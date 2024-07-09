@@ -1,5 +1,8 @@
 <script lang="ts" setup>
-import OpenSourceProjects from './OpenSourceProjects.vue'
+import Company from './lists/Company.vue'
+import OpenSource from './lists/OpenSource.vue'
+import Gadgets from './lists/Gadgets.vue'
+import BlogArchives from './lists/BlogArchives.vue'
 </script>
 
 <template>
@@ -9,7 +12,7 @@ import OpenSourceProjects from './OpenSourceProjects.vue'
         <div h-12 w-12>
           <img src="/favicon.png" rounded-full>
         </div>
-        <div text-8 font-bold>
+        <div text-8 font-thin bg-clip-text text-transparent bg-gradient-to-tr from="#bd34fe" to="#47caff">
           imba久期
         </div>
       </div>
@@ -18,33 +21,54 @@ import OpenSourceProjects from './OpenSourceProjects.vue'
         Hello 各位好，我是 imba久期
       </div>
 
-      <div mt-6>
-        <p>一个前端，开源爱好者，自建服务狂热者，面向生活编程，用技术解决生活中的问题，喜欢研究、总结、分享</p>
+      <div mt-4>
+        <p>
+          一个前端，开源爱好者，自建服务狂热者，面向生活编程，用技术解决生活中的问题，喜欢研究、总结、分享
+        </p>
       </div>
 
-      <div mt-6>
-        <div font-bold>
+      <div mt-8>
+        <div text-6 font-bold>
           工作项目
         </div>
 
-        <ul>
-          <li>淘宝小程序商家助手，独立开发跨境电商应用跨境助手，封装小程序 WebView 通讯机制、开发可视化打印模板编辑器</li>
-          <li>点餐屏跨端应用开发，皮爷咖啡、赛百味、泸溪河，调研并对接打印机、电子秤、副屏、读卡器、支付 POS 机等硬件设备</li>
-        </ul>
+        <div mt-2>
+          <Company />
+        </div>
       </div>
 
-      <div mt-6>
-        <div font-bold>
+      <div mt-8>
+        <div text-6 font-bold>
           开源项目
         </div>
 
         <div mt-2>
-          <OpenSourceProjects />
+          <OpenSource />
         </div>
       </div>
 
-      <div mt-6>
-        <div font-bold>
+      <div mt-8>
+        <div text-6 font-bold>
+          小玩意儿
+        </div>
+
+        <div mt-2>
+          <Gadgets />
+        </div>
+      </div>
+
+      <div mt-8>
+        <div text-6 font-bold>
+          博客文章
+        </div>
+
+        <div mt-2>
+          <BlogArchives />
+        </div>
+      </div>
+
+      <div mt-8>
+        <div text-6 font-bold>
           技术栈
         </div>
         <div mt-2 flex="~ wrap">
@@ -71,11 +95,12 @@ import OpenSourceProjects from './OpenSourceProjects.vue'
           <IconText icon-class="i-logos-docker-icon h-6 w-6">
             Docker
           </IconText>
+
+          <IconText icon-class="i-logos-typeorm">
+            TypeORM
+          </IconText>
         </div>
       </div>
     </div>
   </div>
 </template>
-
-<style lang="scss" scoped>
-</style>
