@@ -9,8 +9,8 @@ import BlogArchives from './lists/BlogArchives.vue'
   <div class="main" h-full w-full px-7 py-10 of-x-hidden>
     <div prose ma font-ma>
       <div mb-6 flex items-center gap-4>
-        <div h-12 w-12>
-          <img src="/favicon.png" rounded-full>
+        <div h-14 w-14>
+          <img src="/favicon.png">
         </div>
         <div text-8 font-thin bg-clip-text text-transparent bg-gradient-to-tr from="#bd34fe" to="#47caff">
           imba久期
