@@ -1,12 +1,15 @@
 {
   "name": "imba97-me",
   "type": "module",
+  "version": "0.0.0",
   "private": true,
   "scripts": {
     "build": "nuxt build",
     "dev": "nuxt dev",
     "generate": "nuxt generate",
     "preview": "nuxt preview",
+    "start-docker": "nuxt start --hostname 0.0.0.0 --port $NUXT_PORT",
+    "release": "bumpp",
     "postinstall": "nuxt prepare"
   },
   "dependencies": {
@@ -20,6 +23,7 @@
     "@iconify-json/logos": "^1.1.43",
     "@unocss/nuxt": "^0.61.0",
     "@vueuse/nuxt": "^10.11.0",
+    "bumpp": "^9.4.1",
     "eslint": "^9.5.0",
     "sass": "^1.77.6",
     "typescript": "^5.5.2",
