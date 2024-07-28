@@ -14,4 +14,6 @@ export default defineNuxtConfig({
   css: [
     '@unocss/reset/tailwind.css',
   ],
+
+  compatibilityDate: '2024-07-25',
 })
