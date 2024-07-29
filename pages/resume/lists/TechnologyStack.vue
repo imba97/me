@@ -54,7 +54,7 @@
       </IconText>
 
       <IconText icon-class="i-material-symbols-more-horiz">
-        想到再列
+        想到再加
       </IconText>
     </div>
   </div>
