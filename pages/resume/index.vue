@@ -1,4 +1,5 @@
 <script lang="ts" setup>
+import TechnologyStack from './lists/TechnologyStack.vue'
 import Company from './lists/Company.vue'
 import OpenSource from './lists/OpenSource.vue'
 import Gadgets from './lists/Gadgets.vue'
@@ -25,6 +26,20 @@ import BlogArchives from './lists/BlogArchives.vue'
         <p>
           一个前端，开源爱好者，自建服务狂热者，面向生活编程，用技术解决生活中的问题，喜欢研究、总结、分享
         </p>
+      </div>
+
+      <div mt-8>
+        <div flex items-baseline gap-2>
+          <div text-6 font-bold>
+            技术栈
+          </div>
+          <div text="3.2 gray">
+            按熟练度排序
+          </div>
+        </div>
+        <div mt-2>
+          <TechnologyStack />
+        </div>
       </div>
 
       <div mt-8>
@@ -64,41 +79,6 @@ import BlogArchives from './lists/BlogArchives.vue'
 
         <div mt-2>
           <BlogArchives />
-        </div>
-      </div>
-
-      <div mt-8>
-        <div text-6 font-bold>
-          技术栈
-        </div>
-        <div mt-2 flex="~ wrap">
-          <IconText icon-class="i-logos-typescript-icon">
-            TypeScript
-          </IconText>
-
-          <IconText icon-class="i-logos-vue">
-            Vue
-          </IconText>
-
-          <IconText icon-class="i-logos-angular-icon">
-            Angular
-          </IconText>
-
-          <IconText icon-class="i-logos-capacitorjs-icon">
-            Capacitor
-          </IconText>
-
-          <IconText icon-class="i-logos-nestjs">
-            Nest
-          </IconText>
-
-          <IconText icon-class="i-logos-docker-icon h-6 w-6">
-            Docker
-          </IconText>
-
-          <IconText icon-class="i-logos-typeorm">
-            TypeORM
-          </IconText>
         </div>
       </div>
     </div>
