@@ -50,5 +50,18 @@ import BaseList from './BaseList.vue'
         </IconText>
       </div>
     </li>
+
+    <li>
+      <div>
+        <span>蓝天救援队管理系统</span>
+        <IconText
+          icon-class="i-logos-github-icon translate-y-0.2" font-class="font-bold b-b-1 b-b-dashed"
+          href="https://github.com/bsr-project"
+        >
+          bsr-project
+        </IconText>
+        <span>，包含用户端、服务端、后台管理、官网。功能有人员管理、任务管理、签到签退、导出表格等。前端 Vue 3，后端 Nestjs，数据库 MySQL</span>
+      </div>
+    </li>
   </BaseList>
 </template>
