@@ -74,5 +74,24 @@ import BaseList from './BaseList.vue'
         </IconText>
       </div>
     </li>
+
+    <li>
+      <div>
+        <span>做了几个小游戏</span>
+        <IconText
+          icon-class="i-logos-github-icon translate-y-0.2" font-class="font-bold b-b-1 b-b-dashed"
+          href="https://github.com/imba97/games"
+        >
+          Games
+        </IconText>
+        <span>，你可以在这里试试</span>
+        <IconText
+          icon-class="i-ph-game-controller translate-y-0.7 bg-[#8dc149]" font-class="font-bold text-[#8dc149] b-b-1 b-b-dashed"
+          href="https://games.imba97.cn"
+        >
+          games.imba97.cn
+        </IconText>
+      </div>
+    </li>
   </BaseList>
 </template>
