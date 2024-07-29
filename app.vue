@@ -1,6 +1,8 @@
 <script lang="ts" setup>
 import 'uno.css'
 
+import { initAnalytics } from './utils/analytics/51.la'
+
 useHead({
   title: 'imba97',
   htmlAttrs: {
@@ -13,7 +15,15 @@ useHead({
       href: '/favicon.png',
     },
   ],
+  script: [
+    {
+      id: 'LA_COLLECT',
+      src: '//sdk.51.la/js-sdk-pro.min.js',
+    },
+  ],
 })
+
+initAnalytics()
 </script>
 
 <template>
