@@ -74,18 +74,5 @@ import BaseList from './BaseList.vue'
         </IconText>
       </div>
     </li>
-
-    <li>
-      <div>
-        <span>在蓝天救援队做志愿者的时候发现了一些需求，从头写了一套前后端管理系统</span>
-        <IconText
-          icon-class="i-logos-github-icon translate-y-0.2" font-class="font-bold b-b-1 b-b-dashed"
-          href="https://github.com/bsr-project"
-        >
-          bsr-project
-        </IconText>
-        <span>管理人员、任务、签到签退等。包含客户端、管理后台、服务端、官网</span>
-      </div>
-    </li>
   </BaseList>
 </template>
