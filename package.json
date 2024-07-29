@@ -21,6 +21,8 @@
     "@antfu/eslint-config": "^2.21.1",
     "@iconify-json/game-icons": "^1.1.9",
     "@iconify-json/logos": "^1.1.43",
+    "@iconify-json/mdi": "^1.1.67",
+    "@iconify-json/ph": "^1.1.13",
     "@unocss/nuxt": "^0.61.0",
     "@vueuse/nuxt": "^10.11.0",
     "bumpp": "^9.4.1",
