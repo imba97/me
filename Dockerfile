@@ -16,6 +16,10 @@ RUN pnpm install
 # 构建 Nuxt.js 应用程序
 RUN pnpm run build
 
+# 环境变量
+ENV LAST_API_USER ""
+ENV LAST_API_KEY ""
+
 # 暴露端口（默认端口为 3000，可以通过环境变量 NUXT_PORT 配置）
 ENV NUXT_PORT=3000
 EXPOSE ${NUXT_PORT}
