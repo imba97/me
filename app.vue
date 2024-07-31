@@ -16,10 +16,12 @@ useHead({
     },
   ],
   script: [
-    {
-      id: 'LA_COLLECT',
-      src: '//sdk.51.la/js-sdk-pro.min.js',
-    },
+    import.meta.dev
+      ? {}
+      : {
+          id: 'LA_COLLECT',
+          src: '//sdk.51.la/js-sdk-pro.min.js',
+        },
   ],
 })
 

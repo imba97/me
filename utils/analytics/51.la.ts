@@ -1,7 +1,7 @@
 declare const LA: any
 
 export function initAnalytics() {
-  if (!(window as any)?.LA) {
+  if (!(window as any)?.LA || import.meta.dev) {
     return
   }
 
