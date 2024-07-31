@@ -1,6 +1,11 @@
 import process from 'node:process'
 import axios from 'axios'
 
+// 超时 10 秒
+const axiosInstance = axios.create({
+  timeout: 10000,
+})
+
 interface Track {
   name: string
   artist: { '#text': string }
@@ -15,7 +20,7 @@ async function getItunesAlbumCover(songName: string, artistName: string): Promis
     limit: '1',
   })
 
-  const response = await axios.get(`${searchUrl}?${params.toString()}`)
+  const response = await axiosInstance.get(`${searchUrl}?${params.toString()}`)
   const results = response.data
 
   if (results.resultCount > 0) {
