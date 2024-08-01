@@ -36,7 +36,7 @@ async function getItunesAlbumCover(songName: string, artistName: string): Promis
 export default defineEventHandler(async () => {
   try {
     const url = `https://ws.audioscrobbler.com/2.0/?method=user.getrecenttracks&user=${process.env.LAST_API_USER}&api_key=${process.env.LAST_API_KEY}&format=json`
-    const response = await axios.get(url)
+    const response = await axiosInstance.get(url)
     const first: Track = response.data.recenttracks.track[0]
 
     const albumCoverUrl = await getItunesAlbumCover(first.name, first.artist['#text'])
