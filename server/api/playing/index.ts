@@ -1,6 +1,8 @@
 import process from 'node:process'
 import axios from 'axios'
 
+let cache: Track | null = null
+
 // 超时 10 秒
 const axiosInstance = axios.create({
   timeout: 10000,
@@ -34,6 +36,10 @@ async function getItunesAlbumCover(songName: string, artistName: string): Promis
 }
 
 export default defineEventHandler(async () => {
+  if (cache) {
+    return cache
+  }
+
   try {
     const url = `https://ws.audioscrobbler.com/2.0/?method=user.getrecenttracks&user=${process.env.LAST_API_USER}&api_key=${process.env.LAST_API_KEY}&format=json`
     const response = await axiosInstance.get(url)
@@ -41,6 +47,12 @@ export default defineEventHandler(async () => {
 
     const albumCoverUrl = await getItunesAlbumCover(first.name, first.artist['#text'])
     first.albumCover = albumCoverUrl
+
+    cache = first
+
+    setTimeout(() => {
+      cache = null
+    }, 10000)
 
     return first
   }
