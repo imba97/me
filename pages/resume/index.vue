@@ -74,14 +74,14 @@ async function getMusic() {
         </div>
 
         <div v-show="music.playing">
-          <VMenu :distance="16" :skidding="84" :triggers="['hover', 'click']" placement="right">
+          <VMenu :distance="16" :skidding="120" :triggers="['hover', 'click']" placement="right">
             <div
               i-ph-music-note-simple-duotone h-6 w-6 animate-pulse bg-gradient-to-tr from="#bd34fe"
               to="#47caff"
             />
 
             <template #popper>
-              <div relative p-3>
+              <div relative p-3 max-w-64 of-hidden>
                 <div absolute top-0 left-0 w-full blur-16>
                   <img :src="music.image" h-24 w-full>
                 </div>
@@ -99,7 +99,7 @@ async function getMusic() {
 
                   <div mt-2 text-6>
                     <div
-                      p-2 text-wrap leading-8 font-bold bg-clip-text text-transparent bg-gradient-to-tr
+                      p-2 break-all font-bold bg-clip-text text-transparent bg-gradient-to-tr
                       from="#bd34fe" to="#47caff"
                     >
                       {{ music.name }} - {{ music.artist }}
