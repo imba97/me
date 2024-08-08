@@ -27,7 +27,6 @@
     "@iconify-json/material-symbols": "^1.1.85",
     "@iconify-json/mdi": "^1.1.67",
     "@iconify-json/ph": "^1.1.13",
-    "@nuxt/ui": "^2.18.4",
     "@types/lodash-es": "^4.17.12",
     "@unocss/nuxt": "^0.61.0",
     "@vueuse/nuxt": "^10.11.0",
