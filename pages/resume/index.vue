@@ -17,6 +17,10 @@ const music = reactive({
 
 let requestTimer: NodeJS.Timeout | null = null
 
+const windowWidth = ref(0)
+
+const isMobile = computed(() => windowWidth.value < 670)
+
 onNuxtReady(async () => {
   getMusic()
 
@@ -25,12 +29,23 @@ onNuxtReady(async () => {
   }, 10000)
 })
 
+onMounted(() => {
+  windowWidth.value = window.innerWidth
+  window.addEventListener('resize', onResize)
+})
+
 onUnmounted(() => {
+  window.removeEventListener('resize', onResize)
+
   if (requestTimer) {
     clearInterval(requestTimer)
     requestTimer = null
   }
 })
+
+function onResize() {
+  windowWidth.value = window.innerWidth
+}
 
 // TODO: 抽成工具函数
 async function getMusic() {
@@ -74,11 +89,11 @@ async function getMusic() {
         </div>
 
         <div v-show="music.playing">
-          <VMenu :distance="16" :skidding="120" :triggers="['hover', 'click']" placement="right">
-            <div
-              i-ph-music-note-simple-duotone h-6 w-6 animate-pulse bg-gradient-to-tr from="#bd34fe"
-              to="#47caff"
-            />
+          <VMenu
+            :distance="16" :skidding="isMobile ? 0 : 100" :triggers="['hover', 'click']"
+            :placement="isMobile ? undefined : 'right'"
+          >
+            <div i-ph-music-note-simple-duotone h-6 w-6 animate-pulse bg-gradient-to-tr from="#bd34fe" to="#47caff" />
 
             <template #popper>
               <div relative p-3 max-w-64 of-hidden>
@@ -99,8 +114,8 @@ async function getMusic() {
 
                   <div mt-2 text-6>
                     <div
-                      p-2 break-all font-bold bg-clip-text text-transparent bg-gradient-to-tr
-                      from="#bd34fe" to="#47caff"
+                      p-2 break-all font-bold bg-clip-text text-transparent bg-gradient-to-tr from="#bd34fe"
+                      to="#47caff"
                     >
                       {{ music.name }} - {{ music.artist }}
                     </div>
