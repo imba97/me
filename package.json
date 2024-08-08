@@ -32,6 +32,7 @@
     "@vueuse/nuxt": "^10.11.0",
     "bumpp": "^9.4.1",
     "eslint": "^9.5.0",
+    "floating-vue": "^5.2.2",
     "sass": "^1.77.6",
     "typescript": "^5.5.2",
     "unocss": "^0.61.0"

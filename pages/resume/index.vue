@@ -74,15 +74,13 @@ async function getMusic() {
         </div>
 
         <div v-show="music.playing">
-          <UTooltip
-            :ui="{
-              base: '[@media(pointer:coarse)]:hidden h-auto text-xs font-normal truncate relative',
-            }" :popper="{
-              arrow: true,
-              placement: 'right',
-            }" :close-delay="500"
-          >
-            <template #text>
+          <VMenu :distance="16" :skidding="84" :triggers="['hover', 'click']" placement="right">
+            <div
+              i-ph-music-note-simple-duotone h-6 w-6 animate-pulse bg-gradient-to-tr from="#bd34fe"
+              to="#47caff"
+            />
+
+            <template #popper>
               <div relative p-3>
                 <div absolute top-0 left-0 w-full blur-16>
                   <img :src="music.image" h-24 w-full>
@@ -110,12 +108,7 @@ async function getMusic() {
                 </div>
               </div>
             </template>
-
-            <div
-              i-ph-music-note-simple-duotone relative top-1 h-6 w-6 animate-pulse bg-gradient-to-tr from="#bd34fe"
-              to="#47caff"
-            />
-          </UTooltip>
+          </VMenu>
         </div>
       </div>
 
