@@ -4,6 +4,7 @@ import Company from './lists/Company.vue'
 import OpenSource from './lists/OpenSource.vue'
 import Gadgets from './lists/Gadgets.vue'
 import BlogArchives from './lists/BlogArchives.vue'
+import Pages from './lists/Pages.vue'
 </script>
 
 <template>
@@ -69,6 +70,16 @@ import BlogArchives from './lists/BlogArchives.vue'
 
         <div mt-2>
           <Gadgets />
+        </div>
+      </div>
+
+      <div mt-8>
+        <div text-6 font-bold>
+          页面
+        </div>
+
+        <div mt-2>
+          <Pages />
         </div>
       </div>
 
