@@ -4,7 +4,6 @@ import {
   presetIcons,
   presetTypography,
   presetUno,
-  presetWebFonts,
   transformerDirectives,
   transformerVariantGroup,
 } from 'unocss'
@@ -24,11 +23,6 @@ export default defineConfig({
       scale: 1.2,
     }),
     presetTypography(),
-    presetWebFonts({
-      fonts: {
-        ma: 'Noto Sans SC',
-      },
-    }),
   ],
   transformers: [
     transformerDirectives(),
