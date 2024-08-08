@@ -1,10 +1,65 @@
 <script lang="ts" setup>
+import { find, get } from 'lodash-es'
+
 import TechnologyStack from './lists/TechnologyStack.vue'
 import Company from './lists/Company.vue'
 import OpenSource from './lists/OpenSource.vue'
 import Gadgets from './lists/Gadgets.vue'
 import BlogArchives from './lists/BlogArchives.vue'
 import Pages from './lists/Pages.vue'
+
+const music = reactive({
+  playing: false,
+  name: '',
+  artist: '',
+  image: '',
+})
+
+let requestTimer: NodeJS.Timeout | null = null
+
+onNuxtReady(async () => {
+  getMusic()
+
+  requestTimer = setInterval(() => {
+    getMusic()
+  }, 10000)
+})
+
+onUnmounted(() => {
+  if (requestTimer) {
+    clearInterval(requestTimer)
+    requestTimer = null
+  }
+})
+
+// TODO: 抽成工具函数
+async function getMusic() {
+  const response = await useFetch('/api/playing')
+
+  if (!response || !response.data.value) {
+    return
+  }
+
+  const data = response.data.value
+
+  const name = get(data, 'name')
+  const artist = get(data, 'artist.#text')
+
+  if (!name || !artist) {
+    return
+  }
+
+  music.name = name
+  music.artist = artist
+
+  music.playing = get(data, '@attr.nowplaying') === 'true'
+
+  music.image = get(data, 'albumCover', '')
+
+  if (music.image === '') {
+    music.image = get(find(get(data, 'image'), { size: 'extralarge' }), '#text')!
+  }
+}
 </script>
 
 <template>
@@ -16,6 +71,51 @@ import Pages from './lists/Pages.vue'
         </div>
         <div text-8 font-thin bg-clip-text text-transparent bg-gradient-to-tr from="#bd34fe" to="#47caff">
           imba久期
+        </div>
+
+        <div v-show="music.playing">
+          <UTooltip
+            :ui="{
+              base: '[@media(pointer:coarse)]:hidden h-auto text-xs font-normal truncate relative',
+            }" :popper="{
+              arrow: true,
+              placement: 'right',
+            }" :close-delay="500"
+          >
+            <template #text>
+              <div relative p-3>
+                <div absolute top-0 left-0 w-full blur-16>
+                  <img :src="music.image" h-24 w-full>
+                </div>
+
+                <div mt-6 flex="~ col" items-center justify-center text-center>
+                  <div flex="~ col" items-center gap-2>
+                    <div v-if="music.image !== ''">
+                      <img :src="music.image" h-32 w-32 rounded-full animate-spin animate-duration-30000>
+                    </div>
+                  </div>
+
+                  <div mt-5 text="4 gray">
+                    我正在听
+                  </div>
+
+                  <div mt-2 text-6>
+                    <div
+                      p-2 text-wrap leading-8 font-bold bg-clip-text text-transparent bg-gradient-to-tr
+                      from="#bd34fe" to="#47caff"
+                    >
+                      {{ music.name }} - {{ music.artist }}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </template>
+
+            <div
+              i-ph-music-note-simple-duotone relative top-1 h-6 w-6 animate-pulse bg-gradient-to-tr from="#bd34fe"
+              to="#47caff"
+            />
+          </UTooltip>
         </div>
       </div>
 
