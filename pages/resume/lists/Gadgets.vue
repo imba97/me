@@ -45,19 +45,6 @@ import BaseList from './BaseList.vue'
 
     <li>
       <div>
-        <span>有时候会用 Iconfont，同事会把字体文件通过一个网站转成 Base64 放在 CSS 文件中，这太麻烦了，干脆写个</span>
-        <IconText
-          icon-class="i-logos-github-icon translate-y-0.2" font-class="font-bold b-b-1 b-b-dashed"
-          href="https://github.com/imba97/simple-iconfont-builder"
-        >
-          Iconfont 生成器
-        </IconText>
-        <span>让它自己生成，顺便还做了 CSS 压缩</span>
-      </div>
-    </li>
-
-    <li>
-      <div>
         <span>写博客上传图片 PicGo 真好用，但为什么没有 FTP 上传插件，写了两个插件</span>
         <IconText
           icon-class="i-logos-github-icon translate-y-0.2" font-class="font-bold b-b-1 b-b-dashed"

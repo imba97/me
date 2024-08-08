@@ -6,22 +6,39 @@ import BaseList from './BaseList.vue'
   <BaseList>
     <li>
       <div>
-        <span>可以通过串口发送短信的</span>
-        <IconText
-          icon-class="i-logos-github-icon translate-y-0.2" font-class="font-bold b-b-1 b-b-dashed"
-          href="https://github.com/smserialport/smserialport"
-        >
-          SMSerialport
-        </IconText>
-        <span>，使用 Monorepo 管理项目。实现了中国大陆地区手机号发送短信，封装了适配器接口，可通过实现适配器对接更多国家或地区的发信逻辑。</span>
+        <div>
+          <span>可以通过串口发送短信的</span>
+          <IconText
+            icon-class="i-logos-github-icon translate-y-0.2" font-class="font-bold b-b-1 b-b-dashed"
+            href="https://github.com/smserialport/smserialport"
+          >
+            SMSerialport
+          </IconText>
+          <span>，使用 Monorepo 管理项目。实现了中国大陆地区手机号发送短信，封装了适配器接口，可通过实现适配器对接更多国家或地区的发信逻辑</span>
+        </div>
 
-        <span>并写了一个 Electron 的应用</span>
+        <div>
+          <span>并写了一个 Electron 的应用</span>
+          <IconText
+            icon-class="i-logos-github-icon translate-y-0.2" font-class="font-bold b-b-1 b-b-dashed"
+            href="https://github.com/smserialport/smserialport-electron"
+          >
+            smserialport-electron
+          </IconText>
+        </div>
+      </div>
+    </li>
+
+    <li>
+      <div>
+        <span>免安装脚本</span>
         <IconText
           icon-class="i-logos-github-icon translate-y-0.2" font-class="font-bold b-b-1 b-b-dashed"
-          href="https://github.com/smserialport/smserialport-electron"
+          href="https://github.com/imba97/iconfontx"
         >
-          smserialport-electron
+          iconfontx
         </IconText>
+        <span>，将 iconfont 的图标生成一个 CSS 文件在本地使用的，自动拉取样式和字体、自动转 base64、自动压缩样式文件</span>
       </div>
     </li>
 
