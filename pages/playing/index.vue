@@ -18,6 +18,8 @@ const music = reactive({
 
 let stopRipples: () => void
 
+let requestTimer: NodeJS.Timeout | null = null
+
 watch(music, () => {
   resetText()
 })
@@ -28,9 +30,16 @@ onNuxtReady(() => {
   getMusic()
 
   // 10 秒获取一次
-  setInterval(() => {
+  requestTimer = setInterval(() => {
     getMusic()
   }, 10000)
+})
+
+onUnmounted(() => {
+  if (requestTimer) {
+    clearInterval(requestTimer)
+    requestTimer = null
+  }
 })
 
 async function getMusic() {
