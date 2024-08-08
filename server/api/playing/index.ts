@@ -58,6 +58,7 @@ export default defineEventHandler(async () => {
   }
   // eslint-disable-next-line unused-imports/no-unused-vars
   catch (error) {
+    cache = null
     return { error: '获取数据时出错' }
   }
 })
