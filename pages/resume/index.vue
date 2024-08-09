@@ -126,8 +126,6 @@
 </template>
 
 <script lang="ts" setup>
-import { find, get } from 'lodash-es'
-
 import TechnologyStack from './lists/TechnologyStack.vue'
 import Company from './lists/Company.vue'
 import OpenSource from './lists/OpenSource.vue'
@@ -184,8 +182,8 @@ async function getMusic() {
 
   const data = response.data.value
 
-  const name = get(data, 'name')
-  const artist = get(data, 'artist.#text')
+  const name = _get(data, 'name')
+  const artist = _get(data, 'artist.#text')
 
   if (!name || !artist) {
     return
@@ -194,12 +192,12 @@ async function getMusic() {
   music.name = name
   music.artist = artist
 
-  music.playing = get(data, '@attr.nowplaying') === 'true'
+  music.playing = _get(data, '@attr.nowplaying') === 'true'
 
-  music.image = get(data, 'albumCover', '')
+  music.image = _get(data, 'albumCover', '')
 
   if (music.image === '') {
-    music.image = get(find(get(data, 'image'), { size: 'extralarge' }), '#text')!
+    music.image = _get(_find(_get(data, 'image'), { size: 'extralarge' }), '#text')!
   }
 }
 </script>

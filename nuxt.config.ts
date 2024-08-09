@@ -5,11 +5,18 @@ export default defineNuxtConfig({
   modules: [
     '@vueuse/nuxt',
     '@unocss/nuxt',
+    'nuxt-lodash',
     'floating-vue/nuxt'
   ],
 
   unocss: {
     autoImport: false
+  },
+
+  lodash: {
+    prefix: '_',
+    prefixSkip: false,
+    upperAfterPrefix: false
   },
 
   css: [
