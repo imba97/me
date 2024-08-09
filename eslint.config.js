@@ -1,4 +1,4 @@
 // @ts-check
-import antfu from '@antfu/eslint-config'
+import createConfig from '@imba97/eslint-config'
 
-export default antfu()
+export default createConfig()
