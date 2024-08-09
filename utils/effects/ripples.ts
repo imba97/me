@@ -45,7 +45,7 @@ export function createRipples(svgId: string) {
         y,
         radius: 0,
         alpha: 0.5,
-        color,
+        color
       })
     }
   }

@@ -1,7 +1,3 @@
-<script lang="ts" setup>
-import BaseList from './BaseList.vue'
-</script>
-
 <template>
   <BaseList>
     <li>
@@ -27,3 +23,7 @@ import BaseList from './BaseList.vue'
     </li>
   </BaseList>
 </template>
+
+<script lang="ts" setup>
+import BaseList from './BaseList.vue'
+</script>

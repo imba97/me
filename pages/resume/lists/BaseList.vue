@@ -1,9 +1,3 @@
-<template>
-  <ul class="common-list">
-    <slot />
-  </ul>
-</template>
-
 <style lang="scss" scoped>
 .common-list {
   :deep(li) {
@@ -20,3 +14,9 @@
   }
 }
 </style>
+
+<template>
+  <ul class="common-list">
+    <slot />
+  </ul>
+</template>

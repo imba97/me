@@ -5,27 +5,27 @@ import {
   presetTypography,
   presetUno,
   transformerDirectives,
-  transformerVariantGroup,
+  transformerVariantGroup
 } from 'unocss'
 
 export default defineConfig({
   theme: {
     colors: {
       primary: {
-        DEFAULT: '#64cc96',
-      },
-    },
+        DEFAULT: '#64cc96'
+      }
+    }
   },
   presets: [
     presetUno(),
     presetAttributify(),
     presetIcons({
-      scale: 1.2,
+      scale: 1.2
     }),
-    presetTypography(),
+    presetTypography()
   ],
   transformers: [
     transformerDirectives(),
-    transformerVariantGroup(),
-  ],
+    transformerVariantGroup()
+  ]
 })

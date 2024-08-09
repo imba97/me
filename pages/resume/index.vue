@@ -1,82 +1,3 @@
-<script lang="ts" setup>
-import { find, get } from 'lodash-es'
-
-import TechnologyStack from './lists/TechnologyStack.vue'
-import Company from './lists/Company.vue'
-import OpenSource from './lists/OpenSource.vue'
-import Gadgets from './lists/Gadgets.vue'
-import BlogArchives from './lists/BlogArchives.vue'
-import Pages from './lists/Pages.vue'
-
-const music = reactive({
-  playing: false,
-  name: '',
-  artist: '',
-  image: '',
-})
-
-let requestTimer: NodeJS.Timeout | null = null
-
-const windowWidth = ref(0)
-
-const isMobile = computed(() => windowWidth.value < 670)
-
-onNuxtReady(async () => {
-  getMusic()
-
-  requestTimer = setInterval(() => {
-    getMusic()
-  }, 10000)
-})
-
-onMounted(() => {
-  windowWidth.value = window.innerWidth
-  window.addEventListener('resize', onResize)
-})
-
-onUnmounted(() => {
-  window.removeEventListener('resize', onResize)
-
-  if (requestTimer) {
-    clearInterval(requestTimer)
-    requestTimer = null
-  }
-})
-
-function onResize() {
-  windowWidth.value = window.innerWidth
-}
-
-// TODO: 抽成工具函数
-async function getMusic() {
-  const response = await useFetch('/api/playing')
-
-  if (!response || !response.data.value) {
-    return
-  }
-
-  const data = response.data.value
-
-  const name = get(data, 'name')
-  const artist = get(data, 'artist.#text')
-
-  if (!name || !artist) {
-    return
-  }
-
-  music.name = name
-  music.artist = artist
-
-  music.playing = get(data, '@attr.nowplaying') === 'true'
-
-  music.image = get(data, 'albumCover', '')
-
-  if (music.image === '') {
-    music.image = get(find(get(data, 'image'), { size: 'extralarge' }), '#text')!
-  }
-}
-</script>
-
 <template>
   <div class="main" h-full w-full px-7 py-10 of-x-hidden>
     <div prose ma font-ma>
@@ -203,3 +124,82 @@ async function getMusic() {
     </div>
   </div>
 </template>
+
+<script lang="ts" setup>
+import { find, get } from 'lodash-es'
+
+import TechnologyStack from './lists/TechnologyStack.vue'
+import Company from './lists/Company.vue'
+import OpenSource from './lists/OpenSource.vue'
+import Gadgets from './lists/Gadgets.vue'
+import BlogArchives from './lists/BlogArchives.vue'
+import Pages from './lists/Pages.vue'
+
+const music = reactive({
+  playing: false,
+  name: '',
+  artist: '',
+  image: ''
+})
+
+let requestTimer: NodeJS.Timeout | null = null
+
+const windowWidth = ref(0)
+
+const isMobile = computed(() => windowWidth.value < 670)
+
+onNuxtReady(async () => {
+  getMusic()
+
+  requestTimer = setInterval(() => {
+    getMusic()
+  }, 10000)
+})
+
+onMounted(() => {
+  windowWidth.value = window.innerWidth
+  window.addEventListener('resize', onResize)
+})
+
+onUnmounted(() => {
+  window.removeEventListener('resize', onResize)
+
+  if (requestTimer) {
+    clearInterval(requestTimer)
+    requestTimer = null
+  }
+})
+
+function onResize() {
+  windowWidth.value = window.innerWidth
+}
+
+// TODO: 抽成工具函数
+async function getMusic() {
+  const response = await useFetch('/api/playing')
+
+  if (!response || !response.data.value) {
+    return
+  }
+
+  const data = response.data.value
+
+  const name = get(data, 'name')
+  const artist = get(data, 'artist.#text')
+
+  if (!name || !artist) {
+    return
+  }
+
+  music.name = name
+  music.artist = artist
+
+  music.playing = get(data, '@attr.nowplaying') === 'true'
+
+  music.image = get(data, 'albumCover', '')
+
+  if (music.image === '') {
+    music.image = get(find(get(data, 'image'), { size: 'extralarge' }), '#text')!
+  }
+}
+</script>

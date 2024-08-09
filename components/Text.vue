@@ -1,35 +1,3 @@
-<script lang="ts" setup>
-import { onMounted, ref } from 'vue'
-
-const marquee = ref<HTMLDivElement | null>(null)
-const text = ref<HTMLSpanElement | null>(null)
-
-onMounted(() => {
-  checkOverflow()
-})
-
-function checkOverflow() {
-  if (!text.value || !marquee.value) {
-    return
-  }
-
-  if (text.value.offsetWidth > marquee.value.offsetWidth) {
-    text.value.classList.add('overflow')
-  }
-  else {
-    text.value.classList.remove('overflow')
-  }
-}
-</script>
-
-<template>
-  <div ref="marquee" class="marquee" of-hidden>
-    <span ref="text">
-      <slot />
-    </span>
-  </div>
-</template>
-
 <style scoped>
 .marquee {
   white-space: nowrap;
@@ -53,3 +21,35 @@ function checkOverflow() {
   }
 }
 </style>
+
+<template>
+  <div ref="marquee" class="marquee" of-hidden>
+    <span ref="text">
+      <slot />
+    </span>
+  </div>
+</template>
+
+<script lang="ts" setup>
+import { onMounted, ref } from 'vue'
+
+const marquee = ref<HTMLDivElement | null>(null)
+const text = ref<HTMLSpanElement | null>(null)
+
+onMounted(() => {
+  checkOverflow()
+})
+
+function checkOverflow() {
+  if (!text.value || !marquee.value) {
+    return
+  }
+
+  if (text.value.offsetWidth > marquee.value.offsetWidth) {
+    text.value.classList.add('overflow')
+  }
+  else {
+    text.value.classList.remove('overflow')
+  }
+}
+</script>

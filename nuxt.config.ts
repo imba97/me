@@ -5,16 +5,16 @@ export default defineNuxtConfig({
   modules: [
     '@vueuse/nuxt',
     '@unocss/nuxt',
-    'floating-vue/nuxt',
+    'floating-vue/nuxt'
   ],
 
   unocss: {
-    autoImport: false,
+    autoImport: false
   },
 
   css: [
-    '@unocss/reset/tailwind.css',
+    '@unocss/reset/tailwind.css'
   ],
 
-  compatibilityDate: '2024-07-25',
+  compatibilityDate: '2024-07-25'
 })

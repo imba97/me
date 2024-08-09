@@ -5,7 +5,7 @@ let cache: Track | null = null
 
 // 超时 10 秒
 const axiosInstance = axios.create({
-  timeout: 10000,
+  timeout: 10000
 })
 
 interface Track {
@@ -19,7 +19,7 @@ async function getItunesAlbumCover(songName: string, artistName: string): Promis
   const params = new URLSearchParams({
     term: `${songName} ${artistName}`,
     media: 'music',
-    limit: '1',
+    limit: '1'
   })
 
   const response = await axiosInstance.get(`${searchUrl}?${params.toString()}`)

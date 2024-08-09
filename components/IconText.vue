@@ -1,19 +1,4 @@
-<script lang="ts" setup>
-const props = defineProps<{
-  iconClass: string
-  src?: string
-  fontClass?: string
-  href?: string
-}>()
-
-const isIcon = !props.src
-
-function onClick() {
-  if (props.href) {
-    window.open(props.href, '_blank')
-  }
-}
-</script>
+<style lang="scss" scoped></style>
 
 <template>
   <div
@@ -31,4 +16,19 @@ function onClick() {
   </div>
 </template>
 
-<style lang="scss" scoped></style>
+<script lang="ts" setup>
+const props = defineProps<{
+  iconClass: string
+  src?: string
+  fontClass?: string
+  href?: string
+}>()
+
+const isIcon = !props.src
+
+function onClick() {
+  if (props.href) {
+    window.open(props.href, '_blank')
+  }
+}
+</script>
