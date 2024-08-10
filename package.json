@@ -21,11 +21,7 @@
     "vue-router": "^4.3.3"
   },
   "devDependencies": {
-    "@iconify-json/game-icons": "^1.1.9",
-    "@iconify-json/logos": "^1.1.43",
-    "@iconify-json/material-symbols": "^1.1.85",
-    "@iconify-json/mdi": "^1.1.67",
-    "@iconify-json/ph": "^1.1.13",
+    "@iconify/json": "^2.2.235",
     "@imba97/eslint-config": "^0.0.2",
     "@types/lodash-es": "^4.17.12",
     "@unocss/nuxt": "^0.61.0",
