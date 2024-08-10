@@ -19,7 +19,7 @@
             <template #popper>
               <div relative p-3 min-w-56 max-w-64 of-hidden>
                 <div absolute top-0 left-0 w-full blur-16>
-                  <img :src="music.image" h-24 w-full>
+                  <img v-show="music.image !== ''" :src="music.image" h-24 w-full>
                 </div>
 
                 <div mt-6 flex="~ col" items-center justify-center text-center>
