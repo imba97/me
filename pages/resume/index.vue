@@ -9,7 +9,7 @@
           imba久期
         </div>
 
-        <div v-show="music.playing && imageLoaded">
+        <div v-show="music.playing">
           <VMenu
             :distance="16" :skidding="isMobile ? 0 : 100" :triggers="['hover', 'click']"
             :placement="isMobile ? undefined : 'right'"
@@ -24,8 +24,9 @@
 
                 <div mt-6 flex="~ col" items-center justify-center text-center>
                   <div flex="~ col" items-center gap-2>
-                    <div v-if="music.image !== ''">
-                      <img :src="music.image" h-32 w-32 rounded-full animate-spin animate-duration-30000>
+                    <div flex items-center justify-center h-32 w-32>
+                      <img v-if="imageLoaded && music.image !== ''" :src="music.image" rounded-full animate-spin animate-duration-30000>
+                      <div v-else i-line-md-loading-loop h-12 w-12 bg-gray />
                     </div>
                   </div>
 
@@ -40,7 +41,7 @@
                     >
                       {{ music.name }}
                     </div>
-                    <div text="3.5 gray-300">
+                    <div text="3.5 gray-3">
                       {{ music.artist }}
                     </div>
                   </div>
