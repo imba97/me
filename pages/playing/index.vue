@@ -120,8 +120,6 @@ async function getMusic() {
   playing.value = data.playing
 
   if (data.albumCover && data.albumCover !== music.image) {
-    imageLoaded.value = false
-
     useLoadImage(data.albumCover).then(() => {
       stopRipples()
 
