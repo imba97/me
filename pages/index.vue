@@ -7,12 +7,18 @@
       <div text-8 bg-clip-text text-transparent bg-gradient-to-tr from="#bd34fe" to="#47caff">
         Hi
       </div>
+
+      <div text="3 gray-3">
+        v{{ pkg.version }}
+      </div>
     </div>
   </div>
 </template>
 
 <script lang="ts" setup>
 const showFavicon = ref(false)
+
+const pkg = usePackage()
 
 onMounted(() => {
   const faviconImage = new Image()
