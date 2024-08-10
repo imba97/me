@@ -1,7 +1,7 @@
 import process from 'node:process'
 import axios from 'axios'
 
-let cache: Track | null = null
+let cache: MusicInfo | null = null
 
 // 超时 10 秒
 const axiosInstance = axios.create({
@@ -12,6 +12,19 @@ interface Track {
   name: string
   artist: { '#text': string }
   albumCover?: string
+  image: { 'size': string, '#text': string }[]
+}
+
+interface MusicInfo {
+  playing: boolean
+  name: string
+  artist: string
+  albumCover?: string
+}
+
+interface Result {
+  success: boolean
+  data?: MusicInfo
 }
 
 async function getItunesAlbumCover(songName: string, artistName: string): Promise<string> {
@@ -35,9 +48,12 @@ async function getItunesAlbumCover(songName: string, artistName: string): Promis
   }
 }
 
-export default defineEventHandler(async () => {
+export default defineEventHandler(async (): Promise<Result> => {
   if (cache) {
-    return cache
+    return {
+      success: true,
+      data: cache
+    }
   }
 
   try {
@@ -45,20 +61,34 @@ export default defineEventHandler(async () => {
     const response = await axiosInstance.get(url)
     const first: Track = response.data.recenttracks.track[0]
 
-    const albumCoverUrl = await getItunesAlbumCover(first.name, first.artist['#text'])
-    first.albumCover = albumCoverUrl
+    const itunesAlbumCover = await getItunesAlbumCover(first.name, first.artist['#text'])
 
-    cache = first
+    cache = {
+      playing: _get(first, '@attr.nowplaying') === 'true',
+      name: first.name,
+      artist: first.artist['#text'],
+      albumCover: itunesAlbumCover
+    }
+
+    // 没有的话拿 Last.fm 的
+    if (itunesAlbumCover === '') {
+      cache.albumCover = _get(_find(_get(first, 'image'), { size: 'extralarge' }), '#text')
+    }
 
     setTimeout(() => {
       cache = null
     }, 10000)
 
-    return first
+    return {
+      success: true,
+      data: cache
+    }
   }
   // eslint-disable-next-line unused-imports/no-unused-vars
   catch (error) {
     cache = null
-    return { error: '获取数据时出错' }
+    return {
+      success: false
+    }
   }
 })

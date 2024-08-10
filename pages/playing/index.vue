@@ -62,8 +62,6 @@
 <script lang="ts" setup>
 import { nextTick, reactive, ref, watch } from 'vue'
 
-import { find, get } from 'lodash-es'
-
 import { createRipples } from '~/utils/effects/ripples'
 
 const playing = ref(false)
@@ -106,39 +104,30 @@ onUnmounted(() => {
 async function getMusic() {
   const response = await useFetch('/api/playing')
 
-  if (!response || !response.data.value) {
+  if (!_get(response.data.value, 'success')) {
     return
   }
 
-  const data = response.data.value
+  const data = response.data.value!.data!
 
-  const name = get(data, 'name')
-  const artist = get(data, 'artist.#text')
-
-  if (!name || !artist) {
+  if (!data.name || !data.artist) {
     return
   }
 
-  music.name = name
-  music.artist = artist
+  music.name = data.name
+  music.artist = data.artist
 
-  playing.value = get(data, '@attr.nowplaying') === 'true'
+  playing.value = data.playing
 
-  let imageUrl = get(data, 'albumCover', '')
+  if (data.albumCover && data.albumCover !== music.image) {
+    imageLoaded.value = false
 
-  if (imageUrl === '') {
-    imageUrl = get(find(get(data, 'image'), { size: 'extralarge' }), '#text')!
-  }
-
-  if (imageUrl && imageUrl !== music.image) {
-    const image = new Image()
-    image.src = imageUrl
-    image.onload = () => {
-      imageLoaded.value = true
+    useLoadImage(data.albumCover).then(() => {
       stopRipples()
-      music.image = imageUrl
-    }
-    image.onerror = () => {
+
+      imageLoaded.value = true
+      music.image = data.albumCover!
+    }).catch(() => {
       imageLoaded.value = false
 
       if (stopRipples) {
@@ -147,7 +136,7 @@ async function getMusic() {
 
       stopRipples = createRipples('ripples')
       music.image = ''
-    }
+    })
   }
 }
 

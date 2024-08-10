@@ -9,7 +9,7 @@
           imba久期
         </div>
 
-        <div v-show="music.playing">
+        <div v-show="music.playing && imageLoaded">
           <VMenu
             :distance="16" :skidding="isMobile ? 0 : 100" :triggers="['hover', 'click']"
             :placement="isMobile ? undefined : 'right'"
@@ -17,7 +17,7 @@
             <div i-ph-music-note-simple-duotone h-6 w-6 animate-pulse bg-gradient-to-tr from="#bd34fe" to="#47caff" />
 
             <template #popper>
-              <div relative p-3 max-w-64 of-hidden>
+              <div relative p-3 min-w-56 max-w-64 of-hidden>
                 <div absolute top-0 left-0 w-full blur-16>
                   <img :src="music.image" h-24 w-full>
                 </div>
@@ -33,12 +33,15 @@
                     我正在听
                   </div>
 
-                  <div mt-2 text-6>
+                  <div mt-2>
                     <div
-                      p-2 break-all font-bold bg-clip-text text-transparent bg-gradient-to-tr from="#bd34fe"
+                      p-2 break-all text-8 font-bold bg-clip-text text-transparent bg-gradient-to-tr from="#bd34fe"
                       to="#47caff"
                     >
-                      {{ music.name }} - {{ music.artist }}
+                      {{ music.name }}
+                    </div>
+                    <div text="3.5 gray-300">
+                      {{ music.artist }}
                     </div>
                   </div>
                 </div>
@@ -140,6 +143,8 @@ const music = reactive({
   image: ''
 })
 
+const imageLoaded = ref(false)
+
 let requestTimer: NodeJS.Timeout | null = null
 
 const windowWidth = ref(0)
@@ -172,32 +177,34 @@ function onResize() {
   windowWidth.value = window.innerWidth
 }
 
-// TODO: 抽成工具函数
 async function getMusic() {
   const response = await useFetch('/api/playing')
 
-  if (!response || !response.data.value) {
+  if (!_get(response.data.value, 'success')) {
     return
   }
 
-  const data = response.data.value
+  const data = response.data.value!.data!
 
-  const name = _get(data, 'name')
-  const artist = _get(data, 'artist.#text')
-
-  if (!name || !artist) {
+  if (!data.name || !data.artist) {
     return
   }
 
-  music.name = name
-  music.artist = artist
+  music.name = data.name
+  music.artist = data.artist
 
-  music.playing = _get(data, '@attr.nowplaying') === 'true'
+  music.playing = data.playing
 
-  music.image = _get(data, 'albumCover', '')
+  if (data.albumCover && data.albumCover !== music.image) {
+    imageLoaded.value = false
 
-  if (music.image === '') {
-    music.image = _get(_find(_get(data, 'image'), { size: 'extralarge' }), '#text')!
+    useLoadImage(data.albumCover).then(() => {
+      music.image = data.albumCover!
+      imageLoaded.value = true
+    }).catch(() => {
+      imageLoaded.value = false
+      music.image = ''
+    })
   }
 }
 </script>
