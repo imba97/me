@@ -23,5 +23,11 @@ export default defineNuxtConfig({
     '@unocss/reset/tailwind.css'
   ],
 
+  imports: {
+    dirs: [
+      'composables/**'
+    ]
+  },
+
   compatibilityDate: '2024-07-25'
 })
