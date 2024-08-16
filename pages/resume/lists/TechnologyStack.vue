@@ -1,7 +1,7 @@
 <template>
   <div>
     <div flex="~ wrap">
-      <IconText v-for="item in list" :key="item.text" :icon-class="item.icon">
+      <IconText v-for="item in list" :key="item.text" :font-preset="IconTextFont.None" :icon-class="item.icon">
         {{ item.text }}
       </IconText>
     </div>
