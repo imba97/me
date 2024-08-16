@@ -50,6 +50,10 @@ function onClick() {
     return
   }
 
+  if (/^https?/.test(props.href)) {
+    return props.href
+  }
+
   let presetHref: string | undefined
 
   switch (props.preset) {
