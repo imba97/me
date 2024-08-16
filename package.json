@@ -10,7 +10,7 @@
     "build": "nuxt build",
     "start-docker": "nuxt start --hostname 0.0.0.0 --port $NUXT_PORT",
     "release": "bumpp",
-    "lint": "eslint ."
+    "lint": "eslint . --flag unstable_ts_config"
   },
   "dependencies": {
     "axios": "^1.7.4",
