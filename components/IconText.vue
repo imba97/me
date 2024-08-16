@@ -58,7 +58,7 @@ function onClick() {
 
   switch (props.preset) {
     case IconTextPreset.Github:
-      return `https://github.com/${props.href}`
+      presetHref = `https://github.com/${props.href}`
   }
 
   if (!presetHref) {
