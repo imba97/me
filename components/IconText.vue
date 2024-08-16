@@ -8,9 +8,7 @@
     box-border @click="onClick"
   >
     <div v-if="isIcon" :class="iconClass" />
-    <img
-      v-else :src="props.src" :class="iconClass"
-    >
+    <img v-else :src="props.src" :class="iconClass">
 
     <div :class="fontClass" select-none>
       <slot />
@@ -48,8 +46,23 @@ const iconClass = computed(() => [props.iconClass, presetClass.value.icon])
 const fontClass = computed(() => [props.fontClass, presetClass.value.font])
 
 function onClick() {
-  if (props.href) {
-    window.open(props.href, '_blank')
+  if (!props.href) {
+    return
   }
+
+  let presetHref: string | undefined
+
+  switch (props.preset) {
+    case IconTextPreset.Github:
+      presetHref = /^[\w\-]+\/[\w\-]+$/.test(props.href)
+        ? `https://github.com/${props.href}`
+        : props.href
+  }
+
+  if (!presetHref) {
+    return
+  }
+
+  window.open(presetHref, '_blank')
 }
 </script>
