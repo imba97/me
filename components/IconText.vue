@@ -54,7 +54,7 @@ function onClick() {
 
   switch (props.preset) {
     case IconTextPreset.Github:
-      presetHref = /^[\w\-]+\/[\w\-]+$/.test(props.href)
+      presetHref = /^[\w\-]+(?:\/[\w\-]+)?$/.test(props.href)
         ? `https://github.com/${props.href}`
         : props.href
   }
