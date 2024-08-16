@@ -24,7 +24,8 @@ export default defineNuxtConfig({
 
   imports: {
     dirs: [
-      'composables/**'
+      'composables/**',
+      'enums/**'
     ]
   },
 
