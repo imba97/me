@@ -47,21 +47,23 @@ const presetClass = computed(() => {
 const iconClass = computed(() => [props.iconClass, presetClass.value.icon])
 const fontClass = computed(() => [props.fontClass, presetClass.value.font])
 
-function onClick() {
+function getHref() {
   if (!props.href) {
     return
   }
 
-  if (/^https?/.test(props.href)) {
+  if (/^(?:https?|\/)/.test(props.href)) {
     return props.href
   }
 
-  let presetHref: string | undefined
-
   switch (props.preset) {
     case IconTextPreset.Github:
-      presetHref = `https://github.com/${props.href}`
+      return `https://github.com/${props.href}`
   }
+}
+
+function onClick() {
+  const presetHref = getHref()
 
   if (!presetHref) {
     return
