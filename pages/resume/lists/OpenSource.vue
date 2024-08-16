@@ -40,6 +40,20 @@
 
     <li>
       <div>
+        <span>自动引入 Lodash 的</span>
+        <IconText
+          icon-class="i-logos-github-icon translate-y-0.2" font-class="font-bold b-b-1 b-b-dashed"
+          href="https://github.com/imba97/lodash-imports"
+        >
+          lodash-imports
+        </IconText>
+        <span>，配合自动引入插件使用，可以配置过滤、前缀。</span>
+        <span>内置 Lodash 库，无需额外安装，可以在自动引入插件外使用 Lodash 的函数</span>
+      </div>
+    </li>
+
+    <li>
+      <div>
         <span>一个以优化 B站 功能为主的浏览器插件</span>
         <IconText
           icon-class="i-logos-github-icon translate-y-0.2" font-class="font-bold b-b-1 b-b-dashed"
