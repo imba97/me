@@ -28,17 +28,19 @@ const props = defineProps<{
 const isIcon = !props.src
 
 const presetClass = computed(() => {
+  const defaultFont = 'font-bold b-b-1 b-b-dashed'
+
   switch (props.preset) {
     case IconTextPreset.Github:
       return {
         icon: 'i-logos-github-icon translate-y-0.2',
-        font: 'font-bold b-b-1 b-b-dashed'
+        font: defaultFont
       }
   }
 
   return {
     icon: '',
-    font: ''
+    font: props.fontClass || defaultFont
   }
 })
 
