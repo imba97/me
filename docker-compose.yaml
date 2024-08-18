@@ -8,5 +8,6 @@ services:
       - '3000:3000'
     restart: always
     environment:
-      LAST_API_USER: ''
-      LAST_API_KEY: ''
+      NAVIDROME_API_URL: ''
+      NAVIDROME_USERNAME: ''
+      NAVIDROME_PASSWORD: ''

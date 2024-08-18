@@ -24,3 +24,6 @@ logs
 
 # lock files
 *-lock.yaml
+
+# download images
+/public/downlaod
