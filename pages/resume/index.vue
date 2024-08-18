@@ -1,6 +1,6 @@
 <template>
   <div class="main" h-full w-full px-7 py-10 of-x-hidden>
-    <div prose ma font-ma>
+    <div prose ma>
       <div mb-6 flex items-center gap-4>
         <div h-14 w-14>
           <img src="/favicon.png">
