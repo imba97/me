@@ -5,7 +5,8 @@ export default defineNuxtConfig({
   modules: [
     '@vueuse/nuxt',
     '@unocss/nuxt',
-    'floating-vue/nuxt'
+    'floating-vue/nuxt',
+    '@nuxthub/core'
   ],
 
   unocss: {
@@ -21,6 +22,10 @@ export default defineNuxtConfig({
   css: [
     '@unocss/reset/tailwind.css'
   ],
+
+  hub: {
+    kv: true
+  },
 
   imports: {
     dirs: [
