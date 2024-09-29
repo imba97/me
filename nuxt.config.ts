@@ -5,11 +5,12 @@ export default defineNuxtConfig({
     '@vueuse/nuxt',
     '@unocss/nuxt',
     'floating-vue/nuxt',
-    '@nuxthub/core'
+    '@nuxthub/core',
+    '@nuxtjs/seo'
   ],
 
-  unocss: {
-    autoImport: false
+  site: {
+    url: 'https://imba97-me.nuxt.dev'
   },
 
   lodash: {
