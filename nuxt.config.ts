@@ -1,6 +1,3 @@
-import process from 'node:process'
-
-// https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
   devtools: { enabled: false },
 
@@ -27,10 +24,6 @@ export default defineNuxtConfig({
 
   hub: {
     kv: true
-  },
-
-  runtimeConfig: {
-    NAVIDROME_API_URL: process.env.NAVIDROME_API_URL
   },
 
   imports: {
