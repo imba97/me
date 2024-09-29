@@ -11,9 +11,7 @@ body,
 </template>
 
 <script lang="ts" setup>
-import 'uno.css'
-
-import { initAnalytics } from './utils/analytics/51.la'
+import { initAnalytics } from '../utils/analytics/51.la'
 
 useHead({
   title: 'imba97',
