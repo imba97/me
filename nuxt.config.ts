@@ -30,7 +30,11 @@ export default defineNuxtConfig({
   },
 
   runtimeConfig: {
-    env: process.env as any
+    env: {
+      NAVIDROME_API_URL: process.env.NAVIDROME_API_URL,
+      NAVIDROME_USERNAME: process.env.NAVIDROME_USERNAME,
+      NAVIDROME_PASSWORD: process.env.NAVIDROME_PASSWORD
+    } as Record<string, string>
   },
 
   compatibilityDate: '2024-07-25',
