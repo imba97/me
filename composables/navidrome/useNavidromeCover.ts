@@ -1,9 +1,9 @@
 import { Buffer } from 'node:buffer'
 
-import { axiosInstance, mergeOptions } from './shared'
+import { axiosInfo, mergeOptions } from './shared'
 
 export default async function (id: string) {
-  const cover = await axiosInstance.post('/getCoverArt.view', null, mergeOptions({
+  const cover = await axiosInfo.instance.post('/getCoverArt.view', null, mergeOptions({
     params: {
       id
     },

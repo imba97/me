@@ -1,4 +1,4 @@
-import { axiosInstance, commonOptions, mergeOptions } from './shared'
+import { axiosInfo, mergeOptions } from './shared'
 
 export default async function () {
   let currentMusic
@@ -28,7 +28,7 @@ export default async function () {
 }
 
 async function getHistory() {
-  const recent = await axiosInstance.post('/getAlbumList.view', null, mergeOptions({
+  const recent = await axiosInfo.instance.post('/getAlbumList.view', null, mergeOptions({
     params: {
       type: 'recent',
       size: 1
@@ -74,12 +74,12 @@ async function getHistory() {
 }
 
 async function getPlaying() {
-  return await axiosInstance.post('/getNowPlaying.view', null, commonOptions)
+  return await axiosInfo.instance.post('/getNowPlaying.view', null, axiosInfo.commonOptions)
     .then(res => _get(res.data, 'subsonic-response.nowPlaying.entry.0', null))
 }
 
 async function getAlbum(id: string) {
-  return await axiosInstance.post('/getAlbum.view', null, mergeOptions({
+  return await axiosInfo.instance.post('/getAlbum.view', null, mergeOptions({
     params: {
       id
     }
