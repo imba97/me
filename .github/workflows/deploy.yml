@@ -39,13 +39,14 @@ jobs:
       - name: Install dependencies
         run: pnpm install
 
+      - name: Write NUXT_PROJECT_ENV to .env
+        run: echo "${{ secrets.NUXT_PROJECT_ENV }}" >> .env
+
       - name: Build the project
         run: pnpm build
-        env:
-          NAVIDROME_API_URL: "test"
 
       - name:  Deploy with nuxthub
         run: npx nuxthub deploy --no-build
         env:
-          NUXT_HUB_PROJECT_KEY: ${{ secrets.NUXT_HUB_PROJECT_KEY}}
+          NUXT_HUB_PROJECT_KEY: ${{ secrets.NUXT_HUB_PROJECT_KEY }}
           NUXT_HUB_USER_TOKEN: ${{ secrets.NUXT_HUB_USER_TOKEN }}
