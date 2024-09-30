@@ -41,6 +41,8 @@ jobs:
 
       - name: Build the project
         run: pnpm build
+        env:
+          NAVIDROME_API_URL: "test"
 
       - name:  Deploy with nuxthub
         run: npx nuxthub deploy --no-build

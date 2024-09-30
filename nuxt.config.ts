@@ -1,3 +1,5 @@
+import process from 'node:process'
+
 export default defineNuxtConfig({
   devtools: { enabled: false },
 
@@ -5,13 +7,8 @@ export default defineNuxtConfig({
     '@vueuse/nuxt',
     '@unocss/nuxt',
     'floating-vue/nuxt',
-    '@nuxthub/core',
-    '@nuxtjs/seo'
+    '@nuxthub/core'
   ],
-
-  site: {
-    url: 'https://imba97-me.nuxt.dev'
-  },
 
   lodash: {
     prefix: '_',
