@@ -29,12 +29,6 @@ export const axiosInfo = {
       baseURL: runtimeConfig.env.NAVIDROME_API_URL
     })
 
-    axiosInstance.interceptors.response.use((response) => {
-      console.log('env')
-      console.log(runtimeConfig.env)
-      return response
-    })
-
     return axiosInstance
   },
 
