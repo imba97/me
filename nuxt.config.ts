@@ -1,3 +1,5 @@
+import process from 'node:process'
+
 export default defineNuxtConfig({
   modules: [
     '@vueuse/nuxt',
@@ -25,6 +27,10 @@ export default defineNuxtConfig({
       'composables/**/use*.ts',
       'enums/**'
     ]
+  },
+
+  runtimeConfig: {
+    env: process.env as any
   },
 
   compatibilityDate: '2024-07-25',

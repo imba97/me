@@ -1,7 +1,7 @@
-import process from 'node:process'
-
 export default defineEventHandler(async () => {
+  const runtimeConfig = useRuntimeConfig()
+
   return {
-    env: process.env
+    env: runtimeConfig.env
   }
 })
