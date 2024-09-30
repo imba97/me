@@ -1,8 +1,4 @@
-import process from 'node:process'
-
 export default defineNuxtConfig({
-  devtools: { enabled: false },
-
   modules: [
     '@vueuse/nuxt',
     '@unocss/nuxt',
@@ -31,5 +27,6 @@ export default defineNuxtConfig({
     ]
   },
 
-  compatibilityDate: '2024-07-25'
+  compatibilityDate: '2024-07-25',
+  devtools: { enabled: false }
 })
