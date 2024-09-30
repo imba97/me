@@ -1,7 +1,8 @@
-export default defineEventHandler(async () => {
-  const runtimeConfig = useRuntimeConfig()
+import { axiosInfo } from '~/composables/navidrome/shared'
 
+export default defineEventHandler(async () => {
   return {
-    env: runtimeConfig.env
+    version: '1',
+    env: axiosInfo.testEnv
   }
 })
