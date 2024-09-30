@@ -42,6 +42,9 @@ importers:
       '@cloudflare/workers-types':
         specifier: ^4.20240925.0
         version: 4.20240925.0
+      '@haverstack/axios-fetch-adapter':
+        specifier: ^0.12.0
+        version: 0.12.0(axios@1.7.4)
       '@iconify/json':
         specifier: ^2.2.237
         version: 2.2.237
@@ -1036,6 +1039,11 @@ packages:
 
   '@floating-ui/utils@0.2.8':
     resolution: {integrity: sha512-kym7SodPp8/wloecOpcmSnWJsK7M0E5Wg8UcFA+uO4B9s5d0ywXOEro/8HM9x0rW+TljRzul/14UYz3TleT3ig==}
+
+  '@haverstack/axios-fetch-adapter@0.12.0':
+    resolution: {integrity: sha512-+9WzqzeIvEC6Qrs6ImSqaX5P+eCrWbhzR+GoB7+p8/yqxmq59CPEo0uFuu0wINU9DQuJMzyER9WYdpYVwZV9rw==}
+    peerDependencies:
+      axios: ^0.21.1
 
   '@humanwhocodes/module-importer@1.0.1':
     resolution: {integrity: sha512-bxveV4V8v5Yb4ncFTT3rPSgZBOpCkjfK0y4oVVVJwIuDVBRMDXrPyXRL988i5ap9m9bnyEEjWfm5WkBmtffLfA==}
@@ -6051,6 +6059,10 @@ snapshots:
       '@floating-ui/core': 1.6.8
 
   '@floating-ui/utils@0.2.8': {}
+
+  '@haverstack/axios-fetch-adapter@0.12.0(axios@1.7.4)':
+    dependencies:
+      axios: 1.7.4
 
   '@humanwhocodes/module-importer@1.0.1': {}
 

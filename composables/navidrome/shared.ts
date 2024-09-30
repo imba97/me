@@ -1,4 +1,5 @@
 import axios, { type AxiosInstance, type AxiosRequestConfig } from 'axios'
+import fetchAdapter from '@haverstack/axios-fetch-adapter'
 import defu from 'defu'
 
 let axiosInstance: AxiosInstance | null = null
@@ -26,7 +27,8 @@ export const axiosInfo = {
     const runtimeConfig = useRuntimeConfig()
 
     axiosInstance = axios.create({
-      baseURL: runtimeConfig.env.NAVIDROME_API_URL
+      baseURL: runtimeConfig.env.NAVIDROME_API_URL,
+      adapter: fetchAdapter
     })
 
     return axiosInstance
