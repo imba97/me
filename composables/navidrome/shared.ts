@@ -22,11 +22,12 @@ export const navidromeRequest = {
     return response.json()
   },
 
-  async arrayBuffer(url: string, params: Record<string, any> = {}) {
+  async blob(url: string, params: Record<string, any> = {}) {
     const queryString = new URLSearchParams(defu(this.commonOptions, params)).toString()
     const response = await fetch(`${this.baseURL}${url}?${queryString}`, {
       method: 'GET'
     })
-    return response.arrayBuffer()
+
+    return response.blob()
   }
 }
