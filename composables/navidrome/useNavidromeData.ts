@@ -1,4 +1,4 @@
-import { axiosInfo, mergeOptions } from './shared'
+import { navidromeRequest } from './shared'
 
 export default async function () {
   let currentMusic
@@ -28,13 +28,11 @@ export default async function () {
 }
 
 async function getHistory() {
-  const recent = await axiosInfo.instance.post('/getAlbumList.view', null, mergeOptions({
-    params: {
-      type: 'recent',
-      size: 1
-    }
-  }))
-    .then(res => _get(res.data, 'subsonic-response.albumList.album.0'))
+  const recent = await navidromeRequest.get('/getAlbumList.view', {
+    type: 'recent',
+    size: 1
+  })
+    .then(res => _get(res, 'subsonic-response.albumList.album.0'))
 
   if (!recent) {
     return
@@ -74,15 +72,13 @@ async function getHistory() {
 }
 
 async function getPlaying() {
-  return await axiosInfo.instance.post('/getNowPlaying.view', null, axiosInfo.commonOptions)
-    .then(res => _get(res.data, 'subsonic-response.nowPlaying.entry.0', null))
+  return await navidromeRequest.get('/getNowPlaying.view')
+    .then(res => _get(res, 'subsonic-response.nowPlaying.entry.0', null))
 }
 
 async function getAlbum(id: string) {
-  return await axiosInfo.instance.post('/getAlbum.view', null, mergeOptions({
-    params: {
-      id
-    }
-  }))
-    .then(res => _get(res.data, 'subsonic-response.album.song', []))
+  return await navidromeRequest.get('/getAlbum.view', {
+    id
+  })
+    .then(res => _get(res, 'subsonic-response.album.song', []))
 }

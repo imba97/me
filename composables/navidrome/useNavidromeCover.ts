@@ -1,18 +1,15 @@
 import { Buffer } from 'node:buffer'
 
-import { axiosInfo, mergeOptions } from './shared'
+import { navidromeRequest } from './shared'
 
 export default async function (id: string) {
-  const cover = await axiosInfo.instance.post('/getCoverArt.view', null, mergeOptions({
-    params: {
-      id
-    },
-    responseType: 'arraybuffer'
-  }))
+  const cover = await navidromeRequest.arrayBuffer('/getCoverArt.view', {
+    id
+  })
 
-  if (!(cover.data instanceof Buffer)) {
+  if (!(cover instanceof ArrayBuffer)) {
     return ''
   }
 
-  return cover.data
+  return Buffer.from(cover)
 }

@@ -1,48 +1,32 @@
-import axios, { type AxiosInstance, type AxiosRequestConfig } from 'axios'
-import fetchAdapter from '@haverstack/axios-fetch-adapter'
 import defu from 'defu'
 
-let axiosInstance: AxiosInstance | null = null
+const runtimeConfig = useRuntimeConfig()
 
-export const axiosInfo = {
-  get commonOptions() {
-    const runtimeConfig = useRuntimeConfig()
+export const navidromeRequest = {
+  baseURL: runtimeConfig.env.NAVIDROME_API_URL,
 
-    return {
-      params: {
-        u: runtimeConfig.env.NAVIDROME_USERNAME,
-        p: runtimeConfig.env.NAVIDROME_PASSWORD,
-        v: '1.16.1',
-        c: 'my-client',
-        f: 'json'
-      }
-    }
+  commonOptions: {
+    u: runtimeConfig.env.NAVIDROME_USERNAME,
+    p: runtimeConfig.env.NAVIDROME_PASSWORD,
+    v: '1.16.1',
+    c: 'my-client',
+    f: 'json'
   },
 
-  get instance() {
-    if (axiosInstance) {
-      return axiosInstance
-    }
-
-    const runtimeConfig = useRuntimeConfig()
-
-    axiosInstance = axios.create({
-      baseURL: runtimeConfig.env.NAVIDROME_API_URL,
-      adapter: fetchAdapter
+  async get(url: string, params: Record<string, any> = {}) {
+    const queryString = new URLSearchParams(defu(this.commonOptions, params)).toString()
+    const response = await fetch(`${this.baseURL}${url}?${queryString}`, {
+      method: 'GET'
     })
 
-    return axiosInstance
+    return response.json()
   },
 
-  get testEnv() {
-    const runtimeConfig = useRuntimeConfig()
-
-    return {
-      ...runtimeConfig.env
-    }
+  async arrayBuffer(url: string, params: Record<string, any> = {}) {
+    const queryString = new URLSearchParams(defu(this.commonOptions, params)).toString()
+    const response = await fetch(`${this.baseURL}${url}?${queryString}`, {
+      method: 'GET'
+    })
+    return response.arrayBuffer()
   }
-}
-
-export function mergeOptions(...options: AxiosRequestConfig[]) {
-  return defu(axiosInfo.commonOptions, ...options)
 }
