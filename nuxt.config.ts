@@ -1,11 +1,13 @@
 import process from 'node:process'
 
+const isCloudflareMode = process.env.CLOUDFLARE_MODE !== 'false'
+
 export default defineNuxtConfig({
   modules: [
     '@vueuse/nuxt',
     '@unocss/nuxt',
     'floating-vue/nuxt',
-    '@nuxthub/core'
+    ...(isCloudflareMode ? ['@nuxthub/core'] : [])
   ],
 
   lodash: {
@@ -18,9 +20,17 @@ export default defineNuxtConfig({
     '@unocss/reset/tailwind.css'
   ],
 
-  hub: {
-    kv: true
-  },
+  ...(isCloudflareMode
+    ? {
+        hub: {
+          kv: true
+        }
+      }
+    : {
+        nitro: {
+          preset: 'node-server'
+        }
+      }),
 
   imports: {
     dirs: [
