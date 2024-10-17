@@ -1,13 +1,15 @@
 import process from 'node:process'
 
-const isCloudflareMode = process.env.CLOUDFLARE_MODE !== 'false'
+const isCloudflarePagesMode
+  = typeof process.env.BUILD_MODE === 'undefined'
+  || process.env.BUILD_MODE === 'cloudflare-pages'
 
 export default defineNuxtConfig({
   modules: [
     '@vueuse/nuxt',
     '@unocss/nuxt',
     'floating-vue/nuxt',
-    ...(isCloudflareMode ? ['@nuxthub/core'] : [])
+    ...(isCloudflarePagesMode ? ['@nuxthub/core'] : [])
   ],
 
   lodash: {
@@ -20,17 +22,17 @@ export default defineNuxtConfig({
     '@unocss/reset/tailwind.css'
   ],
 
-  ...(isCloudflareMode
+  ...(isCloudflarePagesMode
     ? {
         hub: {
           kv: true
         }
       }
-    : {
-        nitro: {
-          preset: 'node-server'
-        }
-      }),
+    : {}),
+
+  nitro: {
+    preset: process.env.BUILD_MODE
+  },
 
   imports: {
     dirs: [
