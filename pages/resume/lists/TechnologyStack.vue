@@ -21,6 +21,7 @@ const list = [
   { icon: 'i-logos-nestjs', text: 'Nest' },
   { icon: 'i-logos-react', text: 'React' },
   { icon: 'i-logos-php h-8 w-8', text: 'PHP' },
+  { icon: 'i-logos-unity', text: 'Unity 3D' },
   { icon: 'i-logos-c-sharp', text: 'C#' },
   { icon: 'i-logos-swift', text: 'Swift' },
   { icon: 'i-material-symbols-more-horiz', text: '想到再加' }
