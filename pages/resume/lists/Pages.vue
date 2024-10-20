@@ -7,6 +7,22 @@
         </IconText>
       </div>
     </li>
+
+    <li>
+      <div>
+        <IconText src="https://introxd.com/favicon.png" icon-class="size-5" href="https://introxd.com">
+          Introxd 定制个人简介
+        </IconText>
+      </div>
+    </li>
+
+    <li>
+      <div>
+        <IconText src="https://introxd.com/favicon.png" icon-class="size-5" href="https://docs.introxd.com">
+          Introxd 组件库
+        </IconText>
+      </div>
+    </li>
   </BaseList>
 </template>
 
