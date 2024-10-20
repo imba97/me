@@ -2,6 +2,27 @@
   <BaseList>
     <li>
       <div>
+        <span>更方便的初始化工具</span>
+        <IconText :preset="IconTextPreset.Github" href="imba97/initx">
+          initx
+        </IconText>
+        <span>，当你有一台新设备或重装了系统，搭建各种开发环境有大量工作要做，这个工具可以尽可能帮你简化流程。</span>
+        <span>提供插件开发能力</span>
+      </div>
+    </li>
+
+    <li>
+      <div>
+        <span>免安装脚本</span>
+        <IconText :preset="IconTextPreset.Github" href="imba97/iconfontx">
+          iconfontx
+        </IconText>
+        <span>，将 iconfont 的图标生成一个 CSS 文件在本地使用的，自动拉取样式和字体、自动转 base64、自动压缩样式文件</span>
+      </div>
+    </li>
+
+    <li>
+      <div>
         <div>
           <span>可以通过串口发送短信的</span>
           <IconText :preset="IconTextPreset.Github" href="smserialport/smserialport">
@@ -21,22 +42,25 @@
 
     <li>
       <div>
-        <span>免安装脚本</span>
-        <IconText :preset="IconTextPreset.Github" href="imba97/iconfontx">
-          iconfontx
-        </IconText>
-        <span>，将 iconfont 的图标生成一个 CSS 文件在本地使用的，自动拉取样式和字体、自动转 base64、自动压缩样式文件</span>
-      </div>
-    </li>
-
-    <li>
-      <div>
         <span>自动引入 Lodash 的</span>
         <IconText :preset="IconTextPreset.Github" href="imba97/lodash-imports">
           lodash-imports
         </IconText>
         <span>，配合自动引入插件使用，可以配置过滤、前缀。</span>
         <span>内置 Lodash 库，无需额外安装，可以在自动引入插件外使用 Lodash 的函数</span>
+      </div>
+    </li>
+
+    <li>
+      <div>
+        <span>定制个人简介</span>
+        <IconText :preset="IconTextPreset.Github" href="introxd/web">
+          Intro XD
+        </IconText>
+        <span>，个人付费定制简介项目。在做项目时有一些不错的组件，单独抽出来做了</span>
+        <IconText :preset="IconTextPreset.Github" href="introxd/components">
+          组件库
+        </IconText>
       </div>
     </li>
 
