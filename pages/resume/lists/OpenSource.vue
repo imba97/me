@@ -28,7 +28,7 @@
           <IconText :preset="IconTextPreset.Github" href="smserialport/smserialport">
             SMSerialport
           </IconText>
-          <span>，使用 Monorepo 管理项目。实现了中国大陆地区手机号发送短信，封装了适配器接口，可通过实现适配器对接更多国家或地区的发信逻辑</span>
+          <span>。实现了中国大陆地区手机号发送短信，封装了适配器接口，可通过实现适配器对接更多国家或地区的发信逻辑</span>
         </div>
 
         <div>
