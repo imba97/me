@@ -2,12 +2,18 @@
   <BaseList>
     <li>
       <div>
-        <span>更方便的初始化工具</span>
+        <span>更方便的脚本引擎</span>
         <IconText :preset="IconTextPreset.Github" href="imba97/initx">
           initx
         </IconText>
-        <span>，当你有一台新设备或重装了系统，搭建各种开发环境有大量工作要做，这个工具可以尽可能帮你简化流程。</span>
-        <span>提供插件开发能力</span>
+        <span>提供强大的匹配器和插件系统，让脚本开发更简单。提供插件起步模板</span>
+        <IconText :preset="IconTextPreset.Github" href="imba97/initx-plugin-starter">
+          initx-plugin-starter
+        </IconText>
+        <span>详情可查看</span>
+        <IconText icon-class="i-simple-icons-bilibili bg-[#00aeec]" href="https://b23.tv/BV18d1sYrEiU">
+          介绍视频
+        </IconText>
       </div>
     </li>
 
