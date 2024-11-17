@@ -10,7 +10,7 @@
           initx
         </IxIconText>
         <span>提供强大的匹配器和插件系统，让脚本开发更简单。提供插件起步模板</span>
-        <IxIconText :preset="IconTextPreset.Github" href="imba97/initx-plugin-starter">
+        <IxIconText :preset="IconTextPreset.Github" href="initx-collective/initx-plugin-starter">
           initx-plugin-starter
         </IxIconText>
         <span>详情可查看</span>
