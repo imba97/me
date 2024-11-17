@@ -6,7 +6,7 @@
     }
 
     &>div {
-      .icon-text {
+      .ix-icon-text {
         --uno: relative top-0.58;
       }
     }

@@ -1,9 +1,9 @@
 <template>
   <div>
     <div flex="~ wrap">
-      <IconText v-for="item in list" :key="item.text" :font-preset="IconTextFont.None" :icon-class="item.icon">
+      <IxIconText v-for="item in list" :key="item.text" :font-preset="IconTextFont.None" :icon-class="item.icon">
         {{ item.text }}
-      </IconText>
+      </IxIconText>
     </div>
   </div>
 </template>
