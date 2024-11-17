@@ -37,14 +37,14 @@
         </div>
         <Text
           v-if="visibleText" :class="{
-            'music-text': imageLoaded,
+            'music-text': imageLoaded
           }" text="gray-6 center lt-md:8 md:12" w-full h="lt-md:12 md:22" font-bold
         >
           {{ music.name }}
         </Text>
         <Text
           v-if="visibleText" :class="{
-            'music-text': imageLoaded,
+            'music-text': imageLoaded
           }" text="gray-6 center lt-md:4 md:6" w-full h="lt-md:8 md:10"
         >
           {{ music.artist }}

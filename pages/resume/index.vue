@@ -130,12 +130,12 @@
 </template>
 
 <script lang="ts" setup>
-import TechnologyStack from './lists/TechnologyStack.vue'
-import Company from './lists/Company.vue'
-import OpenSource from './lists/OpenSource.vue'
-import Gadgets from './lists/Gadgets.vue'
 import BlogArchives from './lists/BlogArchives.vue'
+import Company from './lists/Company.vue'
+import Gadgets from './lists/Gadgets.vue'
+import OpenSource from './lists/OpenSource.vue'
 import Pages from './lists/Pages.vue'
+import TechnologyStack from './lists/TechnologyStack.vue'
 
 const music = reactive({
   playing: false,

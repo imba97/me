@@ -1,5 +1,5 @@
-import process from 'node:process'
 import { spawn } from 'node:child_process'
+import process from 'node:process'
 
 const child = spawn('npx', ['nuxi', 'build'], {
   env: process.env

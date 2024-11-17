@@ -9,10 +9,10 @@
  *   - add nuxt-lodash modules to nuxt.config.ts
  */
 
-import { addImports, createResolver, defineNuxtModule } from 'nuxt/kit'
+import type { Import } from 'unimport'
 import * as lodash from 'lodash-es'
 
-import type { Import } from 'unimport'
+import { addImports, createResolver, defineNuxtModule } from 'nuxt/kit'
 
 import excludeDefaults from './exclude'
 
