@@ -25,3 +25,5 @@ logs
 
 .eslintcache
 eslint.config.js
+
+.wrangler
