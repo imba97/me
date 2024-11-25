@@ -12,18 +12,7 @@ interface Result {
   data?: MusicInfo
 }
 
-export default defineEventHandler(async (): Promise<Result> => {
-  const kv = hubKV()
-  const hasCache = await kv.has('playing')
-
-  if (hasCache) {
-    const data = (await kv.get<MusicInfo>('playing'))!
-    return {
-      success: true,
-      data
-    }
-  }
-
+export default cachedEventHandler(async (): Promise<Result> => {
   try {
     const navidromeData = await useNavidromeData()
 
@@ -38,10 +27,6 @@ export default defineEventHandler(async (): Promise<Result> => {
       albumCover: _get(navidromeData.data, 'albumCover', '')
     }
 
-    kv.set('playing', result, {
-      ttl: 10
-    })
-
     return {
       success: true,
       data: result
@@ -49,9 +34,14 @@ export default defineEventHandler(async (): Promise<Result> => {
   }
   // eslint-disable-next-line unused-imports/no-unused-vars
   catch (error) {
-    kv.del('playing')
+    await useStorage('cache').remove('navidrome:getPlaying:playing.json')
     return {
       success: false
     }
   }
+}, {
+  group: 'navidrome',
+  name: 'getPlaying',
+  maxAge: 10,
+  getKey: () => 'playing'
 })
