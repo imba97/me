@@ -1,7 +1,5 @@
 import useNavidromeData from '~/composables/navidrome/useNavidromeData'
 
-let cache: MusicInfo | null = null
-
 interface MusicInfo {
   playing: boolean
   name: string
@@ -15,10 +13,14 @@ interface Result {
 }
 
 export default defineEventHandler(async (): Promise<Result> => {
-  if (cache) {
+  const kv = hubKV()
+  const hasCache = await kv.has('playing')
+
+  if (hasCache) {
+    const data = (await kv.get<MusicInfo>('playing'))!
     return {
       success: true,
-      data: cache
+      data
     }
   }
 
@@ -29,25 +31,25 @@ export default defineEventHandler(async (): Promise<Result> => {
       return navidromeData
     }
 
-    cache = {
+    const result: MusicInfo = {
       playing: _get(navidromeData.data, 'playing', false),
       name: _get(navidromeData.data, 'title', ''),
       artist: _get(navidromeData.data, 'artist', ''),
       albumCover: _get(navidromeData.data, 'albumCover', '')
     }
 
-    setTimeout(() => {
-      cache = null
-    }, 10000)
+    kv.set('playing', result, {
+      ttl: 10
+    })
 
     return {
       success: true,
-      data: cache
+      data: result
     }
   }
   // eslint-disable-next-line unused-imports/no-unused-vars
   catch (error) {
-    cache = null
+    kv.del('playing')
     return {
       success: false
     }
