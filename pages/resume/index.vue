@@ -1,8 +1,8 @@
 <template>
-  <div class="main" h-full w-full px-7 py-10 of-x-hidden>
+  <div class="main" size-full px-7 py-10 of-x-hidden>
     <div prose ma>
-      <div mb-6 flex items-center gap-4>
-        <div h-14 w-14>
+      <div mb-6 fyc gap-4>
+        <div size-14>
           <img src="/favicon.png">
         </div>
         <div text-8 font-thin bg-clip-text text-transparent bg-gradient-to-tr from="#bd34fe" to="#47caff">
@@ -14,7 +14,7 @@
             :distance="16" :skidding="isMobile ? 0 : 100" :triggers="['hover', 'click']"
             :placement="isMobile ? undefined : 'right'"
           >
-            <div i-ph-music-note-simple-duotone h-6 w-6 animate-pulse bg-gradient-to-tr from="#bd34fe" to="#47caff" />
+            <div i-ph-music-note-simple-duotone size-6 animate-pulse bg-gradient-to-tr from="#bd34fe" to="#47caff" />
 
             <template #popper>
               <div relative p-3 min-w-56 max-w-64 of-hidden>
@@ -22,11 +22,14 @@
                   <img v-show="music.image !== ''" :src="music.image" h-24 w-full>
                 </div>
 
-                <div mt-6 flex="~ col" items-center justify-center text-center>
+                <div mt-6 fccc text-center>
                   <div flex="~ col" items-center gap-2>
-                    <div flex items-center justify-center h-32 w-32>
-                      <img v-if="imageLoaded && music.image !== ''" :src="music.image" rounded-full animate-spin animate-duration-30000>
-                      <div v-else i-line-md-loading-loop h-12 w-12 bg-gray />
+                    <div fcc size-32>
+                      <img
+                        v-if="imageLoaded && music.image !== ''" :src="music.image" rounded-full animate-spin
+                        animate-duration-30000
+                      >
+                      <div v-else i-line-md-loading-loop size-12 bg-gray />
                     </div>
                   </div>
 
