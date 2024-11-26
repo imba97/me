@@ -115,7 +115,7 @@
         </div>
 
         <div mt-2>
-          <Pages />
+          <Pages :music />
         </div>
       </div>
 
@@ -133,6 +133,8 @@
 </template>
 
 <script lang="ts" setup>
+import type { MusicInfo } from './types'
+
 import BlogArchives from './lists/BlogArchives.vue'
 import Company from './lists/Company.vue'
 import Gadgets from './lists/Gadgets.vue'
@@ -140,7 +142,7 @@ import OpenSource from './lists/OpenSource.vue'
 import Pages from './lists/Pages.vue'
 import TechnologyStack from './lists/TechnologyStack.vue'
 
-const music = reactive({
+const music = reactive<MusicInfo>({
   playing: false,
   name: '',
   artist: '',
