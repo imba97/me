@@ -8,6 +8,8 @@ import {
   transformerVariantGroup
 } from 'unocss'
 
+import { presetUseful } from 'unocss-preset-useful'
+
 export default defineConfig({
   theme: {
     colors: {
@@ -18,6 +20,7 @@ export default defineConfig({
   },
   presets: [
     presetUno(),
+    presetUseful(),
     presetAttributify(),
     presetIcons({
       scale: 1.2
