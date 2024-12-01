@@ -1,3 +1,4 @@
+import sharp from 'sharp'
 import { navidromeRequest } from './shared'
 
 export default async function (id: string) {
@@ -9,5 +10,6 @@ export default async function (id: string) {
     return ''
   }
 
-  return cover
+  // TODO: 待测试
+  return sharp(await cover.arrayBuffer()).resize(300, 300).toBuffer()
 }
