@@ -5,6 +5,7 @@
         <IxIconText
           :icon-class="[
             'size-6.25 rounded-full',
+            props.music.image === '' ? 'i-ph-music-note-simple-duotone' : '',
             props.music.playing ? 'animate-spin animate-duration-30000' : ''
           ].join(' ')" :src="props.music.image" href="/playing"
         >
@@ -44,7 +45,7 @@ const props = defineProps<{
   music: MusicInfo
 }>()
 
-const visiblePlayingMusic = ref(false)
+const visiblePlayingMusic = ref(true)
 
 watch(() => props.music, () => {
   visiblePlayingMusic.value = false
