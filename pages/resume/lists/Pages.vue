@@ -36,7 +36,7 @@
 </template>
 
 <script lang="ts" setup>
-import type { MusicInfo } from '../types'
+import type { MusicInfo } from '@/types/playing'
 
 import BaseList from './BaseList.vue'
 

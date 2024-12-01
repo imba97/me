@@ -133,7 +133,7 @@
 </template>
 
 <script lang="ts" setup>
-import type { MusicInfo } from './types'
+import type { MusicInfo } from '@/types/playing'
 
 import BlogArchives from './lists/BlogArchives.vue'
 import Company from './lists/Company.vue'
