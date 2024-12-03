@@ -5,8 +5,8 @@
         <IxIconText
           :icon-class="[
             'size-6.25 rounded-full',
-            props.music.image === '' ? 'i-ph-music-note-simple-duotone' : '',
-            props.music.playing ? 'animate-spin animate-duration-30000' : ''
+            !hasImage ? 'i-ph-music-note-simple-duotone' : '',
+            props.music.playing && hasImage ? 'animate-spin animate-duration-30000' : ''
           ].join(' ')" :src="props.music.image" href="/playing"
         >
           我正在听的音乐
@@ -46,6 +46,8 @@ const props = defineProps<{
 }>()
 
 const visiblePlayingMusic = ref(true)
+
+const hasImage = computed(() => props.music.image !== '')
 
 watch(() => props.music, () => {
   visiblePlayingMusic.value = false
