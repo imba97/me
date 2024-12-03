@@ -42,8 +42,7 @@ export default defineNuxtConfig({
 
   imports: {
     dirs: [
-      'composables/**/use*.ts',
-      '.auto-import/*.ts'
+      'composables/**'
     ],
     imports: [
       ...[
