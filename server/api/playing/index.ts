@@ -42,5 +42,6 @@ export default cachedEventHandler(async (): Promise<Result> => {
 }, {
   group: 'navidrome',
   name: 'getPlaying',
+  maxAge: 5,
   getKey: () => 'playing'
 })
