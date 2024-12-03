@@ -155,7 +155,7 @@ const imageLoaded = ref(false)
 
 let requestTimer: NodeJS.Timeout | null = null
 
-let lastGetMusicTime = new Date().getTime()
+let lastGetMusicTime = 0
 
 const visible = useDocumentVisibility()
 
