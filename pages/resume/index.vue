@@ -149,20 +149,22 @@ const music = reactive<MusicInfo>({
   image: ''
 })
 
+const GET_MUSIC_DELAY = 10000
+
 const imageLoaded = ref(false)
 
 let requestTimer: NodeJS.Timeout | null = null
+
+let lastGetMusicTime = new Date().getTime()
+
+const visible = useDocumentVisibility()
 
 const windowWidth = ref(0)
 
 const isMobile = computed(() => windowWidth.value < 670)
 
 onNuxtReady(async () => {
-  getMusic()
-
-  requestTimer = setInterval(() => {
-    getMusic()
-  }, 10000)
+  startMusicInfoRequest()
 })
 
 onMounted(() => {
@@ -179,16 +181,48 @@ onUnmounted(() => {
   }
 })
 
+watch(visible, () => {
+  if (visible.value === 'visible') {
+    startMusicInfoRequest()
+  }
+  else {
+    if (requestTimer) {
+      clearInterval(requestTimer)
+      requestTimer = null
+    }
+  }
+})
+
+function startMusicInfoRequest() {
+  if (requestTimer) {
+    return
+  }
+
+  getMusic()
+
+  requestTimer = setInterval(() => {
+    getMusic()
+  }, GET_MUSIC_DELAY)
+}
+
 function onResize() {
   windowWidth.value = window.innerWidth
 }
 
 async function getMusic() {
+  const now = new Date().getTime()
+
+  if (lastGetMusicTime + GET_MUSIC_DELAY > now) {
+    return
+  }
+
   const response = await $fetch('/api/playing')
 
   if (!response.success) {
     return
   }
+
+  lastGetMusicTime = new Date().getTime()
 
   const data = response.data!
 
