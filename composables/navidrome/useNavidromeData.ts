@@ -22,7 +22,7 @@ export default async function () {
     data: {
       ...currentMusic,
       playing,
-      albumCover: `/api/navidrome/album-cover/${currentMusic.coverArt}`
+      albumCover: `/api/navidrome/album-cover/${currentMusic.id}`
     }
   }
 }
