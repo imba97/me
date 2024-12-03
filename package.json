@@ -27,7 +27,7 @@
   },
   "devDependencies": {
     "@cloudflare/workers-types": "^4.20241202.0",
-    "@iconify/json": "^2.2.278",
+    "@iconify/json": "^2.2.279",
     "@imba97/eslint-config": "^0.0.5",
     "@types/fs-extra": "^11.0.4",
     "@types/lodash-es": "^4.17.12",
