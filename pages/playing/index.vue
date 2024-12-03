@@ -102,13 +102,13 @@ onUnmounted(() => {
 })
 
 async function getMusic() {
-  const response = await useFetch('/api/playing')
+  const response = await $fetch('/api/playing')
 
-  if (!_get(response.data.value, 'success')) {
+  if (!response.success) {
     return
   }
 
-  const data = response.data.value!.data!
+  const data = response.data!
 
   if (!data.name || !data.artist) {
     return
