@@ -1,4 +1,3 @@
-import sharp from 'sharp'
 import { navidromeRequest } from './shared'
 
 export default async function (id: string) {
@@ -11,12 +10,5 @@ export default async function (id: string) {
     return ''
   }
 
-  const buffer = await cover.arrayBuffer()
-
-  const compressed = sharp(buffer).webp({
-    quality: 50,
-    effort: 6
-  }).toBuffer()
-
-  return compressed
+  return cover
 }
