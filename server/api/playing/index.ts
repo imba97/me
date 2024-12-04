@@ -12,7 +12,7 @@ interface Result {
   data?: MusicInfo
 }
 
-export default cachedEventHandler(async (): Promise<Result> => {
+export default defineEventHandler(async (): Promise<Result> => {
   try {
     const navidromeData = await useNavidromeData()
 
@@ -39,9 +39,4 @@ export default cachedEventHandler(async (): Promise<Result> => {
       success: false
     }
   }
-}, {
-  group: 'navidrome',
-  name: 'getPlaying',
-  maxAge: 30,
-  getKey: () => 'playing'
 })
