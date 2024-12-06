@@ -38,11 +38,13 @@
                   </div>
 
                   <div mt-2>
-                    <div
-                      p-2 break-all text-8 font-bold bg-clip-text text-transparent bg-gradient-to-tr from="#bd34fe"
-                      to="#47caff"
-                    >
-                      {{ music.name }}
+                    <div p-2>
+                      <Text
+                        w-58 text-class="text-8 font-bold bg-clip-text text-transparent bg-gradient-to-tr from-[#bd34fe]
+                      to-[#47caff]"
+                      >
+                        {{ music.name }}
+                      </Text>
                     </div>
                     <div text="3.5 gray-3">
                       {{ music.artist }}

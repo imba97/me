@@ -60,8 +60,6 @@
 </template>
 
 <script lang="ts" setup>
-import { nextTick, reactive, ref, watch } from 'vue'
-
 import { createRipples } from '~/utils/effects/ripples'
 
 const playing = ref(false)
@@ -78,10 +76,6 @@ const music = reactive({
 let stopRipples: () => void
 
 let requestTimer: NodeJS.Timeout | null = null
-
-watch(music, () => {
-  resetText()
-})
 
 onNuxtReady(() => {
   stopRipples = createRipples('ripples')
@@ -136,12 +130,5 @@ async function getMusic() {
       music.image = ''
     })
   }
-}
-
-function resetText() {
-  visibleText.value = false
-  nextTick(() => {
-    visibleText.value = true
-  })
 }
 </script>
