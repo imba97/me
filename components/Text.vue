@@ -3,16 +3,18 @@
   white-space: nowrap;
   overflow: hidden;
   position: relative;
-
-  /* 渐隐效果 */
-  mask: linear-gradient(to right, transparent, black 20%, black 80%, transparent);
-  -webkit-mask: linear-gradient(to right, transparent, black 20%, black 80%, transparent);
 }
 
 .marquee span.overflow {
   display: inline-block;
   padding-left: 100%;
   animation: marquee 10s linear infinite;
+}
+
+.gradually-hides {
+  /* 渐隐效果 */
+  mask: linear-gradient(to right, transparent, black 20%, black 80%, transparent);
+  -webkit-mask: linear-gradient(to right, transparent, black 20%, black 80%, transparent);
 }
 
 @keyframes marquee {
@@ -27,8 +29,17 @@
 </style>
 
 <template>
-  <div ref="marquee" class="marquee" of-hidden>
-    <span v-if="visible" ref="text" :class="props.textClass">
+  <div
+    ref="marquee" class="marquee" :class="{
+      'gradually-hides': isOverflowing
+    }" of-hidden
+  >
+    <span
+      v-if="visible" ref="text" :class="[
+        props.textClass,
+        isOverflowing ? 'overflow' : ''
+      ]"
+    >
       <slot />
     </span>
   </div>
@@ -44,9 +55,12 @@ const props = defineProps<{
 const slots = useSlots()
 
 const visible = ref(true)
+const isOverflowing = ref(false)
 
 const marquee = ref<HTMLDivElement | null>(null)
 const text = ref<HTMLSpanElement | null>(null)
+
+let observer: ResizeObserver | null = null
 
 watch(() => _get(slots.default?.(), '0.children'), () => {
   reset()
@@ -54,6 +68,19 @@ watch(() => _get(slots.default?.(), '0.children'), () => {
 
 onMounted(() => {
   checkOverflow()
+
+  observer = new ResizeObserver(() => {
+    reset()
+  })
+
+  observer.observe(marquee.value!)
+})
+
+onUnmounted(() => {
+  if (observer) {
+    observer.disconnect()
+    observer = null
+  }
 })
 
 function checkOverflow() {
@@ -62,10 +89,10 @@ function checkOverflow() {
   }
 
   if (text.value.offsetWidth > marquee.value.offsetWidth) {
-    text.value.classList.add('overflow')
+    isOverflowing.value = true
   }
   else {
-    text.value.classList.remove('overflow')
+    isOverflowing.value = false
   }
 }
 
@@ -74,9 +101,8 @@ function reset() {
     return
   }
 
-  text.value.classList.remove('overflow')
-
   visible.value = false
+  isOverflowing.value = false
 
   nextTick(() => {
     visible.value = true
