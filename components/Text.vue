@@ -24,7 +24,7 @@
 
 <template>
   <div ref="marquee" class="marquee" of-hidden>
-    <span ref="text">
+    <span v-if="visible" ref="text" :class="props.textClass">
       <slot />
     </span>
   </div>
@@ -33,8 +33,20 @@
 <script lang="ts" setup>
 import { onMounted, ref } from 'vue'
 
+const props = defineProps<{
+  textClass?: string
+}>()
+
+const slots = useSlots()
+
+const visible = ref(true)
+
 const marquee = ref<HTMLDivElement | null>(null)
 const text = ref<HTMLSpanElement | null>(null)
+
+watch(() => _get(slots.default?.(), '0.children'), () => {
+  reset()
+})
 
 onMounted(() => {
   checkOverflow()
@@ -51,5 +63,23 @@ function checkOverflow() {
   else {
     text.value.classList.remove('overflow')
   }
+}
+
+function reset() {
+  if (!text.value) {
+    return
+  }
+
+  text.value.classList.remove('overflow')
+
+  visible.value = false
+
+  nextTick(() => {
+    visible.value = true
+
+    nextTick(() => {
+      checkOverflow()
+    })
+  })
 }
 </script>
