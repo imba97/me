@@ -3,6 +3,10 @@
   white-space: nowrap;
   overflow: hidden;
   position: relative;
+
+  /* 渐隐效果 */
+  mask: linear-gradient(to right, transparent, black 20%, black 80%, transparent);
+  -webkit-mask: linear-gradient(to right, transparent, black 20%, black 80%, transparent);
 }
 
 .marquee span.overflow {
