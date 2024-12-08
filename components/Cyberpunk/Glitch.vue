@@ -69,7 +69,7 @@
 </style>
 
 <template>
-  <div class="text-container" pr text-8>
+  <div class="text-container" pr>
     <div
       pr class="text"
       :class="isPlaying ? 'animate-glitch animate-flash animate-duration-300 animate-count-infinite' : ''"
