@@ -14,7 +14,7 @@
           initx-plugin-starter
         </IxIconText>
         <span>详情可查看</span>
-        <IxIconText icon-class="i-simple-icons-bilibili bg-[#00aeec]" href="https://b23.tv/BV18d1sYrEiU">
+        <IxIconText :preset="IconTextPreset.Bilibili" href="BV18d1sYrEiU">
           介绍视频
         </IxIconText>
       </div>
