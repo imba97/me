@@ -1,6 +1,8 @@
 <style lang="scss" scoped>
 .common-list {
   :deep(li) {
+    --uno: leading-7.5;
+
     &+li {
       --uno: mt-4;
     }
