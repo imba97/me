@@ -13,7 +13,7 @@ export const useMusic = defineStore('music', {
     async fetchMusic() {
       const now = new Date().getTime()
 
-      if (this.lastFetchTime + this.fetchInterval > now) {
+      if (this.lastFetchTime + (this.fetchInterval - 1000) > now) {
         return
       }
 

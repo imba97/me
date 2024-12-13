@@ -146,17 +146,9 @@ import TechnologyStack from './lists/TechnologyStack.vue'
 
 const music = useMusic()
 
-let requestTimer: NodeJS.Timeout | null = null
-
-const visible = useDocumentVisibility()
-
 const windowWidth = ref(0)
 
 const isMobile = computed(() => windowWidth.value < 670)
-
-onNuxtReady(async () => {
-  startMusicInfoRequest()
-})
 
 onMounted(() => {
   windowWidth.value = window.innerWidth
@@ -165,36 +157,7 @@ onMounted(() => {
 
 onUnmounted(() => {
   window.removeEventListener('resize', onResize)
-
-  if (requestTimer) {
-    clearInterval(requestTimer)
-    requestTimer = null
-  }
 })
-
-watch(visible, () => {
-  if (visible.value === 'visible') {
-    startMusicInfoRequest()
-  }
-  else {
-    if (requestTimer) {
-      clearInterval(requestTimer)
-      requestTimer = null
-    }
-  }
-})
-
-function startMusicInfoRequest() {
-  if (requestTimer) {
-    return
-  }
-
-  music.fetchMusic()
-
-  requestTimer = setInterval(() => {
-    music.fetchMusic()
-  }, music.fetchInterval)
-}
 
 function onResize() {
   windowWidth.value = window.innerWidth

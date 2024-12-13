@@ -71,24 +71,8 @@ const music = useMusic()
 
 let stopRipples: () => void
 
-let requestTimer: NodeJS.Timeout | null = null
-
 onNuxtReady(() => {
   stopRipples = createRipples('ripples')
-
-  music.fetchMusic()
-
-  // 10 秒获取一次
-  requestTimer = setInterval(() => {
-    music.fetchMusic()
-  }, music.fetchInterval)
-})
-
-onUnmounted(() => {
-  if (requestTimer) {
-    clearInterval(requestTimer)
-    requestTimer = null
-  }
 })
 
 function onLoadImage() {
