@@ -14,6 +14,7 @@ export default defineNuxtConfig({
   modules: [
     '@vueuse/nuxt',
     '@unocss/nuxt',
+    '@pinia/nuxt',
     'floating-vue/nuxt',
     ...(isCloudflarePagesMode ? ['@nuxthub/core'] : [])
   ],
