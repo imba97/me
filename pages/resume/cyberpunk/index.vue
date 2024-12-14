@@ -2,9 +2,7 @@
   <div size-full px-7 py-10 of-x-hidden bg-slate-950>
     <div prose ma>
       <div mb-6 fyc gap-4>
-        <div size-14>
-          <img src="/favicon.png">
-        </div>
+        <Avatar size-14 />
         <CyberpunkGlitch>
           <div text-8 font-thin bg-clip-text text-transparent bg-gradient-to-tr from="#bd34fe" to="#47caff">
             imba久期
