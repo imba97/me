@@ -1,6 +1,21 @@
 <template>
   <BaseList>
     <li>
+      <div pr top-1>
+        <IxIconText
+          icon-class="i-mynaui-tool text-white size-6" href="#"
+          bg-slate-950
+          hover="bg-slate-950! bg-opacity-70!"
+          @click.stop="router.push('/resume/cyberpunk')"
+        >
+          <IxCyberpunkGlitch>
+            <span text-white>赛博朋克页面</span>
+          </IxCyberpunkGlitch>
+        </IxIconText>
+      </div>
+    </li>
+
+    <li>
       <div v-if="visiblePlayingMusic" pr top-1 fyc gap-1>
         <IxIconText
           :icon-class="[
@@ -38,6 +53,8 @@
 
 <script lang="ts" setup>
 import BaseList from './BaseList.vue'
+
+const router = useRouter()
 
 const music = useMusic()
 
