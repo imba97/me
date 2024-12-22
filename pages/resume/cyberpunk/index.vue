@@ -1,5 +1,8 @@
 <template>
   <div class="dark" size-full px-7 py-10 of-x-hidden bg-slate-950>
+    <div inline-block p-1 rounded-full bg="white opacity-75" @click="router.push('/resume')">
+      <div i-ic-round-arrow-back size-5 />
+    </div>
     <template v-if="loading">
       <div fcc>
         <div i-eos-icons-loading size-8 bg-gray />
@@ -31,6 +34,7 @@
 import Avatar from './Avatar.vue'
 import Masks from './masks/index.vue'
 
+const router = useRouter()
 const loading = ref(true)
 
 onNuxtReady(() => {
