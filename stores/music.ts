@@ -39,8 +39,8 @@ export const useMusic = defineStore('music', {
       if (data.albumCover && data.albumCover !== this.image) {
         this.imageLoaded = false
 
-        useLoadImage(data.albumCover).then(() => {
-          this.image = data.albumCover!
+        useLoadImage(data.albumCover).then((albumCover) => {
+          this.image = albumCover
           this.imageLoaded = true
         }).catch(() => {
           this.imageLoaded = false
