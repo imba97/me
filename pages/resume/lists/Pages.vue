@@ -6,14 +6,14 @@
           :icon-class="[
             'size-6.25 rounded-full',
             !hasImage ? 'i-ph-music-note-simple-duotone' : '',
-            props.music.playing && hasImage ? 'animate-spin animate-duration-30000' : ''
-          ].join(' ')" :src="props.music.image" href="/playing"
+            music.playing && hasImage ? 'animate-spin animate-duration-30000' : ''
+          ].join(' ')" :src="music.image" href="/playing"
         >
           我正在听的音乐
         </IxIconText>
 
-        <div v-show="props.music.playing" pr top="0.5" text="3 gray-3">
-          ( {{ props.music.name }} - {{ props.music.artist }} )
+        <div v-show="music.playing" pr top="0.5" text="3 gray-3">
+          ( {{ music.name }} - {{ music.artist }} )
         </div>
       </div>
     </li>
@@ -37,19 +37,15 @@
 </template>
 
 <script lang="ts" setup>
-import type { MusicInfo } from '@/types/playing'
-
 import BaseList from './BaseList.vue'
 
-const props = defineProps<{
-  music: MusicInfo
-}>()
+const music = useMusic()
 
 const visiblePlayingMusic = ref(true)
 
-const hasImage = computed(() => props.music.image !== '')
+const hasImage = computed(() => music.image !== '')
 
-watch(() => props.music, () => {
+watch(() => music, () => {
   visiblePlayingMusic.value = false
   nextTick(() => {
     visiblePlayingMusic.value = true

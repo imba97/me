@@ -119,7 +119,7 @@
         </div>
 
         <div mt-2>
-          <Pages :music />
+          <Pages />
         </div>
       </div>
 
