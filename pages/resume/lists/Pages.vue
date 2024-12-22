@@ -12,7 +12,7 @@
           我正在听的音乐
         </IxIconText>
 
-        <div v-show="music.playing" pr top="0.5" text="3 gray-3">
+        <div v-show="music.playing" pr top="0.5" text="3 gray-3" lt-md:hidden md:block>
           ( {{ music.name }} - {{ music.artist }} )
         </div>
       </div>
