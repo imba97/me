@@ -35,6 +35,9 @@
     <div pxc w="lt-md:full md:prose">
       <div h-72 />
 
+      <LeftSide />
+      <RightSide />
+
       <LightMaskProvider :src="background1" :size="[4, 4]">
         <div>
           <div pr fyc justify-between>
@@ -56,7 +59,7 @@
             </div>
 
             <div>
-              <LightMask :position="[1, 3]" mask-class="bg-[#54eff4]" rotate-40 class="lt-md:size-25 md:size-50" />
+              <LightMask :position="[1, 3]" mask-class="bg-[#54eff4]" rotate-40 class="lt-md:size-32 md:size-50" />
             </div>
 
             <div pa bottom-0>
@@ -104,7 +107,7 @@
 
       <LightMaskProvider :src="background1" :size="[4, 4]">
         <div fyc justify-between mt-32>
-          <LightMask :position="[2, 1]" mask-class="bg-amber" class="lt-md:size-40 md:size-50" />
+          <LightMask :position="[2, 1]" mask-class="bg-amber" lt-md="pr left--10 size-40" md:size-50 />
 
           <div h-16 pr>
             <div pa top-0 right-0>
@@ -124,11 +127,11 @@
       <LightMaskProvider :src="background2" :size="[4, 4]">
         <div pr h="lt-md:40 md:48">
           <div pxc top-0>
-            <LightMask :position="[2, 4]" mask-class="bg-[#33a474]" rotate-10 class="lt-md:size-72 md:size-84" />
+            <LightMask :position="[2, 4]" mask-class="bg-[#33a474]" rotate-10 lt-md:size-72 md:size-84 />
           </div>
 
           <div pxc top--16>
-            <LightMask :position="[2, 3]" mask-class="bg-[#00aeec]" size-30 />
+            <LightMask :position="[2, 3]" mask-class="bg-[#00aeec]" pr lt-md="left--5 top--10 size-32" md="top--12 size-48" />
           </div>
 
           <div pa top-68 w-full flex justify-between>
@@ -162,7 +165,9 @@
 </template>
 
 <script setup lang="ts">
+import LeftSide from './LeftSide.vue'
 import Mask97 from './Mask97.vue'
+import RightSide from './RightSide.vue'
 
 const background1 = ref('')
 const background2 = ref('')
