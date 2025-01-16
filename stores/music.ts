@@ -4,6 +4,7 @@ export const useMusic = defineStore('music', {
     name: '',
     artist: '',
     image: '',
+    blobImage: '',
     imageLoaded: false,
     lastFetchTime: 0,
     fetchInterval: 10000
@@ -39,12 +40,15 @@ export const useMusic = defineStore('music', {
       if (data.albumCover && data.albumCover !== this.image) {
         this.imageLoaded = false
 
+        this.image = data.albumCover
+
         useLoadImage(data.albumCover).then((albumCover) => {
-          this.image = albumCover
+          this.blobImage = albumCover
           this.imageLoaded = true
         }).catch(() => {
           this.imageLoaded = false
           this.image = ''
+          this.blobImage = ''
         })
       }
     }
