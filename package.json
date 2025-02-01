@@ -12,7 +12,7 @@
     "preview": "pnpm build && npx nuxthub preview",
     "start-docker": "nuxt start --hostname 0.0.0.0 --port $NUXT_PORT",
     "release": "bumpp",
-    "lint": "eslint --cache --flag unstable_ts_config"
+    "lint": "eslint --cache"
   },
   "dependencies": {
     "@introxd/components": "^0.0.8",
@@ -55,6 +55,6 @@
     "pre-commit": "pnpm lint-staged"
   },
   "lint-staged": {
-    "*": "eslint --cache --flag unstable_ts_config --fix"
+    "*": "eslint --cache --fix"
   }
 }
