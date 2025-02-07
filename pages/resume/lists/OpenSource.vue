@@ -4,7 +4,7 @@
       <div>
         <span>更方便的脚本引擎</span>
         <IxIconText
-          :preset="IconTextPreset.Initx" icon-class="i-mdi-github bg-[#f4cb25] size-6"
+          :preset="IconTextPreset.Initx" icon-class="i-mdi-github bg-[#f4cb25] size-5.5!"
           href="https://github.com/initx-collective/initx"
         >
           initx
@@ -69,6 +69,19 @@
         <span>，个人付费定制简介项目。在做项目时有一些不错的组件，单独抽出来做了</span>
         <IxIconText :preset="IconTextPreset.Github" href="introxd/components">
           组件库
+        </IxIconText>
+      </div>
+    </li>
+
+    <li>
+      <div>
+        <span>饥荒联机版菜谱速查工具</span>
+        <IxIconText :preset="IconTextPreset.Github" href="imba97/dst-recipe">
+          dst-recipe
+        </IxIconText>
+        <span>，通过菜谱名称或拼音查询制作条件，可以在这里使用</span>
+        <IxIconText icon-class="i-material-symbols-light-document-search-outline size-5.5!" href="https://dst-recipe.netlify.app/">
+          菜谱速查
         </IxIconText>
       </div>
     </li>
