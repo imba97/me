@@ -94,7 +94,7 @@
           </div>
 
           <div pa top--16 left-0>
-            <LightMask :position="[3, 1]" mask-class="bg-[#ff17f9]" class="lt-md:size-28 md:size-32" />
+            <LightMask :position="[1, 2]" mask-class="bg-[#ff17f9]" rotate--30 class="lt-md:size-28 md:size-32" />
           </div>
 
           <div pxc>
