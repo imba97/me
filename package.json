@@ -1,7 +1,7 @@
 {
   "name": "imba97-me",
   "type": "module",
-  "version": "0.0.32",
+  "version": "0.0.33",
   "private": true,
   "packageManager": "pnpm@10.2.1",
   "scripts": {
@@ -10,6 +10,7 @@
     "dev": "nuxt dev --dotenv .env.local",
     "build": "esno scripts/build.ts",
     "preview": "pnpm build && npx nuxthub preview",
+    "db:generate": "drizzle-kit generate",
     "start-docker": "nuxt start --hostname 0.0.0.0 --port $NUXT_PORT",
     "release": "bumpp",
     "lint": "eslint --cache"
@@ -23,6 +24,7 @@
     "@vueuse/core": "^12.5.0",
     "@vueuse/nuxt": "^12.5.0",
     "defu": "^6.1.4",
+    "drizzle-orm": "^0.38.4",
     "floating-vue": "^5.2.2",
     "nuxt": "^3.15.4",
     "pinia": "^2.3.1",
@@ -36,6 +38,7 @@
     "@types/fs-extra": "^11.0.4",
     "@types/lodash-es": "^4.17.12",
     "bumpp": "^10.0.2",
+    "drizzle-kit": "^0.30.2",
     "eslint": "^9.19.0",
     "eslint-plugin-unused-imports": "^4.1.4",
     "esno": "^4.8.0",
