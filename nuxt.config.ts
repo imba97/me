@@ -8,7 +8,7 @@ const r = (path: string) => fileURLToPath(new URL(path, import.meta.url))
 
 const isCloudflarePagesMode
   = typeof process.env.BUILD_MODE === 'undefined'
-  || process.env.BUILD_MODE === 'cloudflare-pages'
+    || process.env.BUILD_MODE === 'cloudflare-pages'
 
 export default defineNuxtConfig({
   modules: [
@@ -60,7 +60,9 @@ export default defineNuxtConfig({
     env: {
       NAVIDROME_API_URL: process.env.NAVIDROME_API_URL,
       NAVIDROME_USERNAME: process.env.NAVIDROME_USERNAME,
-      NAVIDROME_PASSWORD: process.env.NAVIDROME_PASSWORD
+      NAVIDROME_PASSWORD: process.env.NAVIDROME_PASSWORD,
+      STEAM_API_KEY: process.env.STEAM_API_KEY,
+      STEAM_ID: process.env.STEAM_ID
     } as Record<string, string>
   },
 
