@@ -3,7 +3,7 @@
   "type": "module",
   "version": "0.0.33",
   "private": true,
-  "packageManager": "pnpm@10.5.2",
+  "packageManager": "pnpm@10.6.2",
   "scripts": {
     "prepare": "simple-git-hooks && nuxt prepare",
     "p": "nuxt prepare",
@@ -17,29 +17,29 @@
   },
   "dependencies": {
     "@introxd/components": "^0.0.9",
-    "@nuxthub/core": "^0.8.17",
+    "@nuxthub/core": "^0.8.18",
     "@pinia/nuxt": "^0.10.1",
     "@unocss/nuxt": "^66.0.0",
     "@unocss/reset": "^66.0.0",
-    "@vueuse/core": "^12.7.0",
-    "@vueuse/nuxt": "^12.7.0",
+    "@vueuse/core": "^13.0.0",
+    "@vueuse/nuxt": "^13.0.0",
     "defu": "^6.1.4",
     "drizzle-orm": "^0.40.0",
     "floating-vue": "^5.2.2",
-    "nuxt": "^3.15.4",
+    "nuxt": "^3.16.0",
     "pinia": "^3.0.1",
     "vue": "^3.5.13",
     "vue-router": "^4.5.0"
   },
   "devDependencies": {
-    "@cloudflare/workers-types": "^4.20250224.0",
-    "@iconify/json": "^2.2.311",
-    "@imba97/eslint-config": "^0.0.5",
+    "@cloudflare/workers-types": "^4.20250311.0",
+    "@iconify/json": "^2.2.316",
+    "@imba97/eslint-config": "^0.0.6",
     "@types/fs-extra": "^11.0.4",
     "@types/lodash-es": "^4.17.12",
-    "bumpp": "^10.0.3",
+    "bumpp": "^10.1.0",
     "drizzle-kit": "^0.30.5",
-    "eslint": "^9.21.0",
+    "eslint": "^9.22.0",
     "eslint-plugin-unused-imports": "^4.1.4",
     "esno": "^4.8.0",
     "fs-extra": "^11.3.0",
@@ -47,16 +47,17 @@
     "lodash-es": "^4.17.21",
     "sass": "^1.85.1",
     "simple-git-hooks": "^2.11.1",
-    "typescript": "^5.7.3",
+    "typescript": "^5.8.2",
     "unimport": "^4.1.2",
     "uno-colors": "^0.0.2",
     "unocss": "^66.0.0",
     "unocss-preset-useful": "^0.9.2",
     "unplugin-vue-components": "^28.4.1",
-    "wrangler": "^3.111.0"
+    "wrangler": "^3.114.1"
   },
   "pnpm": {
     "onlyBuiltDependencies": [
+      "esbuild",
       "sharp",
       "workerd"
     ]
