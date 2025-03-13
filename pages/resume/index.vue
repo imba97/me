@@ -146,20 +146,6 @@ import TechnologyStack from './lists/TechnologyStack.vue'
 
 const music = useMusic()
 
-const windowWidth = ref(0)
-
+const { width: windowWidth } = useWindowSize()
 const isMobile = computed(() => windowWidth.value < 670)
-
-onMounted(() => {
-  windowWidth.value = window.innerWidth
-  window.addEventListener('resize', onResize)
-})
-
-onUnmounted(() => {
-  window.removeEventListener('resize', onResize)
-})
-
-function onResize() {
-  windowWidth.value = window.innerWidth
-}
 </script>
