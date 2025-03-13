@@ -13,9 +13,9 @@
               我正在玩
             </div>
 
-            <div fccc text-center>
-              <div flex="~ col" items-center gap-2>
-                <div fcc h-32 w-full>
+            <div fccc>
+              <div flex="~ col" min-h-32 items-center gap-2>
+                <div fcc w-full>
                   <img
                     v-if="steam.imageLoaded && steam.blobImage !== ''" :src="steam.blobImage"
                   >
@@ -23,11 +23,11 @@
                 </div>
               </div>
 
-              <div>
-                <div p-2>
+              <div w-full bg-black bg-opacity-50 py-2 px-4>
+                <div w-full>
                   <Text
                     v-show="steam.name !== ''"
-                    w-58 text-class="text-8 font-bold text-white"
+                    w-full text-center text-class="text-8 font-bold text-white"
                   >
                     {{ steam.name }}
                   </Text>
@@ -39,7 +39,7 @@
 
           <div pa inset-0 z--1>
             <div pa inset-0 blur-16>
-              <img v-show="steam.imageLoaded && steam.blobImage !== ''" :src="steam.blobImage" size-full>
+              <img v-show="steam.imageLoaded && steam.blobImage !== ''" :src="steam.blobImage" object-cover h-full>
             </div>
           </div>
         </div>
