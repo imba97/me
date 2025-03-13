@@ -2,10 +2,8 @@ export const useSteam = defineStore('steam', {
   state: () => ({
     playing: false,
     name: '',
-    headerImage: '',
-    background: '',
-    backgroundRaw: '',
-    blobBackground: '',
+    image: '',
+    blobImage: '',
     imageLoaded: false,
     lastFetchTime: 0,
     fetchInterval: 10000
@@ -19,7 +17,10 @@ export const useSteam = defineStore('steam', {
         return
       }
 
-      const response = await $fetch('/api/steam/playing')
+      const response = await $fetch('/api/steam/playing', {
+        timeout: 10000
+      })
+
       this.playing = response.playing
 
       if (!this.playing) {
@@ -32,25 +33,20 @@ export const useSteam = defineStore('steam', {
 
       this.name = game.name
 
-      if (this.background !== game.background) {
+      const headerImage = `https://steamcdn-a.akamaihd.net/steam/apps/${game.id}/header.jpg`
+
+      if (this.image !== headerImage) {
         this.imageLoaded = false
 
-        this.headerImage = game.header_image
-        this.background = game.background
-        this.backgroundRaw = game.background_raw
+        this.image = headerImage
 
-        const encodedUrl = encodeURIComponent(this.backgroundRaw)
-        const proxyUrl = `/api/image/${encodedUrl}`
-
-        useLoadImage(proxyUrl).then((image) => {
-          this.blobBackground = image
+        useLoadImage(headerImage).then((image) => {
+          this.blobImage = image
           this.imageLoaded = true
         }).catch(() => {
           this.imageLoaded = false
-          this.headerImage = ''
-          this.background = ''
-          this.backgroundRaw = ''
-          this.blobBackground = ''
+          this.image = ''
+          this.blobImage = ''
         })
       }
     }

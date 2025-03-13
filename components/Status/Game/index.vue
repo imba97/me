@@ -17,7 +17,7 @@
               <div flex="~ col" items-center gap-2>
                 <div fcc h-32 w-full>
                   <img
-                    v-if="steam.imageLoaded && steam.headerImage !== ''" :src="steam.headerImage"
+                    v-if="steam.imageLoaded && steam.blobImage !== ''" :src="steam.blobImage"
                   >
                   <div v-else i-line-md-loading-loop size-12 bg-gray />
                 </div>
@@ -39,7 +39,7 @@
 
           <div pa inset-0 z--1>
             <div pa inset-0 blur-16>
-              <img v-show="steam.imageLoaded && steam.headerImage !== ''" :src="steam.headerImage" size-full>
+              <img v-show="steam.imageLoaded && steam.blobImage !== ''" :src="steam.blobImage" size-full>
             </div>
           </div>
         </div>
