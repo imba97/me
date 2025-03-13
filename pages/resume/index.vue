@@ -11,8 +11,8 @@
 
         <div v-show="music.playing">
           <VMenu
-            :distance="16" :skidding="isMobile ? 0 : 100" :triggers="['hover', 'click']"
-            :placement="isMobile ? undefined : 'right'"
+            :distance="16" :skidding="isMobileSize ? 0 : 100" :triggers="['hover', 'click']"
+            :placement="isMobileSize ? undefined : 'right'"
           >
             <div i-ph-music-note-simple-duotone size-6 animate-pulse bg-gradient-to-tr from="#bd34fe" to="#47caff" />
 
@@ -146,6 +146,5 @@ import TechnologyStack from './lists/TechnologyStack.vue'
 
 const music = useMusic()
 
-const { width: windowWidth } = useWindowSize()
-const isMobile = computed(() => windowWidth.value < 670)
+const { isMobileSize } = useMobileSize()
 </script>
