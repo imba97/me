@@ -44,6 +44,9 @@ importers:
       pinia:
         specifier: ^3.0.1
         version: 3.0.1(typescript@5.8.2)(vue@3.5.13(typescript@5.8.2))
+      steam-playing-game:
+        specifier: ^0.0.3
+        version: 0.0.3
       vue:
         specifier: ^3.5.13
         version: 3.5.13(typescript@5.8.2)
@@ -5077,6 +5080,9 @@ packages:
 
   std-env@3.8.1:
     resolution: {integrity: sha512-vj5lIj3Mwf9D79hBkltk5qmkFI+biIKWS2IBxEyEU3AX1tUf7AoL8nSazCOiiqQsGKIq01SClsKEzweu34uwvA==}
+
+  steam-playing-game@0.0.3:
+    resolution: {integrity: sha512-56lSZkP4Ki6jOZa7ps/OCgJ0Dr9WanVl0CDZSwSF+OGahYS8ptOEhW8URukAqhsA7JaM75tQHzzofyM6/TroYw==}
 
   stoppable@1.1.0:
     resolution: {integrity: sha512-KXDYZ9dszj6bzvnEMRYvxgeTHU74QBFL54XKtP3nyMuJ81CFYtABZ3bAzL2EdFUaEwJOBOgENyFj3R7oTzDyyw==}
@@ -11431,6 +11437,8 @@ snapshots:
   std-env@3.8.0: {}
 
   std-env@3.8.1: {}
+
+  steam-playing-game@0.0.3: {}
 
   stoppable@1.1.0: {}
 

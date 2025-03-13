@@ -16,9 +16,12 @@ import { initAnalytics } from '../utils/analytics/51.la'
 import '@introxd/components/style.css'
 
 const music = useMusic()
+const steam = useSteam()
+
 const visible = useDocumentVisibility()
 
-let requestTimer: NodeJS.Timeout | null = null
+let musicTimer: NodeJS.Timeout | null = null
+let steamTimer: NodeJS.Timeout | null = null
 
 useHead({
   title: 'imba97',
@@ -46,29 +49,44 @@ initAnalytics()
 
 watch(visible, () => {
   if (visible.value === 'visible') {
-    startMusicInfoRequest()
+    startRequestInterval()
   }
   else {
-    if (requestTimer) {
-      clearInterval(requestTimer)
-      requestTimer = null
-    }
+    stopRequestInterval()
   }
 })
 
 onNuxtReady(() => {
-  startMusicInfoRequest()
+  startRequestInterval()
 })
 
-function startMusicInfoRequest() {
-  if (requestTimer) {
-    return
+function startRequestInterval() {
+  if (!musicTimer) {
+    music.fetchMusic()
+
+    musicTimer = setInterval(() => {
+      music.fetchMusic()
+    }, music.fetchInterval)
   }
 
-  music.fetchMusic()
+  if (!steamTimer) {
+    steam.fetchPlayingGame()
 
-  requestTimer = setInterval(() => {
-    music.fetchMusic()
-  }, music.fetchInterval)
+    steamTimer = setInterval(() => {
+      steam.fetchPlayingGame()
+    }, steam.fetchInterval)
+  }
+}
+
+function stopRequestInterval() {
+  if (musicTimer) {
+    clearInterval(musicTimer)
+    musicTimer = null
+  }
+
+  if (steamTimer) {
+    clearInterval(steamTimer)
+    steamTimer = null
+  }
 }
 </script>
