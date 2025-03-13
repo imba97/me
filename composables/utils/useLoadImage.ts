@@ -7,6 +7,7 @@ export default async function useLoadImage(url: string, timeout = 5000): Promise
 
   const blobUrl = new Promise<string>((resolve, reject) => {
     const image = new Image()
+    image.crossOrigin = 'anonymous'
 
     const timer = setTimeout(() => {
       reject(new Error('Image load timeout'))
