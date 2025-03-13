@@ -10,6 +10,7 @@
         </div>
 
         <StatusMusic />
+        <StatusGame />
       </div>
 
       <div text-gray>
