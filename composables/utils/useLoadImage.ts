@@ -6,32 +6,30 @@ export default async function useLoadImage(url: string, timeout = 5000): Promise
   }
 
   const blobUrl = new Promise<string>((resolve, reject) => {
-    const image = new Image()
-    image.crossOrigin = 'anonymous'
+    const controller = new AbortController()
+    const signal = controller.signal
 
     const timer = setTimeout(() => {
+      controller.abort()
       reject(new Error('Image load timeout'))
     }, timeout)
 
-    image.onload = () => {
-      clearTimeout(timer)
-      const canvas = document.createElement('canvas')
-      const context = canvas.getContext('2d')!
-      canvas.width = image.width
-      canvas.height = image.height
-      context.drawImage(image, 0, 0)
-      canvas.toBlob((blob) => {
-        const blobUrl = URL.createObjectURL(blob!)
+    fetch(url, { signal })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error('Image load error')
+        }
+        return response.blob()
+      })
+      .then((blob) => {
+        clearTimeout(timer)
+        const blobUrl = URL.createObjectURL(blob)
         resolve(blobUrl)
       })
-    }
-
-    image.onerror = () => {
-      clearTimeout(timer)
-      reject(new Error('Image load error'))
-    }
-
-    image.src = url
+      .catch((error) => {
+        clearTimeout(timer)
+        reject(error)
+      })
   })
 
   imageBlobUrlMap.set(url, blobUrl)
