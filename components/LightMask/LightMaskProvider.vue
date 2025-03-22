@@ -3,7 +3,8 @@
 </template>
 
 <script lang="ts" setup>
-import { LIGHT_MASK_KEY, type LightMaskProvide } from './types'
+import type { LightMaskProvide } from './types'
+import { LIGHT_MASK_KEY } from './types'
 
 const props = withDefaults(
   defineProps<{
