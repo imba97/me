@@ -10,7 +10,6 @@
     "dev": "nuxt dev --dotenv .env.local",
     "build": "esno scripts/build.ts",
     "preview": "pnpm build && npx nuxthub preview",
-    "db:generate": "drizzle-kit generate",
     "start-docker": "nuxt start --hostname 0.0.0.0 --port $NUXT_PORT",
     "release": "bumpp",
     "lint": "eslint --cache"
