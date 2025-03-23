@@ -16,6 +16,7 @@ export default defineNuxtConfig({
     '@unocss/nuxt',
     '@pinia/nuxt',
     'floating-vue/nuxt',
+    'motion-v/nuxt',
     ...(isCloudflarePagesMode ? ['@nuxthub/core'] : [])
   ],
 
@@ -91,6 +92,12 @@ export default defineNuxtConfig({
         }
       }
     }
+  },
+
+  motionV: {
+    components: true, // 启用 Motion 组件
+    utilities: true, // 启用 Motion 工具类
+    prefix: 'motion' // 可选：自定义前缀
   },
 
   compatibilityDate: '2024-07-25',

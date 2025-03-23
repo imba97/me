@@ -24,6 +24,7 @@
     "@vueuse/nuxt": "^13.0.0",
     "defu": "^6.1.4",
     "floating-vue": "^5.2.2",
+    "motion-v": "^0.13.1",
     "nuxt": "^3.16.1",
     "pinia": "^3.0.1",
     "steam-playing-game": "^0.0.4",
@@ -57,6 +58,7 @@
       "esbuild",
       "sharp",
       "simple-git-hooks",
+      "vue-demi",
       "workerd"
     ]
   },

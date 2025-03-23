@@ -1,16 +1,23 @@
 <template>
   <div h-full w-full flex items-center justify-center>
     <div v-if="!loading" flex="~ col" items-center gap-2 animate-fade-in>
-      <div size-32>
-        <img :src="url">
-      </div>
-      <div text-8 bg-clip-text text-transparent bg-gradient-to-tr from="#bd34fe" to="#47caff">
-        Hi
-      </div>
-
-      <div text="3 gray-3">
-        v{{ pkg.version }}
-      </div>
+      <AnimatedProvider :delay-increment="0.2">
+        <AnimatedSection>
+          <div size-32>
+            <img :src="url">
+          </div>
+        </AnimatedSection>
+        <AnimatedSection>
+          <div text-8 bg-clip-text text-transparent bg-gradient-to-tr from="#bd34fe" to="#47caff">
+            Hi
+          </div>
+        </AnimatedSection>
+        <AnimatedSection>
+          <div text="3 gray-3">
+            v{{ pkg.version }}
+          </div>
+        </AnimatedSection>
+      </AnimatedProvider>
     </div>
   </div>
 </template>
