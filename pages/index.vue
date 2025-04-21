@@ -1,6 +1,6 @@
 <template>
-  <div h-full w-full flex items-center justify-center>
-    <div v-if="!loading" flex="~ col" items-center gap-2 animate-fade-in>
+  <div size-full fcc>
+    <div v-if="!loading" flex="~ col" items-center gap-2>
       <AnimatedProvider :delay-increment="0.2">
         <AnimatedSection>
           <div size-32>

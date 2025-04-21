@@ -18,6 +18,13 @@
           介绍视频
         </IxIconText>
       </div>
+
+      <div>
+        <span>后来将匹配器抽离成了一个单独的项目叫</span>
+        <IxIconText :preset="IconTextPreset.Github" href="imba97/matchinitx">
+          matchinitx
+        </IxIconText>
+      </div>
     </li>
 
     <li>
@@ -32,10 +39,23 @@
 
     <li>
       <div>
+        <span>UnoCSS 颜色色阶生成工具</span>
+        <IxIconText :preset="IconTextPreset.Github" href="imba97/uno-colors">
+          uno-colors
+        </IxIconText>
+        <span>，和 UnoCSS Hexo 插件</span>
+        <IxIconText :preset="IconTextPreset.Github" href="imba97/hexo-unocss">
+          hexo-unocss
+        </IxIconText>
+      </div>
+    </li>
+
+    <li>
+      <div>
         <div>
           <span>可以通过串口发送短信的</span>
           <IxIconText :preset="IconTextPreset.Github" href="smserialport/smserialport">
-            SMSerialport
+            smserialport
           </IxIconText>
           <span>。实现了中国大陆地区手机号发送短信，封装了适配器接口，可通过实现适配器对接更多国家或地区的发信逻辑</span>
         </div>
@@ -82,23 +102,6 @@
         <span>，通过菜谱名称或拼音查询制作条件，可以在这里使用</span>
         <IxIconText icon-class="i-material-symbols-light-document-search-outline size-5.5!" href="https://dst-recipe.netlify.app/">
           菜谱速查
-        </IxIconText>
-      </div>
-    </li>
-
-    <li>
-      <div>
-        <span>一个以优化 B站 功能为主的浏览器插件</span>
-        <IxIconText :preset="IconTextPreset.Github" href="imba97/btools">
-          Btools
-        </IxIconText>
-        <span>，多账号切换、快速打开封面、找回失效视频等功能，后来使用 Vue 重构写了</span>
-        <IxIconText :preset="IconTextPreset.Github" href="imba97/btools-vue">
-          Btools-vue
-        </IxIconText>
-        <span>，不过目前 B站 改了接口，部分功能不能用了。准备继续重构</span>
-        <IxIconText :preset="IconTextPreset.Github" href="imba97/btools-vitesse">
-          Btools-vitesse
         </IxIconText>
       </div>
     </li>
