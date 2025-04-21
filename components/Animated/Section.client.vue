@@ -3,7 +3,7 @@
     :initial="{ opacity: 0, y: 30 }"
     :while-in-view="{ opacity: 1, y: 0 }"
     :in-view-options="{ once: true }"
-    :transition="{ duration: 0.5, delay: computedDelay }"
+    :transition="{ duration: 0.8, delay: computedDelay }"
   >
     <div ref="animation-element">
       <slot />
