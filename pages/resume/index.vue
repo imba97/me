@@ -39,16 +39,6 @@
 
       <div mt-8>
         <div text-6 font-bold>
-          工作项目
-        </div>
-
-        <div mt-2>
-          <Company />
-        </div>
-      </div>
-
-      <div mt-8>
-        <div text-6 font-bold>
           开源项目
         </div>
 
@@ -92,7 +82,6 @@
 
 <script lang="ts" setup>
 import BlogArchives from './lists/BlogArchives.vue'
-import Company from './lists/Company.vue'
 import Gadgets from './lists/Gadgets.vue'
 import OpenSource from './lists/OpenSource.vue'
 import Pages from './lists/Pages.vue'
