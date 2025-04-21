@@ -2,7 +2,7 @@
 html,
 body,
 #__nuxt {
-  --uno: h-full;
+  --uno: h-full font-sans text-gray-9;
 }
 </style>
 

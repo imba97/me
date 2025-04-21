@@ -1,9 +1,13 @@
+import {
+  createLocalFontProcessor
+} from '@unocss/preset-web-fonts/local'
 import { unoColors } from 'uno-colors'
 import {
   defineConfig,
   presetAttributify,
   presetIcons,
   presetTypography,
+  presetWebFonts,
   presetWind3,
   transformerDirectives,
   transformerVariantGroup
@@ -60,9 +64,20 @@ export default defineConfig({
     presetWind3(),
     presetAttributify(),
     presetIcons({
-      scale: 1.2
+      extraProperties: {
+        'display': 'inline-block',
+        'height': '1.2em',
+        'width': '1.2em',
+        'vertical-align': 'text-bottom'
+      }
     }),
-    presetTypography()
+    presetTypography(),
+    presetWebFonts({
+      fonts: {
+        sans: 'Inter'
+      },
+      processors: createLocalFontProcessor()
+    })
   ],
   transformers: [
     transformerDirectives(),
