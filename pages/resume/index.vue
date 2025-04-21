@@ -5,7 +5,7 @@
         <div size-14>
           <img src="/favicon.png">
         </div>
-        <div text-8 font-thin bg-clip-text text-transparent bg-gradient-to-tr from="#bd34fe" to="#47caff">
+        <div text-8 font-thin bg-clip-text text-transparent bg-gradient-to-tr from="#bd34fe" to="#47caff" font="[none]">
           imba久期
         </div>
 
