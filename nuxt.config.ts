@@ -63,7 +63,9 @@ export default defineNuxtConfig({
       NAVIDROME_USERNAME: process.env.NAVIDROME_USERNAME,
       NAVIDROME_PASSWORD: process.env.NAVIDROME_PASSWORD,
       STEAM_API_KEY: process.env.STEAM_API_KEY,
-      STEAM_ID: process.env.STEAM_ID
+      STEAM_ID: process.env.STEAM_ID,
+      ONE_API_URL: process.env.ONE_API_URL,
+      ONE_API_KEY: process.env.ONE_API_KEY
     } as Record<string, string>
   },
 
