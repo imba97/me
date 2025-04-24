@@ -32,6 +32,9 @@ importers:
       defu:
         specifier: ^6.1.4
         version: 6.1.4
+      destr:
+        specifier: ^2.0.5
+        version: 2.0.5
       floating-vue:
         specifier: ^5.2.2
         version: 5.2.2(@nuxt/kit@3.16.2(magicast@0.3.5))(vue@3.5.13(typescript@5.8.3))
@@ -2531,9 +2534,6 @@ packages:
   dequal@2.0.3:
     resolution: {integrity: sha512-0je+qPKHEMohvfRTCEo3CrPG6cAzAYgmzKyxRiYSSDkS6eGJdyVJm7WaYA5ECaAD9wLB2T4EEeymA5aFVcYXCA==}
     engines: {node: '>=6'}
-
-  destr@2.0.3:
-    resolution: {integrity: sha512-2N3BOUU4gYMpTP24s5rF5iP7BDr7uNTCs4ozw3kf/eKfvWSIu93GEBi5m427YoyJoeOzQ5smuu4nNAPGb8idSQ==}
 
   destr@2.0.5:
     resolution: {integrity: sha512-ugFTXCtDZunbzasqBxrK93Ik/DRYsO6S/fedkWEMKqt04xZ4csmnmwGDBAb07QWNaGMAmnTIemsYZCksjATwsA==}
@@ -6321,7 +6321,7 @@ snapshots:
       c12: 2.0.1(magicast@0.3.5)
       consola: 3.4.0
       defu: 6.1.4
-      destr: 2.0.3
+      destr: 2.0.5
       globby: 14.0.2
       ignore: 7.0.3
       jiti: 2.4.2
@@ -6347,7 +6347,7 @@ snapshots:
       c12: 3.0.2(magicast@0.3.5)
       consola: 3.4.2
       defu: 6.1.4
-      destr: 2.0.3
+      destr: 2.0.5
       errx: 0.1.0
       exsolve: 1.0.4
       globby: 14.1.0
@@ -6408,7 +6408,7 @@ snapshots:
       '@nuxt/kit': 3.16.2(magicast@0.3.5)
       citty: 0.1.6
       consola: 3.4.2
-      destr: 2.0.3
+      destr: 2.0.5
       dotenv: 16.4.7
       git-url-parse: 16.0.1
       is-docker: 3.0.0
@@ -8064,8 +8064,6 @@ snapshots:
   depd@2.0.0: {}
 
   dequal@2.0.3: {}
-
-  destr@2.0.3: {}
 
   destr@2.0.5: {}
 
@@ -9746,7 +9744,7 @@ snapshots:
       consola: 3.4.2
       cookie-es: 2.0.0
       defu: 6.1.4
-      destr: 2.0.3
+      destr: 2.0.5
       devalue: 5.1.1
       errx: 0.1.0
       esbuild: 0.25.2
@@ -9868,7 +9866,7 @@ snapshots:
 
   ofetch@1.4.1:
     dependencies:
-      destr: 2.0.3
+      destr: 2.0.5
       node-fetch-native: 1.6.6
       ufo: 1.5.4
 
@@ -10233,7 +10231,7 @@ snapshots:
   rc9@2.1.2:
     dependencies:
       defu: 6.1.4
-      destr: 2.0.3
+      destr: 2.0.5
 
   read-package-up@11.0.0:
     dependencies:
@@ -11237,7 +11235,7 @@ snapshots:
 
   webpack@5.95.0:
     dependencies:
-      '@types/estree': 1.0.6
+      '@types/estree': 1.0.7
       '@webassemblyjs/ast': 1.14.1
       '@webassemblyjs/wasm-edit': 1.14.1
       '@webassemblyjs/wasm-parser': 1.14.1
