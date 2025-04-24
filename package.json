@@ -24,6 +24,7 @@
     "@vueuse/nuxt": "^13.1.0",
     "defu": "^6.1.4",
     "destr": "^2.0.5",
+    "eventsource-parser": "^3.0.1",
     "floating-vue": "^5.2.2",
     "motion-v": "^0.13.1",
     "nuxt": "^3.16.2",

@@ -81,6 +81,7 @@
 <script lang="ts" setup>
 import { useScroll } from '@vueuse/core'
 import { destr } from 'destr'
+import { createParser } from 'eventsource-parser'
 
 enum MessageType {
   AI,
@@ -91,6 +92,14 @@ interface Message {
   type: MessageType
   content: Ref<string> | string
   id?: string
+}
+
+interface AIResponse {
+  choices: {
+    delta: {
+      content: string
+    }
+  }[]
 }
 
 // 使用 ref 创建响应式数据，便于后续流式更新
@@ -152,7 +161,7 @@ function onInputBlur() {
   isKeyboardVisible.value = false
 }
 
-// 发送消息
+// 使用 eventsource-parser 处理 SSE 流
 async function sendMessage() {
   if (!userInput.value.trim())
     return
@@ -197,6 +206,33 @@ async function sendMessage() {
     responseType: 'stream'
   })
 
+  // 创建 SSE 解析器
+  const parser = createParser({
+    onEvent(event) {
+      if (event.data === '[DONE]') {
+        return
+      }
+
+      if (!event.data) {
+        return
+      }
+
+      const json = destr<AIResponse>(event.data)
+
+      if (!json) {
+        return
+      }
+
+      aiMessage.content.value += _map(json.choices, choice => _get(choice, 'delta.content', '')).join('')
+
+      // AI 回复内容更新时智能滚动到底部
+      nextTick(() => {
+        smartScrollToBottom()
+      })
+    }
+  })
+
+  // 读取流数据并传递给解析器
   const reader = response.pipeThrough(new TextDecoderStream()).getReader()
 
   while (true) {
@@ -205,37 +241,8 @@ async function sendMessage() {
     if (done)
       break
 
-    // 解析响应数据
-    const lines = value.split('\n').filter(line => line.trim() !== '')
-
-    for (const line of lines) {
-      // 处理SSE格式的数据行
-      if (line.startsWith('data: ')) {
-        const data = line.substring(6)
-
-        if (data === '[DONE]') {
-          continue
-        }
-
-        const json = destr(data)
-
-        if (!json) {
-          continue
-        }
-
-        const content = _get(json, 'choices.0.delta.content')
-
-        if (!content) {
-          continue
-        }
-
-        aiMessage.content.value += content
-        // AI 回复内容更新时智能滚动到底部
-        nextTick(() => {
-          smartScrollToBottom()
-        })
-      }
-    }
+    // 将接收到的数据块喂给解析器
+    parser.feed(value)
   }
 }
 </script>
