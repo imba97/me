@@ -63,6 +63,7 @@
           :animate="suggestionAnimateState"
           :transition="{ duration: 0.1 }"
           absolute bottom-full mb-4 left-0 w-full flex justify-end
+          :style="{ pointerEvents: shouldShowSuggestion ? 'auto' : 'none' }"
         >
           <div
             bg-white px-4 py-2 rounded-full text-blue-500 border border-blue-200
