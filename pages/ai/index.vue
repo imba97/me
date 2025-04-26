@@ -14,7 +14,7 @@
 
 <template>
   <div flex flex-col h-full bg-gray-100 class="ai-chat-container">
-    <div ref="messageContainerRef" flex-1 p-4 overflow-auto class="message-container">
+    <div ref="message-container" flex-1 p-4 overflow-auto class="message-container">
       <div max-w-3xl mx-auto space-y-4>
         <div v-show="messages.length === 0" text="4 center gray" space-y-4 pt-4>
           <p>求职偷懒 AI 🤣</p>
@@ -57,7 +57,22 @@
     </div>
 
     <div border-t bg-white p-4 class="input-container">
-      <div max-w-3xl mx-auto flex>
+      <div max-w-3xl mx-auto flex relative>
+        <motion.div
+          :initial="{ opacity: 0, y: 30 }"
+          :animate="suggestionAnimateState"
+          :transition="{ duration: 0.1 }"
+          absolute bottom-full mb-4 left-0 w-full flex justify-end
+        >
+          <div
+            bg-white px-4 py-2 rounded-full text-blue-500 border border-blue-200
+            cursor-pointer hover="bg-blue-50" transition-colors shadow-sm
+            @click="sendSuggestion"
+          >
+            {{ defaultInput }}
+          </div>
+        </motion.div>
+
         <input
           v-model="userInput"
           type="text"
@@ -82,6 +97,7 @@
 import { useScroll } from '@vueuse/core'
 import { destr } from 'destr'
 import { createParser } from 'eventsource-parser'
+import { motion } from 'motion-v'
 
 enum MessageType {
   AI,
@@ -102,19 +118,44 @@ interface AIResponse {
   }[]
 }
 
-// 使用 ref 创建响应式数据，便于后续流式更新
 const messages = ref<Message[]>([])
-const messageContainerRef = ref<HTMLElement | null>(null)
-
-// 使用 useScroll 来监听滚动状态
+const messageContainerRef = useTemplateRef('message-container')
 const { arrivedState } = useScroll(messageContainerRef)
 
-// 根据 arrivedState.bottom 判断是否在底部
+const avatar = ref('')
+const userInput = ref('')
+const isKeyboardVisible = ref(false)
+const showSuggestion = ref(false)
+const defaultInput = '做个自我介绍'
+
 const isAtBottom = computed(() => arrivedState.bottom)
 
-const avatar = ref('')
+const shouldShowSuggestion = computed(
+  () => showSuggestion.value && !userInput.value.trim() && messages.value.length === 0
+)
 
-const userInput = ref('')
+const suggestionAnimateState = computed(() => {
+  return shouldShowSuggestion.value
+    ? { opacity: 1, y: -10 }
+    : { opacity: 0, y: 30 }
+})
+
+onMounted(() => {
+  useLoadImage('/favicon.png', 10000)
+    .then((image: string) => {
+      avatar.value = image
+    })
+
+  setTimeout(() => {
+    showSuggestion.value = true
+  }, 2000)
+})
+
+watch(() => [...messages.value], () => {
+  nextTick(() => {
+    smartScrollToBottom()
+  })
+}, { deep: true })
 
 // 滚动到底部的函数
 function scrollToBottom() {
@@ -129,23 +170,6 @@ function smartScrollToBottom() {
     scrollToBottom()
   }
 }
-
-onMounted(() => {
-  useLoadImage('/favicon.png', 10000)
-    .then((image: string) => {
-      avatar.value = image
-    })
-})
-
-// 监听消息变化，自动滚动到底部
-watch(() => [...messages.value], () => {
-  nextTick(() => {
-    smartScrollToBottom()
-  })
-}, { deep: true })
-
-// 输入框焦点管理
-const isKeyboardVisible = ref(false)
 
 function onInputFocus() {
   isKeyboardVisible.value = true
@@ -244,5 +268,10 @@ async function sendMessage() {
     // 将接收到的数据块喂给解析器
     parser.feed(value)
   }
+}
+
+function sendSuggestion() {
+  userInput.value = defaultInput
+  sendMessage()
 }
 </script>
