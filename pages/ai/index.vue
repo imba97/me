@@ -61,7 +61,12 @@
         <motion.div
           :initial="{ opacity: 0, y: 30 }"
           :animate="suggestionAnimateState"
-          :transition="{ duration: 0.1 }"
+          :transition="{
+            type: 'spring',
+            stiffness: 300,
+            damping: 15,
+            mass: 1
+          }"
           absolute bottom-full mb-4 left-0 w-full flex justify-end
           :style="{ pointerEvents: shouldShowSuggestion ? 'auto' : 'none' }"
         >
