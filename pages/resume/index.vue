@@ -1,16 +1,32 @@
 <template>
   <div class="main" size-full px-7 py-10 of-x-hidden>
     <div prose ma>
-      <div mb-6 fyc gap-4>
-        <div size-14>
-          <img src="/favicon.png">
-        </div>
-        <div text-8 font-thin bg-clip-text text-transparent bg-gradient-to-tr from="#bd34fe" to="#47caff" font="[none]">
-          imba久期
+      <div fbc>
+        <div mb-6 fyc gap-4>
+          <div size-14>
+            <img src="/favicon.png">
+          </div>
+          <div text-8 font-thin bg-clip-text text-transparent bg-gradient-to-tr from="#bd34fe" to="#47caff" font="[none]">
+            imba久期
+          </div>
+
+          <StatusMusic />
+          <StatusGame />
         </div>
 
-        <StatusMusic />
-        <StatusGame />
+        <div pr>
+          <motion.div
+            :initial="{ opacity: 0, y: 20 }"
+            :animate="{ opacity: 1, y: 0 }"
+          >
+            <div fyc gap-2>
+              <div
+                i-hugeicons-artificial-intelligence-04 size-6 bg-gradient-to-tr from="#bd34fe" to="#47caff" clickable
+                @click="() => router.push('/ai')"
+              />
+            </div>
+          </motion.div>
+        </div>
       </div>
 
       <div text-gray>
@@ -81,9 +97,12 @@
 </template>
 
 <script lang="ts" setup>
+import { motion } from 'motion-v'
 import BlogArchives from './lists/BlogArchives.vue'
 import Gadgets from './lists/Gadgets.vue'
 import OpenSource from './lists/OpenSource.vue'
 import Pages from './lists/Pages.vue'
 import TechnologyStack from './lists/TechnologyStack.vue'
+
+const router = useRouter()
 </script>
