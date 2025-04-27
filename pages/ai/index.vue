@@ -17,7 +17,7 @@
     <div ref="message-container" flex-1 p-4 overflow-auto class="message-container">
       <div max-w-3xl mx-auto space-y-4>
         <div v-show="messages.length === 0" text="4 center gray" space-y-4 pt-4>
-          <p>求职偷懒 AI 🤣</p>
+          <p>求职偷懒 AI，精确获取我的简历信息</p>
           <p>您可以输入<span font-bold px-1>想要了解的问题</span>或<span font-bold px-1>招聘要求</span>等</p>
         </div>
 
