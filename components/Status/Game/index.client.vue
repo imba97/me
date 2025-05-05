@@ -16,10 +16,7 @@
             <div fccc>
               <div flex="~ col" min-h-32 items-center gap-2>
                 <div fcc w-full>
-                  <img
-                    v-if="steam.imageLoaded && steam.blobImage !== ''" :src="steam.blobImage"
-                  >
-                  <div v-else i-line-md-loading-loop size-12 bg-gray />
+                  <NuxtImg v-if="steam.hasImage" :src="steam.image" size-full />
                 </div>
               </div>
 
@@ -39,7 +36,7 @@
 
           <div pa inset-0 z--1>
             <div pa inset-0 blur-16>
-              <img v-show="steam.imageLoaded && steam.blobImage !== ''" :src="steam.blobImage" object-cover h-full>
+              <NuxtImg v-if="steam.hasImage" :src="steam.image" object-cover h-full />
             </div>
           </div>
         </div>

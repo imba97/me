@@ -1,10 +1,10 @@
 <template>
   <div size-full fcc>
-    <div v-if="!loading" flex="~ col" items-center gap-2 animate-fade-in>
+    <div flex="~ col" items-center gap-2 animate-fade-in>
       <AnimatedProvider :delay-increment="0.2">
         <AnimatedSection>
           <div size-32>
-            <img :src="url">
+            <NuxtImg src="/favicon.png" alt="logo" size-full />
           </div>
         </AnimatedSection>
         <AnimatedSection>
@@ -23,21 +23,12 @@
 </template>
 
 <script lang="ts" setup>
-const loading = ref(true)
-const url = ref('')
-
 const pkg = usePackage()
 
 onMounted(() => {
-  useLoadImage('/favicon.png', 10000)
-    .then((image: string) => {
-      loading.value = false
-      url.value = image
-
-      setTimeout(() => {
-        const router = useRouter()
-        router.push('/resume')
-      }, 2000)
-    })
+  setTimeout(() => {
+    const router = useRouter()
+    router.push('/resume')
+  }, 2000)
 })
 </script>

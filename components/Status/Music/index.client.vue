@@ -1,3 +1,18 @@
+<style lang="scss" scoped>
+.music-text {
+  :deep() {
+    span {
+      @supports (-webkit-background-clip: text) or (background-clip: text) {
+        background: linear-gradient(90deg, #8ec6fa 0%, #d09bff 100%);
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+      }
+    }
+  }
+}
+</style>
+
 <template>
   <div v-show="music.playing">
     <VMenu
@@ -7,39 +22,49 @@
       <div i-ph-music-note-simple-duotone size-6 animate-pulse bg-gradient-to-tr from="#bd34fe" to="#47caff" />
 
       <template #popper>
-        <div relative p-3 w-58 of-hidden>
-          <div absolute top-0 left-0 w-full blur-16>
-            <img v-show="music.blobImage !== ''" :src="music.blobImage" h-24 w-full>
+        <div relative w-58 of-hidden>
+          <div>
+            <div absolute inset-0 py-6 size-full blur-16 bg-gray bg-opacity-50 z--1>
+              <MeImage
+                :src="music.image" hidden-loading absolute size="110%"
+                top="50%" left="50%" translate="-50%"
+                object-cover animate-fade-in
+              />
+            </div>
           </div>
 
-          <div mt-6 fccc text-center>
-            <div flex="~ col" items-center gap-2>
-              <div fcc size-32>
-                <img
-                  v-if="music.imageLoaded && music.image !== ''" :src="music.image" rounded-full animate-spin
+          <div fccc text-center>
+            <div py-8 flex="~ col" items-center gap-2>
+              <div shrink-0 fcc size-32 animate-fade-in>
+                <MeImage
+                  :src="music.image"
+                  size-full
+                  rounded-full
+                  animate-spin
                   animate-duration-30000
-                >
-                <div v-else i-line-md-loading-loop size-12 bg-gray />
+                />
               </div>
             </div>
 
-            <div mt-5 text="4 gray">
-              我正在听
-            </div>
+            <div p-3 bg-black bg-opacity-50>
+              <div text="4 white">
+                我正在听
+              </div>
 
-            <div mt-2>
-              <div p-2>
+              <div py-2>
                 <Text
                   v-show="music.name !== ''"
-                  w-58 text-class="text-8 font-bold bg-clip-text text-transparent bg-gradient-to-tr from-[#bd34fe]
-                      to-[#47caff]"
+                  w-54
+                  text-class="text-8 text-white font-bold"
+                  class="music-text"
                 >
                   {{ music.name }}
                 </Text>
                 <div v-show="music.name === ''" i-line-md-loading-loop size-6 bg-gray-3 />
               </div>
-              <div text="3.5 gray-3">
-                {{ music.artist }}
+
+              <div text="3.5 gray-3" class="music-text">
+                <span>{{ music.artist }}</span>
               </div>
             </div>
           </div>

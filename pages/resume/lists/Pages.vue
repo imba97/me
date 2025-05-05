@@ -20,8 +20,8 @@
         <IxIconText
           :icon-class="[
             'size-6.25 rounded-full',
-            !hasImage ? 'i-ph-music-note-simple-duotone' : '',
-            music.playing && hasImage ? 'animate-spin animate-duration-30000' : ''
+            !music.hasImage ? 'i-ph-music-note-simple-duotone' : '',
+            music.playing && music.hasImage ? 'animate-spin animate-duration-30000' : ''
           ].join(' ')" :src="music.image" href="/playing"
         >
           我正在听的音乐
@@ -43,8 +43,6 @@ const router = useRouter()
 const music = useMusic()
 
 const visiblePlayingMusic = ref(true)
-
-const hasImage = computed(() => music.image !== '')
 
 watch(() => music, () => {
   visiblePlayingMusic.value = false

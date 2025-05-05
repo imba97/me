@@ -12,6 +12,7 @@ const isCloudflarePagesMode
 
 export default defineNuxtConfig({
   modules: [
+    '@nuxt/image',
     '@vueuse/nuxt',
     '@unocss/nuxt',
     '@pinia/nuxt',
@@ -19,6 +20,14 @@ export default defineNuxtConfig({
     'motion-v/nuxt',
     ...(isCloudflarePagesMode ? ['@nuxthub/core'] : [])
   ],
+
+  image: {
+    provider: 'cloudflare',
+    cloudflare: {
+      baseURL: 'https://imba97.me'
+    },
+    format: ['avif', 'webp']
+  },
 
   lodash: {
     prefix: '_',

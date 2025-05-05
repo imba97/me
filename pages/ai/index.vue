@@ -29,7 +29,7 @@
             bg-class="bg-white"
           >
             <template #avatar>
-              <img :src="avatar" alt="avatar" size-full>
+              <NuxtImg src="/favicon.png" alt="avatar" size-full />
             </template>
 
             <template v-if="msg.content.length > 0">
@@ -128,7 +128,6 @@ const messages = ref<Message[]>([])
 const messageContainerRef = useTemplateRef('message-container')
 const { arrivedState } = useScroll(messageContainerRef)
 
-const avatar = ref('')
 const userInput = ref('')
 const isKeyboardVisible = ref(false)
 const showSuggestion = ref(false)
@@ -147,11 +146,6 @@ const suggestionAnimateState = computed(() => {
 })
 
 onMounted(() => {
-  useLoadImage('/favicon.png', 10000)
-    .then((image: string) => {
-      avatar.value = image
-    })
-
   setTimeout(() => {
     showSuggestion.value = true
   }, 2000)

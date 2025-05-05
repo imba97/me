@@ -4,7 +4,7 @@
       <div fbc>
         <div mb-6 fyc gap-4>
           <div size-14>
-            <img src="/favicon.png">
+            <NuxtImg src="/favicon.png" alt="logo" size-full />
           </div>
           <div text-8 font-thin bg-clip-text text-transparent bg-gradient-to-tr from="#bd34fe" to="#47caff" font="[none]">
             imba久期

@@ -3,8 +3,7 @@ export const useSteam = defineStore('steam', {
     playing: false,
     name: '',
     image: '',
-    blobImage: '',
-    imageLoaded: false,
+    hasImage: false,
     lastFetchTime: 0,
     fetchInterval: 10000
   }),
@@ -36,18 +35,10 @@ export const useSteam = defineStore('steam', {
       const headerImage = `https://steamcdn-a.akamaihd.net/steam/apps/${game.id}/header.jpg`
 
       if (this.image !== headerImage) {
-        this.imageLoaded = false
+        this.hasImage = false
 
+        this.hasImage = !!headerImage
         this.image = headerImage
-
-        useLoadImage(headerImage).then((image) => {
-          this.blobImage = image
-          this.imageLoaded = true
-        }).catch(() => {
-          this.imageLoaded = false
-          this.image = ''
-          this.blobImage = ''
-        })
       }
     }
   }
