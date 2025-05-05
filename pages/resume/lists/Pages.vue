@@ -3,6 +3,17 @@
     <li>
       <div pr top-1>
         <IxIconText
+          icon-class="i-hugeicons-artificial-intelligence-04 size-6" href="#"
+          @click.stop="router.push('/ai')"
+        >
+          <span>AI 简历</span>
+        </IxIconText>
+      </div>
+    </li>
+
+    <li>
+      <div pr top-1>
+        <IxIconText
           icon-class="i-mynaui-tool text-white size-6" href="#"
           bg-slate-950
           hover="bg-slate-950! bg-opacity-70!"
