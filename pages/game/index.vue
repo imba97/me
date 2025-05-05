@@ -26,7 +26,7 @@
         <div
           lt-md="h-48 w-48" md="h-86 w-86" my-4 rounded-full of-hidden
         >
-          <img v-show="steam.imageLoaded" :src="steam.blobBackground" size-full object-cover animate-fade-in>
+          <img v-show="steam.imageLoaded" :src="steam.blobImage" size-full object-cover animate-fade-in>
           <div v-show="!steam.imageLoaded" i-mdi-steam size-full bg-dark-1 />
         </div>
         <Text
@@ -42,7 +42,7 @@
 
     <div fixed top="-10%" left="-10%" h="120%" w="120%" z--1 blur-32>
       <img
-        v-show="steam.imageLoaded" :src="steam.blobBackground" h-full w-full object-cover select-none animate-fade-in
+        v-show="steam.imageLoaded" :src="steam.blobImage" h-full w-full object-cover select-none animate-fade-in
       >
     </div>
   </div>
