@@ -25,5 +25,9 @@ const animatedDelay: AnimatedDelay = {
   }
 }
 
+onMounted(() => {
+  animatedDelay.resetDelay()
+})
+
 provide(AnimatedDelayKey, animatedDelay)
 </script>

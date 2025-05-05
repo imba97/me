@@ -50,12 +50,23 @@ const isFirstScreen = computed(() => {
 })
 
 const computedDelay = ref(0)
+
+watch(() => elementRef.value, (newValue) => {
+  if (newValue) {
+    calculateDelay()
+  }
+}, { immediate: true })
+
 onMounted(() => {
+  calculateDelay()
+})
+
+function calculateDelay() {
   if (isFirstScreen.value && animatedDelay) {
     computedDelay.value = animatedDelay.getNextDelay()
   }
   else {
     computedDelay.value = props.delay
   }
-})
+}
 </script>
