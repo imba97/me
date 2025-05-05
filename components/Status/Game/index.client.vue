@@ -4,7 +4,9 @@
       :distance="16" :skidding="isMobileSize ? 0 : 100" :triggers="['hover', 'click']"
       :placement="isMobileSize ? undefined : 'right'"
     >
-      <div i-ph-game-controller size-6 animate-pulse bg-gradient-to-tr from="#bd34fe" to="#47caff" />
+      <div animate-fade-in>
+        <div i-ph-game-controller size-6 animate-pulse bg-gradient-to-tr from="#bd34fe" to="#47caff" />
+      </div>
 
       <template #popper>
         <div pr w-72 of-hidden>
