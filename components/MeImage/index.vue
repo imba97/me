@@ -15,7 +15,7 @@
 
 <script lang="ts" setup>
 const props = withDefaults(defineProps<{
-  src: string
+  src?: string
   hiddenLoading?: boolean
 }>(), {
   src: '',
