@@ -26,6 +26,7 @@ export default defineNuxtConfig({
     cloudflare: {
       baseURL: 'https://imba97.me'
     },
+    none: {},
     format: ['avif', 'webp']
   },
 
