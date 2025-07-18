@@ -6,10 +6,6 @@ import components from 'unplugin-vue-components/vite'
 
 const r = (path: string) => fileURLToPath(new URL(path, import.meta.url))
 
-const isCloudflarePagesMode
-  = typeof process.env.BUILD_MODE === 'undefined'
-    || process.env.BUILD_MODE === 'cloudflare-pages'
-
 export default defineNuxtConfig({
   modules: [
     '@nuxt/image',
@@ -17,8 +13,7 @@ export default defineNuxtConfig({
     '@unocss/nuxt',
     '@pinia/nuxt',
     'floating-vue/nuxt',
-    'motion-v/nuxt',
-    ...(isCloudflarePagesMode ? ['@nuxthub/core'] : [])
+    'motion-v/nuxt'
   ],
 
   image: {
@@ -39,18 +34,6 @@ export default defineNuxtConfig({
   css: [
     '@unocss/reset/tailwind.css'
   ],
-
-  ...(isCloudflarePagesMode
-    ? {
-        hub: {
-          cache: true
-        }
-      }
-    : {}),
-
-  nitro: {
-    preset: process.env.BUILD_MODE
-  },
 
   imports: {
     dirs: [
