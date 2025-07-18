@@ -17,11 +17,8 @@ export default defineNuxtConfig({
   ],
 
   image: {
-    provider: 'cloudflare',
-    cloudflare: {
-      baseURL: 'https://imba97.me'
-    },
-    none: {},
+    provider: 'netlify',
+    domains: ['imba97.me'],
     format: ['avif', 'webp']
   },
 
