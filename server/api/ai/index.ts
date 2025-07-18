@@ -4,8 +4,8 @@ export default defineEventHandler(async (event) => {
   const { message } = await readBody(event)
   const runtimeConfig = useRuntimeConfig()
 
-  const apiUrl = runtimeConfig.env.ONE_API_URL
-  const apiKey = runtimeConfig.env.ONE_API_KEY
+  const apiUrl = runtimeConfig.oneApiUrl
+  const apiKey = runtimeConfig.oneApiKey
 
   if (!apiUrl || !apiKey) {
     throw createError({

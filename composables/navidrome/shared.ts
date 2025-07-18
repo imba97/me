@@ -3,11 +3,11 @@ import defu from 'defu'
 const runtimeConfig = useRuntimeConfig()
 
 export const navidromeRequest = {
-  baseURL: runtimeConfig.env.NAVIDROME_API_URL,
+  baseURL: runtimeConfig.navidromeApiUrl,
 
   commonOptions: {
-    u: runtimeConfig.env.NAVIDROME_USERNAME,
-    p: runtimeConfig.env.NAVIDROME_PASSWORD,
+    u: runtimeConfig.navidromeUsername,
+    p: runtimeConfig.navidromePassword,
     v: '1.16.1',
     c: 'my-client',
     f: 'json'

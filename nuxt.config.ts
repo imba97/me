@@ -48,15 +48,16 @@ export default defineNuxtConfig({
   },
 
   runtimeConfig: {
-    env: {
-      NAVIDROME_API_URL: process.env.NAVIDROME_API_URL,
-      NAVIDROME_USERNAME: process.env.NAVIDROME_USERNAME,
-      NAVIDROME_PASSWORD: process.env.NAVIDROME_PASSWORD,
-      STEAM_API_KEY: process.env.STEAM_API_KEY,
-      STEAM_ID: process.env.STEAM_ID,
-      ONE_API_URL: process.env.ONE_API_URL,
-      ONE_API_KEY: process.env.ONE_API_KEY
-    } as Record<string, string>
+    navidromeApiUrl: process.env.NAVIDROME_API_URL,
+    navidromeUsername: process.env.NAVIDROME_USERNAME,
+    navidromePassword: process.env.NAVIDROME_PASSWORD,
+    steamApiKey: process.env.STEAM_API_KEY,
+    oneApiUrl: process.env.ONE_API_URL,
+    oneApiKey: process.env.ONE_API_KEY,
+
+    public: {
+      steamId: process.env.STEAM_ID
+    }
   },
 
   typescript: {

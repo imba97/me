@@ -8,8 +8,8 @@ export default defineEventHandler(async (): Promise<UserPlayingGameResponse> => 
 
   try {
     result = await getUserPlayingGame(
-      runtimeConfig.env.STEAM_API_KEY,
-      runtimeConfig.env.STEAM_ID
+      runtimeConfig.steamApiKey,
+      runtimeConfig.public.steamId
     )
   }
   // eslint-disable-next-line unused-imports/no-unused-vars

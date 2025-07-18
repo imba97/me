@@ -1,0 +1,14 @@
+[build]
+command = "pnpm build"
+publish = ".output/public"
+
+[build.environment]
+NODE_VERSION = "20"
+SECRETS_SCAN_ENABLED = "true"
+SECRETS_SCAN_OMIT_PATHS = ".nuxt/**,.output/**,node_modules/**,dist/**,public/_nuxt/**"
+SECRETS_SCAN_OMIT_KEYS = "NAVIDROME_API_URL,NAVIDROME_USERNAME,NAVIDROME_PASSWORD,STEAM_ID,STEAM_API_KEY,ONE_API_URL,ONE_API_KEY"
+
+[[redirects]]
+from = "/*"
+to = "/index.html"
+status = 200
