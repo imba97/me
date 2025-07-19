@@ -32,7 +32,7 @@ export const useSteam = defineStore('steam', {
 
       this.name = game.name
 
-      const headerImage = `https://steamcdn-a.akamaihd.net/steam/apps/${game.id}/header.jpg`
+      const headerImage = `/api/steam/game-image/${game.id}`
 
       if (this.image !== headerImage) {
         this.hasImage = false

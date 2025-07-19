@@ -18,12 +18,7 @@
             <div fccc>
               <div flex="~ col" size-full min-h-32 items-center gap-2>
                 <div fcc size-full>
-                  <NuxtImg
-                    v-if="steam.hasImage"
-                    :src="steam.image"
-                    provider="none"
-                    size-full
-                  />
+                  <MeImage :src="steam.image" size-full />
                 </div>
               </div>
 
@@ -43,12 +38,7 @@
 
           <div pa inset-0 z--1>
             <div pa inset-0 blur-16>
-              <NuxtImg
-                v-if="steam.hasImage"
-                :src="steam.image"
-                provider="none"
-                object-cover h-full
-              />
+              <MeImage :src="steam.image" object-cover h-full />
             </div>
           </div>
         </div>
