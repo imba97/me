@@ -20,9 +20,13 @@
       </div>
 
       <div>
-        <span>后来将匹配器抽离成了一个单独的项目叫</span>
+        <span>后来匹配器抽离成单独的项目</span>
         <IxIconText :preset="IconTextPreset.Github" href="imba97/matchinitx">
           matchinitx
+        </IxIconText>
+        <span>插件系统抽离成了</span>
+        <IxIconText :preset="IconTextPreset.Github" href="imba97/npm-plugin-kit">
+          npm-plugin-kit
         </IxIconText>
       </div>
     </li>
