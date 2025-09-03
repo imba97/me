@@ -60,7 +60,7 @@ export default defineNuxtModule<ModuleOptions>({
     name: 'nuxt-lodash',
     configKey: 'lodash',
     compatibility: {
-      nuxt: '^3.0.0'
+      nuxt: '^4.0.0'
     }
   },
   defaults: {

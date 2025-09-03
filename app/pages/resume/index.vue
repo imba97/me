@@ -3,7 +3,7 @@
     <div prose ma>
       <div mb-6 fyc gap-4>
         <div size-14>
-          <NuxtImg src="/favicon.png" alt="logo" size-full />
+          <NuxtImg src="/favicon.png" alt="logo" size-full m-0 />
         </div>
         <div text-8 font-thin bg-clip-text text-transparent bg-gradient-to-tr from="#bd34fe" to="#47caff" font="[none]">
           imba久期

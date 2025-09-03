@@ -12,10 +12,10 @@
 </template>
 
 <script lang="ts" setup>
-import type { AnimatedDelay } from '~/types/animated'
+import type { AnimatedDelay } from '@@/types/animated'
+import { AnimatedDelayKey } from '@@/types/animated'
 import { useIntersectionObserver } from '@vueuse/core'
 import { motion } from 'motion-v'
-import { AnimatedDelayKey } from '~/types/animated'
 
 const props = withDefaults(
   defineProps<{

@@ -17,9 +17,7 @@ export default defineNuxtConfig({
   ],
 
   image: {
-    provider: 'netlify',
-    domains: ['imba97.me'],
-    format: ['avif', 'webp']
+    provider: process.env.NODE_ENV === 'production' ? 'netlify' : 'ipx'
   },
 
   lodash: {
@@ -29,7 +27,7 @@ export default defineNuxtConfig({
   },
 
   css: [
-    '@unocss/reset/tailwind.css'
+    '@unocss/reset/tailwind-compat.css'
   ],
 
   imports: {
@@ -42,7 +40,7 @@ export default defineNuxtConfig({
         'IconTextPreset'
       ].map(name => ({
         name,
-        from: `@introxd/components`
+        from: '@introxd/components'
       }))
     ]
   },
@@ -76,23 +74,15 @@ export default defineNuxtConfig({
           IntroxdResolver()
         ]
       })
-    ],
-
-    css: {
-      preprocessorOptions: {
-        scss: {
-          api: 'modern-compiler'
-        }
-      }
-    }
+    ]
   },
 
   motionV: {
-    components: true, // 启用 Motion 组件
-    utilities: true, // 启用 Motion 工具类
-    prefix: 'motion' // 可选：自定义前缀
+    components: true,
+    utilities: true,
+    prefix: 'motion'
   },
 
-  compatibilityDate: '2024-07-25',
+  compatibilityDate: 'latest',
   devtools: { enabled: false }
 })

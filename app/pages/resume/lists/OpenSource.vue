@@ -52,20 +52,15 @@
 
     <li>
       <div>
-        <div>
-          <span>可以通过串口发送短信的</span>
-          <IxIconText :preset="IconTextPreset.Github" href="smserialport/smserialport">
-            smserialport
-          </IxIconText>
-          <span>。实现了中国大陆地区手机号发送短信，封装了适配器接口，可通过实现适配器对接更多国家或地区的发信逻辑</span>
-        </div>
-
-        <div>
-          <span>并写了一个 Electron 的应用</span>
-          <IxIconText :preset="IconTextPreset.Github" href="smserialport/smserialport-electron">
-            smserialport-electron
-          </IxIconText>
-        </div>
+        <span>可以通过串口发送短信的</span>
+        <IxIconText :preset="IconTextPreset.Github" href="smserialport/smserialport">
+          smserialport
+        </IxIconText>
+        <span>。实现了中国大陆地区手机号发送短信，封装了适配器接口，可通过实现适配器对接更多国家或地区的发信逻辑</span>
+        <span>，并写了一个 Electron 的应用</span>
+        <IxIconText :preset="IconTextPreset.Github" href="smserialport/smserialport-electron">
+          smserialport-electron
+        </IxIconText>
       </div>
     </li>
 

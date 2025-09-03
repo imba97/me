@@ -14,7 +14,7 @@
     <li>
       <div pr top-1>
         <IxIconText
-          icon-class="i-mynaui-tool text-white size-6" href="#"
+          icon-class="i-game-icons-cyber-eye text-white size-6 pr top-0.5" href="#"
           bg-slate-950
           hover="bg-slate-950! bg-opacity-70!"
           @click.stop="router.push('/resume/cyberpunk')"

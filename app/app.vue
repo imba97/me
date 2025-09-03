@@ -11,7 +11,7 @@ body,
 </template>
 
 <script lang="ts" setup>
-import { initAnalytics } from '../utils/analytics/51.la'
+import { initAnalytics } from '~/utils/analytics/51.la'
 
 import '@introxd/components/style.css'
 
