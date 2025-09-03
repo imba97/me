@@ -36,6 +36,7 @@
   "devDependencies": {
     "@imba97/eslint-config": "^0.0.6",
     "@types/fs-extra": "^11.0.4",
+    "@types/lodash-es": "^4.17.12",
     "@unocss/preset-web-fonts": "^66.5.0",
     "bumpp": "^10.2.3",
     "eslint": "^9.34.0",
@@ -43,7 +44,7 @@
     "esno": "^4.8.0",
     "fs-extra": "^11.3.1",
     "lint-staged": "^16.1.6",
-    "lodash-imports": "^0.0.3",
+    "lodash-es": "^4.17.21",
     "sass": "^1.92.0",
     "simple-git-hooks": "^2.13.1",
     "typescript": "^5.9.2",
