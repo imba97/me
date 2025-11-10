@@ -3,40 +3,22 @@ export const useSteam = defineStore('steam', {
     playing: false,
     name: '',
     image: '',
-    hasImage: false,
-    lastFetchTime: 0,
-    fetchInterval: 10000
+    hasImage: false
   }),
 
   actions: {
-    async fetchPlayingGame() {
-      const now = new Date().getTime()
+    updateFromSync(data: any) {
+      this.playing = data?.playing ?? false
 
-      if (this.lastFetchTime + (this.fetchInterval - 1000) > now) {
+      if (!this.playing || !data?.game) {
         return
       }
 
-      const response = await $fetch('/api/steam/playing', {
-        timeout: 10000
-      })
-
-      this.playing = response.playing
-
-      if (!this.playing) {
-        return
-      }
-
-      this.lastFetchTime = new Date().getTime()
-
-      const game = response.game!
-
-      this.name = game.name
-
-      const headerImage = `/api/steam/game-image/${game.id}`
+      this.name = data.game.name
+      const headerImage = `/api/steam/game-image/${data.game.id}`
 
       if (this.image !== headerImage) {
         this.hasImage = false
-
         this.hasImage = !!headerImage
         this.image = headerImage
       }
