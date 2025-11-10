@@ -32,9 +32,7 @@ export default defineEventHandler(async (): Promise<Result> => {
       data: result
     }
   }
-  // eslint-disable-next-line unused-imports/no-unused-vars
-  catch (error) {
-    await useStorage('cache').remove('navidrome:getPlaying:playing.json')
+  catch {
     return {
       success: false
     }
