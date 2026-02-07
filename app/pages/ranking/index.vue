@@ -42,6 +42,7 @@ interface RankingItem {
 }
 
 const rankings: RankingItem[] = [
-  { id: '1', name: '动漫', path: '/ranking/animation' }
+  { id: '1', name: '动漫', path: '/ranking/animation' },
+  { id: '2', name: '瑞幸咖啡', path: '/ranking/luckin-coffee' }
 ]
 </script>
