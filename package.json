@@ -27,6 +27,7 @@
     "destr": "^2.0.5",
     "eventsource-parser": "^3.0.6",
     "floating-vue": "^5.2.2",
+    "h2l-ranking": "^0.1.0",
     "motion-v": "^1.7.4",
     "nuxt": "^4.2.1",
     "pinia": "^3.0.4",

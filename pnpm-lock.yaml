@@ -44,6 +44,9 @@ importers:
       floating-vue:
         specifier: ^5.2.2
         version: 5.2.2(@nuxt/kit@3.19.0(magicast@0.5.1))(vue@3.5.24(typescript@5.9.3))
+      h2l-ranking:
+        specifier: ^0.1.0
+        version: 0.1.0(vue@3.5.24(typescript@5.9.3))
       motion-v:
         specifier: ^1.7.4
         version: 1.7.4(@vueuse/core@14.0.0(vue@3.5.24(typescript@5.9.3)))(vue@3.5.24(typescript@5.9.3))
@@ -3488,6 +3491,11 @@ packages:
   gzip-size@7.0.0:
     resolution: {integrity: sha512-O1Ld7Dr+nqPnmGpdhzLmMTQ4vAsD+rHwMm1NLUmoUFFymBOMKxCCrtDxqdBRYXdeEPEi3SyoR4TizJLQrnKBNA==}
     engines: {node: ^12.20.0 || ^14.13.1 || >=16.0.0}
+
+  h2l-ranking@0.1.0:
+    resolution: {integrity: sha512-dOzeB6SeYvUURq0V3LjQj2z6zwSwwQjWFDZ6f9aqtszRrgItqdPlyUMru+HvgUI70isKdU8GTlS0gaMD1CT3yw==}
+    peerDependencies:
+      vue: ^3.0.0
 
   h3@1.15.4:
     resolution: {integrity: sha512-z5cFQWDffyOe4vQ9xIqNfCZdV4p//vy6fBnr8Q1AWnVZ0teurKMG66rLj++TKwKPUP3u7iMUvrvKaEUiQw2QWQ==}
@@ -9331,6 +9339,10 @@ snapshots:
   gzip-size@7.0.0:
     dependencies:
       duplexer: 0.1.2
+
+  h2l-ranking@0.1.0(vue@3.5.24(typescript@5.9.3)):
+    dependencies:
+      vue: 3.5.24(typescript@5.9.3)
 
   h3@1.15.4:
     dependencies:
