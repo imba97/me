@@ -2,7 +2,7 @@
   <div size-full px-7 py-10 of-x-hidden>
     <div ma max-w-4xl>
       <div mb-6 flex="~" items-center gap-2>
-        <button text-gray-5 hover:text-gray-9 transition i-carbon-arrow-left @click="router.back()" />
+        <NuxtLink to="/resume" text-gray-5 hover:text-gray-9 transition i-carbon-arrow-left />
         <div text-6 font-bold>
           个人从夯到拉排行榜
         </div>
@@ -33,8 +33,6 @@
 </template>
 
 <script lang="ts" setup>
-const router = useRouter()
-
 interface RankingItem {
   id: string
   name: string
