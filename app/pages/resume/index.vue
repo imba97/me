@@ -1,16 +1,21 @@
 <template>
   <div class="main" size-full px-7 py-10 of-x-hidden>
     <div prose ma>
-      <div mb-6 fyc gap-4>
-        <div size-14>
-          <NuxtImg src="/favicon.png" alt="logo" size-full m-0 />
-        </div>
-        <div text-8 font-thin bg-clip-text text-transparent bg-gradient-to-tr from="#bd34fe" to="#47caff" font="[none]">
-          imba久期
-        </div>
+      <div mb-6 flex="~" justify-between items-center>
+        <div fyc gap-4>
+          <div size-14>
+            <NuxtImg src="/favicon.png" alt="logo" size-full m-0 />
+          </div>
+          <div text-8 font-thin bg-clip-text text-transparent bg-gradient-to-tr from="#bd34fe" to="#47caff" font="[none]">
+            imba久期
+          </div>
 
-        <StatusMusic />
-        <StatusGame />
+          <StatusMusic />
+          <StatusGame />
+        </div>
+        <NuxtLink to="/ranking" opacity-30 transition-all hover:opacity-100 hover:scale-110>
+          <div i-solar-ranking-bold-duotone size-6 bg-gradient-to-tr from="#bd34fe" to="#47caff" />
+        </NuxtLink>
       </div>
 
       <div text-gray>
