@@ -57,67 +57,6 @@
 
     <li>
       <div>
-        <span>免安装脚本</span>
-        <IxIconText :preset="IconTextPreset.Github" href="imba97/iconfontx">
-          iconfontx
-        </IxIconText>
-        <span>，将 iconfont 的图标生成一个 CSS 文件在本地使用的，自动拉取样式和字体、自动转 base64、自动压缩样式文件</span>
-      </div>
-    </li>
-
-    <li>
-      <div>
-        <span>UnoCSS 颜色色阶生成工具</span>
-        <IxIconText :preset="IconTextPreset.Github" href="imba97/uno-colors">
-          uno-colors
-        </IxIconText>
-        <span>，和 UnoCSS Hexo 插件</span>
-        <IxIconText :preset="IconTextPreset.Github" href="imba97/hexo-unocss">
-          hexo-unocss
-        </IxIconText>
-      </div>
-    </li>
-
-    <li>
-      <div>
-        <span>可以通过串口发送短信的</span>
-        <IxIconText :preset="IconTextPreset.Github" href="smserialport/smserialport">
-          smserialport
-        </IxIconText>
-        <span>。实现了中国大陆地区手机号发送短信，封装了适配器接口，可通过实现适配器对接更多国家或地区的发信逻辑</span>
-        <span>，并写了一个 Electron 的应用</span>
-        <IxIconText :preset="IconTextPreset.Github" href="smserialport/smserialport-electron">
-          smserialport-electron
-        </IxIconText>
-      </div>
-    </li>
-
-    <li>
-      <div>
-        <span>自动引入 Lodash 的</span>
-        <IxIconText :preset="IconTextPreset.Github" href="imba97/lodash-imports">
-          lodash-imports
-        </IxIconText>
-        <span>，配合自动引入插件使用，可以配置过滤、前缀。</span>
-        <span>内置 Lodash 库，无需额外安装，可以在自动引入插件外使用 Lodash 的函数</span>
-      </div>
-    </li>
-
-    <li>
-      <div>
-        <span>定制个人简介</span>
-        <IxIconText :preset="IconTextPreset.Github" href="introxd/web">
-          Intro XD
-        </IxIconText>
-        <span>，个人付费定制简介项目。在做项目时有一些不错的组件，单独抽出来做了</span>
-        <IxIconText :preset="IconTextPreset.Github" href="introxd/components">
-          组件库
-        </IxIconText>
-      </div>
-    </li>
-
-    <li>
-      <div>
         <span>饥荒联机版菜谱速查工具</span>
         <IxIconText :preset="IconTextPreset.Github" href="imba97/dst-recipe">
           dst-recipe
@@ -131,11 +70,17 @@
 
     <li>
       <div>
-        <span>蓝天救援队管理系统</span>
-        <IxIconText :preset="IconTextPreset.Github" href="bsr-project">
-          bsr-project
+        更多开源项目
+      </div>
+      <div>
+        <IxIconText
+          v-for="item in moreProjects"
+          :key="item.href"
+          :preset="IconTextPreset.Github"
+          :href="item.href"
+        >
+          {{ item.name }}
         </IxIconText>
-        <span>，包含用户端、服务端、后台管理、官网。功能有人员管理、任务管理、签到签退、导出表格等。前端 Vue 3，后端 Nestjs，数据库 MySQL</span>
       </div>
     </li>
   </BaseList>
@@ -143,4 +88,16 @@
 
 <script lang="ts" setup>
 import BaseList from './BaseList.vue'
+
+const moreProjects = [
+  { name: 'iconfontx', href: 'imba97/iconfontx' },
+  { name: 'uno-colors', href: 'imba97/uno-colors' },
+  { name: 'hexo-unocss', href: 'imba97/hexo-unocss' },
+  { name: 'smserialport', href: 'smserialport/smserialport' },
+  { name: 'smserialport-electron', href: 'smserialport/smserialport-electron' },
+  { name: 'lodash-imports', href: 'imba97/lodash-imports' },
+  { name: 'introxd', href: 'introxd/web' },
+  { name: 'introxd-components', href: 'introxd/components' },
+  { name: 'bsr-project', href: 'bsr-project' }
+]
 </script>
