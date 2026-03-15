@@ -66,6 +66,10 @@ export default defineNuxtConfig({
     }
   },
 
+  future: {
+    compatibilityVersion: 5
+  },
+
   vite: {
     plugins: [
       components({

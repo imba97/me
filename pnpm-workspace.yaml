@@ -2,6 +2,10 @@ shellEmulator: true
 
 trustPolicy: no-downgrade
 
+overrides:
+  chokidar: ^3.5.3
+  vite: ^8.0.0
+
 onlyBuiltDependencies:
   - '@parcel/watcher'
   - esbuild
