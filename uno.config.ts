@@ -33,6 +33,9 @@ export default defineConfig({
   shortcuts: [
     [/^clickable(-.*)?$/, ([, scale]) => `cursor-pointer transition active:scale${scale || '-95'}`],
 
+    ['bg-colorful', 'bg-gradient-to-tr from-[#bd34fe] to-[#47caff]'],
+    ['text-colorful', 'bg-colorful text-transparent bg-clip-text'],
+
     ['pr', 'relative'],
     ['pa', 'absolute'],
     ['pf', 'fixed'],
