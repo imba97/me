@@ -27,7 +27,7 @@ const rankings: Rankings = {
   ],
   upper: [
     {
-      title: '羽衣青体果蔬茶',
+      title: '羽衣轻体果蔬茶',
       description: '感觉就很健康',
       cover: image('/assets/images/ranking/luckin-coffee/collard-tea.png')
     }
