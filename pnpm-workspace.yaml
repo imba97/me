@@ -3,13 +3,12 @@ shellEmulator: true
 trustPolicy: no-downgrade
 
 overrides:
-  chokidar: ^3.5.3
-  vite: ^8.0.0
+  chokidar: ^5.0.0
+  semver: 7.7.3
+  vite: ^8.0.13
 
-onlyBuiltDependencies:
-  - '@parcel/watcher'
-  - esbuild
-  - sharp
-  - simple-git-hooks
-  - vue-demi
-  - workerd
+allowBuilds:
+  '@parcel/watcher': true
+  esbuild: true
+  sharp: true
+  simple-git-hooks: true
