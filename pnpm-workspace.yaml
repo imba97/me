@@ -3,9 +3,7 @@ shellEmulator: true
 trustPolicy: no-downgrade
 
 overrides:
-  chokidar: ^5.0.0
-  semver: 7.7.3
-  vite: ^8.0.13
+  semver: ^7.7.2
 
 allowBuilds:
   '@parcel/watcher': true
