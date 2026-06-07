@@ -26,7 +26,7 @@
         <div
           lt-md="h-48 w-48" md="h-86 w-86" my-4 rounded-full of-hidden
         >
-          <NuxtImg v-show="steam.hasImage" :src="steam.blobImage" size-full object-cover animate-fade-in />
+          <NuxtImg v-show="steam.hasImage" :src="steam.image" size-full object-cover animate-fade-in />
           <div v-show="!steam.hasImage" i-mdi-steam size-full bg-dark-1 />
         </div>
         <Text

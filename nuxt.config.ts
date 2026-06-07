@@ -17,7 +17,11 @@ export default defineNuxtConfig({
   ],
 
   image: {
-    provider: process.env.NODE_ENV === 'production' ? 'netlify' : 'ipx'
+    provider: process.env.NODE_ENV === 'production' ? 'netlify' : 'ipx',
+    domains: [
+      'shared.akamai.steamstatic.com',
+      'store.akamai.steamstatic.com'
+    ]
   },
 
   lodash: {

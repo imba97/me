@@ -15,7 +15,7 @@ export const useSteam = defineStore('steam', {
       }
 
       this.name = data.game.name
-      const headerImage = `/api/steam/game-image/${data.game.id}`
+      const headerImage = data.game.header_image ?? ''
 
       if (this.image !== headerImage) {
         this.hasImage = false
