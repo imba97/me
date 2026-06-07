@@ -4,13 +4,12 @@
  * Temporary solution
  *
  * TODO:
- *   - remove this folder
- *   - remove lodash-es @types/lodash-es
+ *   - remove this folder and migrate call sites to es-toolkit
  *   - add nuxt-lodash modules to nuxt.config.ts
  */
 
 import type { Import } from 'unimport'
-import * as lodash from 'lodash-es'
+import * as lodash from 'es-toolkit/compat'
 
 import { addImports, createResolver, defineNuxtModule } from 'nuxt/kit'
 

@@ -1,1 +1,1 @@
-export * from 'lodash-es'
+export * from 'es-toolkit/compat'
