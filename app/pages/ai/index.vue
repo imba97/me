@@ -10,6 +10,18 @@
   width: 100%;
   z-index: 10;
 }
+
+:deep(.markstream-vue) {
+  --ms-flow-paragraph-y: 1em;
+}
+
+:deep(.markstream-vue > .node-slot:first-child .paragraph-node) {
+  margin-top: 0;
+}
+
+:deep(.markstream-vue > .node-slot:last-child .paragraph-node) {
+  margin-bottom: 0;
+}
 </style>
 
 <template>
