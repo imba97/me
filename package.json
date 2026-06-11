@@ -7,7 +7,7 @@
   "scripts": {
     "prepare": "simple-git-hooks && nuxt prepare",
     "p": "nuxt prepare",
-    "dev": "nuxt dev --dotenv .env.local",
+    "dev": "TMPDIR=/tmp nuxt dev --dotenv .env.local",
     "build": "esno scripts/build.ts",
     "preview": "nuxt preview",
     "start-docker": "nuxt start --hostname 0.0.0.0 --port $NUXT_PORT",

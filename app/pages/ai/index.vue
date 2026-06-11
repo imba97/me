@@ -101,8 +101,6 @@
 
 <script lang="ts" setup>
 import { useScroll } from '@vueuse/core'
-import { destr } from 'destr'
-import { createParser } from 'eventsource-parser'
 import { motion } from 'motion-v'
 
 enum MessageType {
@@ -116,17 +114,10 @@ interface Message {
   id?: string
 }
 
-interface AIResponse {
-  choices: {
-    delta: {
-      content: string
-    }
-  }[]
-}
-
 const messages = ref<Message[]>([])
 const messageContainerRef = useTemplateRef('message-container')
 const { arrivedState } = useScroll(messageContainerRef)
+const { streamMessage } = useAiChat()
 
 const userInput = ref('')
 const isKeyboardVisible = ref(false)
@@ -157,14 +148,12 @@ watch(() => [...messages.value], () => {
   })
 }, { deep: true })
 
-// 滚动到底部的函数
 function scrollToBottom() {
   if (messageContainerRef.value) {
     messageContainerRef.value.scrollTop = messageContainerRef.value.scrollHeight
   }
 }
 
-// 智能滚动：仅在用户处于底部时滚动
 function smartScrollToBottom() {
   if (isAtBottom.value) {
     scrollToBottom()
@@ -173,11 +162,9 @@ function smartScrollToBottom() {
 
 function onInputFocus() {
   isKeyboardVisible.value = true
-  // 当输入法弹出时，滚动到底部
   setTimeout(() => {
     window.scrollTo(0, document.body.scrollHeight)
-    scrollToBottom() // 这里保持强制滚动到底部，因为是用户操作
-    // 不需要手动设置 isAtBottom，useScroll 会自动更新
+    scrollToBottom()
   }, 300)
 }
 
@@ -185,12 +172,10 @@ function onInputBlur() {
   isKeyboardVisible.value = false
 }
 
-// 使用 eventsource-parser 处理 SSE 流
 async function sendMessage() {
   if (!userInput.value.trim())
     return
 
-  // 添加用户消息
   const userMessage: Message = {
     type: MessageType.USER,
     content: userInput.value,
@@ -217,56 +202,20 @@ async function sendMessage() {
     content: aiMessage.content as any
   })
 
-  // 添加消息后立即滚动到底部
   nextTick(() => {
-    scrollToBottom() // 发送新消息时强制滚动到底部
+    scrollToBottom()
   })
 
-  const response = await $fetch<ReadableStream>('/api/ai', {
-    method: 'POST',
-    body: {
-      message: userMessage.content
-    },
-    responseType: 'stream'
-  })
-
-  // 创建 SSE 解析器
-  const parser = createParser({
-    onEvent(event) {
-      if (event.data === '[DONE]') {
-        return
-      }
-
-      if (!event.data) {
-        return
-      }
-
-      const json = destr<AIResponse>(event.data)
-
-      if (!json) {
-        return
-      }
-
-      aiMessage.content.value += _map(json.choices, choice => _get(choice, 'delta.content', '')).join('')
-
-      // AI 回复内容更新时智能滚动到底部
+  try {
+    await streamMessage(userMessage.content as string, (delta) => {
+      aiMessage.content.value += delta
       nextTick(() => {
         smartScrollToBottom()
       })
-    }
-  })
-
-  // 读取流数据并传递给解析器
-  const reader = response.pipeThrough(new TextDecoderStream()).getReader()
-
-  while (true) {
-    const { value, done } = await reader.read()
-
-    if (done)
-      break
-
-    // 将接收到的数据块喂给解析器
-    parser.feed(value)
+    })
+  }
+  catch {
+    aiMessage.content.value = '请求失败，请稍后重试'
   }
 }
 

@@ -2,81 +2,72 @@ import { createError } from 'h3'
 
 export default defineEventHandler(async (event) => {
   const { message } = await readBody(event)
-  const runtimeConfig = useRuntimeConfig()
+  const { aiApiUrl, aiApiKey, githubAccessToken } = useRuntimeConfig()
 
-  const apiUrl = runtimeConfig.oneApiUrl
-  const apiKey = runtimeConfig.oneApiKey
-
-  if (!apiUrl || !apiKey) {
+  if (!aiApiUrl || !aiApiKey) {
     throw createError({
       statusCode: 500,
-      statusMessage: 'Missing API configuration'
+      statusMessage: 'Missing AI API configuration'
     })
   }
+
+  if (!message?.trim()) {
+    throw createError({
+      statusCode: 400,
+      statusMessage: 'Message is required'
+    })
+  }
+
+  let systemPrompt: string
 
   try {
-    // 调用 OpenAI API (流式响应)
-    const response = await fetch(`${apiUrl}/v1/chat/completions`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${apiKey}`
-      },
-      body: JSON.stringify({
-        model: 'deepseek-chat',
-        messages: [
-          {
-            role: 'user',
-            content: message
-          }
-        ],
-        stream: true
-      })
-    })
-
-    if (!response.ok) {
-      const error = await response.text()
-      throw createError({
-        statusCode: response.status,
-        statusMessage: `OpenAI API错误: ${error}`
-      })
-    }
-
-    // 设置响应头，指定为事件流
-    setResponseHeader(event, 'Content-Type', 'text/event-stream')
-    setResponseHeader(event, 'Cache-Control', 'no-cache')
-    setResponseHeader(event, 'Connection', 'keep-alive')
-
-    // 创建流
-    const stream = new ReadableStream({
-      async start(controller) {
-        // 确保响应body是可读流
-        if (!response.body) {
-          controller.close()
-          return
-        }
-
-        const reader = response.body.getReader()
-
-        while (true) {
-          const { done, value } = await reader.read()
-          if (done) {
-            controller.close()
-            break
-          }
-
-          controller.enqueue(value)
-        }
-      }
-    })
-
-    return stream
+    systemPrompt = await getAiSystemPrompt(githubAccessToken)
   }
-  catch (error: any) {
-    console.error('API调用错误:', error)
+  catch (error) {
+    const message = error instanceof Error ? error.message : 'Failed to load system prompt'
     throw createError({
       statusCode: 500,
-      statusMessage: `服务器错误: ${error.message || '未知错误'}`
+      statusMessage: message
     })
   }
+
+  const response = await fetch(`${aiApiUrl}/chat/completions`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${aiApiKey}`
+    },
+    body: JSON.stringify({
+      model: 'MiniMax-M3',
+      messages: [
+        { role: 'system', content: systemPrompt },
+        { role: 'user', content: message }
+      ],
+      stream: true,
+      thinking: { type: 'disabled' }
+    })
+  })
+
+  if (!response.ok) {
+    const error = await response.text()
+    throw createError({
+      statusCode: response.status,
+      statusMessage: `AI API error: ${error}`
+    })
+  }
+
+  if (!response.body) {
+    throw createError({
+      statusCode: 500,
+      statusMessage: 'AI API returned empty response body'
+    })
+  }
+
+  setResponseHeaders(event, {
+    'Content-Type': 'text/event-stream',
+    'Cache-Control': 'no-cache',
+    'Connection': 'keep-alive'
+  })
+
+  return response.body
 })
