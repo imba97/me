@@ -1,5 +1,7 @@
+import { buildAiSystemPrompt } from './ai-system-prompt-local'
+
 const GIST_ID = 'bdc1cb7ad6eb40a7b7a4a1c25accda60'
-const PROMPT_FILE = 'prompt.txt'
+const RESUME_FILE = 'resume.md'
 const CACHE_TTL_MS = 60 * 60 * 1000
 
 interface GistFile {
@@ -12,7 +14,7 @@ interface GistResponse {
 
 let cache: { content: string, fetchedAt: number } | null = null
 
-export async function getAiSystemPrompt(token: string): Promise<string> {
+async function fetchResumeFromGist(token: string): Promise<string> {
   if (!token) {
     throw new Error('Missing GITHUB_ACCESS_TOKEN')
   }
@@ -30,16 +32,21 @@ export async function getAiSystemPrompt(token: string): Promise<string> {
   })
 
   if (!response.ok) {
-    throw new Error(`Failed to fetch system prompt gist: ${response.status}`)
+    throw new Error(`Failed to fetch resume gist: ${response.status}`)
   }
 
   const gist = await response.json() as GistResponse
-  const content = gist.files?.[PROMPT_FILE]?.content
+  const content = gist.files?.[RESUME_FILE]?.content
 
   if (!content) {
-    throw new Error(`Missing ${PROMPT_FILE} in system prompt gist`)
+    throw new Error(`Missing ${RESUME_FILE} in gist`)
   }
 
   cache = { content, fetchedAt: Date.now() }
   return content
+}
+
+export async function getAiSystemPrompt(token: string): Promise<string> {
+  const resume = await fetchResumeFromGist(token)
+  return buildAiSystemPrompt(resume)
 }
