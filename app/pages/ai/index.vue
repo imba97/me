@@ -201,14 +201,16 @@ async function sendMessage() {
 
   await new Promise(resolve => setTimeout(resolve, 300))
 
-  const aiMessage: Message = {
+  messages.value.push({
     type: MessageType.AI,
     content: '',
     isFinal: false,
     id: Date.now().toString()
-  }
+  })
 
-  messages.value.push(aiMessage)
+  const aiMessage = messages.value.at(-1)
+  if (!aiMessage)
+    return
 
   nextTick(() => {
     scrollToBottom()
