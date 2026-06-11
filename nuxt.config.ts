@@ -31,7 +31,8 @@ export default defineNuxtConfig({
   },
 
   css: [
-    '@unocss/reset/tailwind-compat.css'
+    '@unocss/reset/tailwind-compat.css',
+    'markstream-vue/index.css'
   ],
 
   imports: {

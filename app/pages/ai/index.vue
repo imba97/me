@@ -33,7 +33,14 @@
             </template>
 
             <template v-if="msg.content.length > 0">
-              {{ msg.content }}
+              <MarkdownRender
+                mode="chat"
+                :content="msg.content"
+                :final="getMessageFinal(msg)"
+                smooth-streaming="auto"
+                :fade="false"
+                html-policy="escape"
+              />
             </template>
             <template v-else>
               <div i-line-md-loading-loop />
@@ -101,6 +108,7 @@
 
 <script lang="ts" setup>
 import { useScroll } from '@vueuse/core'
+import MarkdownRender from 'markstream-vue'
 import { motion } from 'motion-v'
 
 enum MessageType {
@@ -110,8 +118,13 @@ enum MessageType {
 
 interface Message {
   type: MessageType
-  content: Ref<string> | string
+  content: string
   id?: string
+  isFinal?: boolean
+}
+
+function getMessageFinal(msg: Message): boolean {
+  return msg.isFinal ?? true
 }
 
 const messages = ref<Message[]>([])
@@ -182,40 +195,38 @@ async function sendMessage() {
     id: Date.now().toString()
   }
 
-  messages.value.push({
-    ...userMessage,
-    content: userMessage.content as string
-  })
+  messages.value.push(userMessage)
 
   userInput.value = ''
 
   await new Promise(resolve => setTimeout(resolve, 300))
 
-  const aiMessage = {
+  const aiMessage: Message = {
     type: MessageType.AI,
-    content: ref(''),
+    content: '',
+    isFinal: false,
     id: Date.now().toString()
   }
 
-  messages.value.push({
-    ...aiMessage,
-    content: aiMessage.content as any
-  })
+  messages.value.push(aiMessage)
 
   nextTick(() => {
     scrollToBottom()
   })
 
   try {
-    await streamMessage(userMessage.content as string, (delta) => {
-      aiMessage.content.value += delta
+    await streamMessage(userMessage.content, (delta) => {
+      aiMessage.content += delta
       nextTick(() => {
         smartScrollToBottom()
       })
     })
   }
   catch {
-    aiMessage.content.value = '请求失败，请稍后重试'
+    aiMessage.content = '请求失败，请稍后重试'
+  }
+  finally {
+    aiMessage.isFinal = true
   }
 }
 
