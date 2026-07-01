@@ -5,6 +5,11 @@
 <script lang="ts" setup>
 import type { Rankings } from 'h2l-ranking'
 
+definePageMeta({
+  title: '瑞幸咖啡排行榜 - imba97',
+  description: 'imba久期常点的瑞幸单品推荐。'
+})
+
 const image = useImage()
 
 const rankings: Rankings = {

@@ -43,4 +43,9 @@ const rankings: RankingItem[] = [
   { id: '1', name: '动漫', path: '/ranking/animation' },
   { id: '2', name: '瑞幸咖啡', path: '/ranking/luckin-coffee' }
 ]
+
+definePageMeta({
+  title: '个人从夯到拉排行榜 - imba97',
+  description: 'imba久期的个人喜好排行：动漫、瑞幸咖啡……'
+})
 </script>

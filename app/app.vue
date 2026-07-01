@@ -13,10 +13,17 @@ body,
 <script lang="ts" setup>
 import { initAnalytics } from '~/utils/analytics/51.la'
 
+import { createShareMeta, DEFAULT_FAVICON } from '~/utils/seo/share-meta'
 import '@introxd/components/style.css'
 
-useHead({
-  title: 'imba97',
+const route = useRoute()
+
+useHead(() => ({
+  ...createShareMeta({
+    path: route.path,
+    frontmatter: route.meta as Record<string, unknown>,
+    defaultImage: DEFAULT_FAVICON
+  }),
   htmlAttrs: {
     lang: 'zh'
   },
@@ -24,7 +31,7 @@ useHead({
     {
       rel: 'icon',
       type: 'image/png',
-      href: '/favicon.png'
+      href: DEFAULT_FAVICON
     }
   ],
   script: [
@@ -35,7 +42,7 @@ useHead({
           src: '//sdk.51.la/js-sdk-pro.min.js'
         }
   ]
-})
+}))
 
 initAnalytics()
 

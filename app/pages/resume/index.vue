@@ -91,4 +91,9 @@ import Gadgets from './lists/Gadgets.vue'
 import OpenSource from './lists/OpenSource.vue'
 import Pages from './lists/Pages.vue'
 import TechnologyStack from './lists/TechnologyStack.vue'
+
+definePageMeta({
+  title: '个人简介 - imba97',
+  description: 'imba久期，前端 / 开源爱好者 / 自建服务狂热者。技术栈、开源项目与小玩意儿。'
+})
 </script>

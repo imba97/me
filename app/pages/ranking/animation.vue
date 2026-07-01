@@ -5,6 +5,11 @@
 <script lang="ts" setup>
 import type { Rankings } from 'h2l-ranking'
 
+definePageMeta({
+  title: '动漫排行榜 - imba97',
+  description: 'imba久期看过的动漫，从夯到拉。'
+})
+
 const image = useImage()
 
 const rankings: Rankings = {
