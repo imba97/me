@@ -55,8 +55,13 @@ export default defineNuxtConfig({
     navidromeUsername: process.env.NAVIDROME_USERNAME,
     navidromePassword: process.env.NAVIDROME_PASSWORD,
     steamApiKey: process.env.STEAM_API_KEY,
+    aiProvider: process.env.AI_PROVIDER ?? 'anthropic',
     aiApiUrl: process.env.AI_API_URL,
     aiApiKey: process.env.AI_API_KEY,
+    aiModel: process.env.AI_MODEL ?? 'MiniMax-M3',
+    aiMaxTokens: process.env.AI_MAX_TOKENS
+      ? Number(process.env.AI_MAX_TOKENS)
+      : 4096,
     githubAccessToken: process.env.GITHUB_ACCESS_TOKEN,
 
     public: {

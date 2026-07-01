@@ -2,7 +2,8 @@ import { createError } from 'h3'
 
 export default defineEventHandler(async (event) => {
   const { message } = await readBody(event)
-  const { aiApiUrl, aiApiKey, githubAccessToken } = useRuntimeConfig()
+  const { aiApiUrl, aiApiKey, aiProvider, aiModel, aiMaxTokens, githubAccessToken }
+    = useRuntimeConfig()
 
   if (!aiApiUrl || !aiApiKey) {
     throw createError({
@@ -24,28 +25,24 @@ export default defineEventHandler(async (event) => {
     systemPrompt = await getAiSystemPrompt(githubAccessToken)
   }
   catch (error) {
-    const message = error instanceof Error ? error.message : 'Failed to load system prompt'
+    const errMsg = error instanceof Error ? error.message : 'Failed to load system prompt'
     throw createError({
       statusCode: 500,
-      statusMessage: message
+      statusMessage: errMsg
     })
   }
 
-  const response = await fetch(`${aiApiUrl}/chat/completions`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${aiApiKey}`
-    },
-    body: JSON.stringify({
-      model: 'MiniMax-M3',
-      messages: [
-        { role: 'system', content: systemPrompt },
-        { role: 'user', content: message }
-      ],
-      stream: true,
-      thinking: { type: 'disabled' }
-    })
+  const provider = createAiProvider({
+    name: aiProvider as 'openai' | 'anthropic' | undefined,
+    baseUrl: aiApiUrl,
+    apiKey: aiApiKey,
+    model: aiModel,
+    maxTokens: aiMaxTokens
+  })
+
+  const response = await provider.chat({
+    systemPrompt,
+    messages: [{ role: 'user', content: message }]
   })
 
   if (!response.ok) {
@@ -53,13 +50,6 @@ export default defineEventHandler(async (event) => {
     throw createError({
       statusCode: response.status,
       statusMessage: `AI API error: ${error}`
-    })
-  }
-
-  if (!response.body) {
-    throw createError({
-      statusCode: 500,
-      statusMessage: 'AI API returned empty response body'
     })
   }
 
