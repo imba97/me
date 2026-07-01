@@ -1,4 +1,5 @@
 import type { AIProvider, ChatMessage, ChatRequest, ChatTool, ProviderConfig } from './types'
+import { stripTrailingSlash } from './url'
 
 /**
  * OpenAI-compatible chat/completions provider.
@@ -97,8 +98,4 @@ function toOpenAIMessage(m: ChatMessage) {
     }
   }
   return { role: 'user' as const, content: m.content }
-}
-
-function stripTrailingSlash(s: string): string {
-  return s.replace(/\/+$/, '')
 }

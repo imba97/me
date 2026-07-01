@@ -28,15 +28,15 @@
   <div flex flex-col h-full bg-gray-100 class="ai-chat-container">
     <div ref="message-container" flex-1 p-4 overflow-auto class="message-container">
       <div max-w-3xl mx-auto space-y-4>
-        <div v-show="messages.length === 0" text="4 center gray" space-y-4 pt-4>
+        <div v-show="visibleMessages.length === 0" text="4 center gray" space-y-4 pt-4>
           <p>求职偷懒 AI，精确获取我的简历信息</p>
           <p>您可以输入<span font-bold px-1>想要了解的问题</span>或<span font-bold px-1>招聘要求</span>等</p>
         </div>
 
-        <template v-for="(msg, index) in messages" :key="index">
+        <template v-for="(msg, idx) in visibleMessages" :key="msg.id">
           <!-- AI 消息 -->
           <MessageBubble
-            v-if="msg.type === MessageType.AI"
+            v-if="msg.role === 'assistant'"
             position="left"
             bg-class="bg-white"
           >
@@ -48,7 +48,7 @@
               <MarkdownRender
                 mode="chat"
                 :content="msg.content"
-                :final="getMessageFinal(msg)"
+                :final="!isStreaming || idx < visibleMessages.length - 1"
                 smooth-streaming="auto"
                 :fade="false"
                 html-policy="escape"
@@ -103,12 +103,14 @@
           type="text"
           placeholder="输入消息..."
           flex-1 border rounded-l-lg px-4 py-2 outline-none focus="ring-2 ring-blue-500"
+          :disabled="isStreaming"
           @keyup.enter="sendMessage"
           @focus="onInputFocus"
           @blur="onInputBlur"
         >
         <button
           bg-blue-500 text-white px-4 py-2 rounded-r-lg hover="bg-blue-600"
+          :disabled="isStreaming"
           @click="sendMessage"
         >
           发送
@@ -123,36 +125,34 @@ import { useScroll } from '@vueuse/core'
 import MarkdownRender from 'markstream-vue'
 import { motion } from 'motion-v'
 
-enum MessageType {
-  AI,
-  USER
-}
+const { messages, isStreaming, send } = useAiSession({
+  tools: aiTools.listTools(),
+  executeCall: aiTools.execute
+})
 
-interface Message {
-  type: MessageType
-  content: string
-  id?: string
-  isFinal?: boolean
-}
+const visibleMessages = computed(() => {
+  const arr = messages.value
+  const lastAssistantIdx = arr.map(m => m.role).lastIndexOf('assistant')
+  return arr.filter((m, idx) => {
+    if (m.role === 'tool')
+      return false
+    if (m.role === 'assistant' && m.content.length === 0 && idx !== lastAssistantIdx)
+      return false
+    return true
+  })
+})
 
-function getMessageFinal(msg: Message): boolean {
-  return msg.isFinal ?? true
-}
-
-const messages = ref<Message[]>([])
 const messageContainerRef = useTemplateRef('message-container')
 const { arrivedState } = useScroll(messageContainerRef)
-const { streamMessage } = useAiChat()
 
 const userInput = ref('')
-const isKeyboardVisible = ref(false)
-const showSuggestion = ref(false)
 const defaultInput = '做个自我介绍'
+const showSuggestion = ref(false)
 
 const isAtBottom = computed(() => arrivedState.bottom)
 
 const shouldShowSuggestion = computed(
-  () => showSuggestion.value && !userInput.value.trim() && messages.value.length === 0
+  () => showSuggestion.value && !userInput.value.trim() && visibleMessages.value.length === 0
 )
 
 const suggestionAnimateState = computed(() => {
@@ -186,62 +186,26 @@ function smartScrollToBottom() {
 }
 
 function onInputFocus() {
-  isKeyboardVisible.value = true
   setTimeout(() => {
     window.scrollTo(0, document.body.scrollHeight)
     scrollToBottom()
   }, 300)
 }
 
-function onInputBlur() {
-  isKeyboardVisible.value = false
-}
-
 async function sendMessage() {
-  if (!userInput.value.trim())
+  if (!userInput.value.trim() || isStreaming.value)
     return
 
-  const userMessage: Message = {
-    type: MessageType.USER,
-    content: userInput.value,
-    id: Date.now().toString()
-  }
-
-  messages.value.push(userMessage)
-
+  const text = userInput.value
   userInput.value = ''
 
-  await new Promise(resolve => setTimeout(resolve, 300))
-
-  messages.value.push({
-    type: MessageType.AI,
-    content: '',
-    isFinal: false,
-    id: Date.now().toString()
-  })
-
-  const aiMessage = messages.value.at(-1)
-  if (!aiMessage)
-    return
+  await new Promise(resolve => setTimeout(resolve, 50))
 
   nextTick(() => {
     scrollToBottom()
   })
 
-  try {
-    await streamMessage(userMessage.content, (delta) => {
-      aiMessage.content += delta
-      nextTick(() => {
-        smartScrollToBottom()
-      })
-    })
-  }
-  catch {
-    aiMessage.content = '请求失败，请稍后重试'
-  }
-  finally {
-    aiMessage.isFinal = true
-  }
+  await send(text)
 }
 
 function sendSuggestion() {

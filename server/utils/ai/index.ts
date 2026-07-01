@@ -29,5 +29,3 @@ export function createAiProvider(opts: AiProviderOptions): AIProvider {
       throw new Error(`Unknown AI provider: ${opts.name}`)
   }
 }
-
-export type { AIProvider, ChatMessage, ChatRequest, ChatTool, ToolCall } from './types'

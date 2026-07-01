@@ -1,7 +1,42 @@
+import type { ChatMessage, ChatTool, ToolCall } from '~~/shared/ai/chat'
+import type { AiProviderName } from '../utils/ai'
 import { createError } from 'h3'
 
+interface WireMessage {
+  role: 'user' | 'assistant' | 'tool'
+  content: string
+  tool_calls?: ToolCall[]
+  tool_call_id?: string
+  name?: string
+}
+
+interface AiRequest {
+  messages: WireMessage[]
+  tools?: ChatTool[]
+}
+
+function toInternalMessage(m: WireMessage): ChatMessage {
+  if (m.role === 'tool') {
+    return {
+      role: 'tool',
+      toolCallId: m.tool_call_id ?? '',
+      ...(m.name ? { name: m.name } : {}),
+      content: m.content
+    }
+  }
+  if (m.role === 'assistant') {
+    return {
+      role: 'assistant',
+      content: m.content,
+      ...(m.tool_calls && m.tool_calls.length > 0 ? { toolCalls: m.tool_calls } : {})
+    }
+  }
+  return { role: 'user', content: m.content }
+}
+
 export default defineEventHandler(async (event) => {
-  const { message } = await readBody(event)
+  const body = await readBody<AiRequest>(event)
+  const { messages, tools } = body ?? {}
   const { aiApiUrl, aiApiKey, aiProvider, aiModel, aiMaxTokens, githubAccessToken }
     = useRuntimeConfig()
 
@@ -12,17 +47,17 @@ export default defineEventHandler(async (event) => {
     })
   }
 
-  if (!message?.trim()) {
+  if (!Array.isArray(messages) || messages.length === 0) {
     throw createError({
       statusCode: 400,
-      statusMessage: 'Message is required'
+      statusMessage: 'messages is required'
     })
   }
 
-  let systemPrompt: string
+  let baseSystemPrompt: string
 
   try {
-    systemPrompt = await getAiSystemPrompt(githubAccessToken)
+    baseSystemPrompt = await getAiSystemPrompt(githubAccessToken)
   }
   catch (error) {
     const errMsg = error instanceof Error ? error.message : 'Failed to load system prompt'
@@ -32,8 +67,20 @@ export default defineEventHandler(async (event) => {
     })
   }
 
+  const systemPrompt = tools && tools.length > 0
+    ? `${baseSystemPrompt}\n\n${formatToolDescriptions(tools)}`
+    : baseSystemPrompt
+
+  const providerName = (aiProvider ?? 'anthropic') as AiProviderName
+  if (providerName !== 'openai' && providerName !== 'anthropic') {
+    throw createError({
+      statusCode: 500,
+      statusMessage: `Invalid AI_PROVIDER: ${aiProvider}`
+    })
+  }
+
   const provider = createAiProvider({
-    name: aiProvider as 'openai' | 'anthropic' | undefined,
+    name: providerName,
     baseUrl: aiApiUrl,
     apiKey: aiApiKey,
     model: aiModel,
@@ -42,7 +89,8 @@ export default defineEventHandler(async (event) => {
 
   const response = await provider.chat({
     systemPrompt,
-    messages: [{ role: 'user', content: message }]
+    messages: messages.map(toInternalMessage),
+    tools
   })
 
   if (!response.ok) {

@@ -1,5 +1,6 @@
 import type { AIProvider, ChatMessage, ChatRequest, ProviderConfig } from './types'
 import { createParser } from 'eventsource-parser'
+import { stripTrailingSlash } from './url'
 
 /**
  * Anthropic-compatible messages provider.
@@ -128,102 +129,120 @@ function anthropicToOpenAISSE(upstream: Response, model: string): Response {
     finish_reason: finishReason
   })
   let sentRole = false
+  let doneEmitted = false
 
   const stream = new ReadableStream({
     async start(controller) {
-      const reader = upstream.body!.pipeThrough(new TextDecoderStream()).getReader()
-
-      const send = (delta: any, finishReason: string | null) => {
-        if (!sentRole && delta.role === undefined) {
-          delta.role = 'assistant'
-          sentRole = true
-        }
-        const chunk = {
-          id,
-          object: 'chat.completion.chunk',
-          created,
-          model,
-          choices: [baseChoice(delta, finishReason)]
-        }
-        controller.enqueue(encoder.encode(`data: ${JSON.stringify(chunk)}\n\n`))
+      const emitDone = () => {
+        if (doneEmitted)
+          return
+        doneEmitted = true
+        controller.enqueue(encoder.encode('data: [DONE]\n\n'))
       }
 
-      const parser = createParser({
-        onEvent(event) {
-          if (event.data === '[DONE]' || !event.data)
-            return
-          let evt: any
-          try {
-            evt = JSON.parse(event.data)
-          }
-          catch {
-            return
-          }
+      try {
+        const reader = upstream.body!.pipeThrough(new TextDecoderStream()).getReader()
 
-          switch (evt.type) {
-            case 'content_block_start': {
-              const block = evt.content_block
-              if (block?.type === 'tool_use') {
-                send(
-                  {
-                    tool_calls: [
-                      {
-                        index: evt.index,
-                        id: block.id,
-                        type: 'function',
-                        function: { name: block.name, arguments: '' }
-                      }
-                    ]
-                  },
-                  null
-                )
-              }
-              break
-            }
-            case 'content_block_delta': {
-              const d = evt.delta
-              if (d?.type === 'text_delta') {
-                send({ content: d.text ?? '' }, null)
-              }
-              else if (d?.type === 'input_json_delta') {
-                send(
-                  {
-                    tool_calls: [
-                      {
-                        index: evt.index,
-                        function: { arguments: d.partial_json ?? '' }
-                      }
-                    ]
-                  },
-                  null
-                )
-              }
-              break
-            }
-            case 'message_delta': {
-              const stop = evt.delta?.stop_reason
-              if (stop) {
-                const finish = stop === 'tool_use' ? 'tool_calls' : 'stop'
-                send({}, finish)
-              }
-              break
-            }
-            case 'message_stop': {
-              controller.enqueue(encoder.encode('data: [DONE]\n\n'))
-              break
-            }
+        const send = (delta: any, finishReason: string | null) => {
+          if (!sentRole && delta.role === undefined) {
+            delta.role = 'assistant'
+            sentRole = true
           }
+          const chunk = {
+            id,
+            object: 'chat.completion.chunk',
+            created,
+            model,
+            choices: [baseChoice(delta, finishReason)]
+          }
+          controller.enqueue(encoder.encode(`data: ${JSON.stringify(chunk)}\n\n`))
         }
-      })
 
-      while (true) {
-        const { value, done } = await reader.read()
-        if (done)
-          break
-        parser.feed(value)
+        const parser = createParser({
+          onEvent(event) {
+            if (event.data === '[DONE]' || !event.data)
+              return
+            let evt: any
+            try {
+              evt = JSON.parse(event.data)
+            }
+            catch {
+              return
+            }
+
+            switch (evt.type) {
+              case 'content_block_start': {
+                const block = evt.content_block
+                if (block?.type === 'tool_use') {
+                  send(
+                    {
+                      tool_calls: [
+                        {
+                          index: evt.index,
+                          id: block.id,
+                          type: 'function',
+                          function: { name: block.name, arguments: '' }
+                        }
+                      ]
+                    },
+                    null
+                  )
+                }
+                break
+              }
+              case 'content_block_delta': {
+                const d = evt.delta
+                if (d?.type === 'text_delta') {
+                  send({ content: d.text ?? '' }, null)
+                }
+                else if (d?.type === 'input_json_delta') {
+                  send(
+                    {
+                      tool_calls: [
+                        {
+                          index: evt.index,
+                          function: { arguments: d.partial_json ?? '' }
+                        }
+                      ]
+                    },
+                    null
+                  )
+                }
+                break
+              }
+              case 'message_delta': {
+                const stop = evt.delta?.stop_reason
+                if (stop) {
+                  const finish
+                    = stop === 'tool_use'
+                      ? 'tool_calls'
+                      : stop === 'max_tokens'
+                        ? 'length'
+                        : 'stop'
+                  send({}, finish)
+                }
+                break
+              }
+              case 'message_stop': {
+                emitDone()
+                break
+              }
+            }
+          }
+        })
+
+        while (true) {
+          const { value, done } = await reader.read()
+          if (done)
+            break
+          parser.feed(value)
+        }
+        emitDone()
+        controller.close()
       }
-      controller.enqueue(encoder.encode('data: [DONE]\n\n'))
-      controller.close()
+      catch (err) {
+        controller.error(err)
+      }
     }
   })
 
@@ -235,8 +254,4 @@ function anthropicToOpenAISSE(upstream: Response, model: string): Response {
       'Connection': 'keep-alive'
     }
   })
-}
-
-function stripTrailingSlash(s: string): string {
-  return s.replace(/\/+$/, '')
 }

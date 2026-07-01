@@ -1,41 +1,13 @@
 /**
- * Provider-agnostic chat contract.
- * All providers must return an OpenAI-style SSE Response
- * (`{choices:[{delta:{content?, tool_calls?}, finish_reason?}]}` + `data: [DONE]`).
- * The /api/ai route and the client SSE parser stay unchanged across providers.
+ * Server-side types. Chat-message shapes live in `shared/ai/chat.ts` so client and server share them.
  */
+
+import type { ChatMessage, ChatTool } from '~~/shared/ai/chat'
 
 export interface ChatRequest {
   systemPrompt: string
   messages: ChatMessage[]
   tools?: ChatTool[]
-}
-
-export type ChatMessage
-  = | { role: 'user', content: string }
-    | {
-      role: 'assistant'
-      content: string
-      toolCalls?: ToolCall[]
-    }
-    | {
-      role: 'tool'
-      toolCallId: string
-      name?: string
-      content: string
-    }
-
-export interface ToolCall {
-  id: string
-  name: string
-  args: Record<string, unknown>
-}
-
-export interface ChatTool {
-  name: string
-  description: string
-  /** JSON Schema */
-  parameters: Record<string, unknown>
 }
 
 export interface AIProvider {
@@ -49,3 +21,5 @@ export interface ProviderConfig {
   model: string
   maxTokens?: number
 }
+
+export type { ChatMessage, ChatTool, ToolCall } from '~~/shared/ai/chat'
