@@ -23,12 +23,8 @@ async function fetchResumeFromGist(token: string): Promise<string> {
     return cache.content
   }
 
-  const response = await fetch(`https://api.github.com/gists/${GIST_ID}`, {
-    headers: {
-      'Authorization': `Bearer ${token}`,
-      'Accept': 'application/vnd.github+json',
-      'X-GitHub-Api-Version': '2022-11-28'
-    }
+  const response = await fetch(`${GITHUB_API_BASE}/gists/${GIST_ID}`, {
+    headers: githubHeaders(token)
   })
 
   if (!response.ok) {

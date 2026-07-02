@@ -44,30 +44,9 @@ async function getHistory() {
         return
       }
 
-      // 获取最新
-      let recentMusic: any
-      let recentTime = 0
-
-      // 最近播放
-      _forEach(songs, (song) => {
-        if (!recentMusic) {
-          recentMusic = song
-          return
-        }
-
-        if (!_has(song, 'played')) {
-          return
-        }
-
-        const currentSongPlayed = new Date(song.played).getTime()
-
-        if (currentSongPlayed > recentTime) {
-          recentMusic = song
-          recentTime = currentSongPlayed
-        }
-      })
-
-      return recentMusic
+      // 选出播放时间最新的一首；没有 played 记录的按 0 处理，_maxBy 平局取靠前
+      return _maxBy(songs, (song: any) =>
+        _has(song, 'played') ? new Date(song.played).getTime() : 0)
     })
 }
 

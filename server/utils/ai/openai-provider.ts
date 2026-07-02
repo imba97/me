@@ -1,4 +1,5 @@
 import type { AIProvider, ChatMessage, ChatRequest, ChatTool, ProviderConfig } from './types'
+import { SSE_HEADERS, toolInputSchema, upstreamErrorResponse } from './response'
 import { stripTrailingSlash } from './url'
 
 /**
@@ -34,23 +35,12 @@ export function createOpenAIProvider(opts: ProviderConfig): AIProvider {
       })
 
       if (!upstream.ok || !upstream.body) {
-        const text = await upstream.text().catch(() => '')
-        return new Response(
-          JSON.stringify({
-            error: `AI upstream error ${upstream.status}`,
-            detail: text.slice(0, 1000)
-          }),
-          { status: upstream.status, headers: { 'Content-Type': 'application/json' } }
-        )
+        return await upstreamErrorResponse(upstream)
       }
 
       return new Response(upstream.body, {
         status: 200,
-        headers: {
-          'Content-Type': 'text/event-stream',
-          'Cache-Control': 'no-cache, no-transform',
-          'Connection': 'keep-alive'
-        }
+        headers: SSE_HEADERS
       })
     }
   }
@@ -62,10 +52,7 @@ function toOpenAITool(t: ChatTool) {
     function: {
       name: t.name,
       description: t.description,
-      parameters:
-        t.parameters && Object.keys(t.parameters).length > 0
-          ? t.parameters
-          : { type: 'object', properties: {} }
+      parameters: toolInputSchema(t)
     }
   }
 }

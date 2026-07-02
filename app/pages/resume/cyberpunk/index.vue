@@ -60,7 +60,7 @@ onMounted(() => {
   let index = 0
 
   setInterval(() => {
-    const [top, left] = position[index++ % position.length]
+    const [top, left] = position[index++ % position.length]!
     maskPosition.value = `${top}% ${left}%`
   }, 100)
 })

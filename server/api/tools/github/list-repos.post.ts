@@ -7,7 +7,6 @@ interface Repo {
 
 const EXTRA_ORGS = ['triggerix-collective']
 const CACHE_TTL_MS = 5 * 60 * 1000
-const FETCH_TIMEOUT_MS = 10_000
 
 let cache: { fetchedAt: number, repos: Repo[] } | null = null
 
@@ -21,15 +20,11 @@ export default defineEventHandler(async (): Promise<{ repos: Repo[] }> => {
     throw createError({ statusCode: 500, statusMessage: 'Missing GITHUB_ACCESS_TOKEN' })
   }
 
-  const headers = {
-    'Authorization': `Bearer ${githubAccessToken}`,
-    'Accept': 'application/vnd.github+json',
-    'X-GitHub-Api-Version': '2022-11-28'
-  }
+  const headers = githubHeaders(githubAccessToken)
 
-  const fetchOpts = { signal: AbortSignal.timeout(FETCH_TIMEOUT_MS) }
+  const fetchOpts = { signal: AbortSignal.timeout(GITHUB_FETCH_TIMEOUT_MS) }
 
-  const personal = await $fetch<any[]>('https://api.github.com/user/repos', {
+  const personal = await $fetch<any[]>(`${GITHUB_API_BASE}/user/repos`, {
     ...fetchOpts,
     headers,
     query: {
@@ -41,7 +36,7 @@ export default defineEventHandler(async (): Promise<{ repos: Repo[] }> => {
 
   const orgLists = await Promise.all(
     EXTRA_ORGS.map(org =>
-      $fetch<any[]>(`https://api.github.com/orgs/${org}/repos`, {
+      $fetch<any[]>(`${GITHUB_API_BASE}/orgs/${org}/repos`, {
         ...fetchOpts,
         headers,
         query: { per_page: 100, sort: 'pushed', type: 'all' }

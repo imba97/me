@@ -33,10 +33,26 @@
           <p>您可以输入<span font-bold px-1>想要了解的问题</span>或<span font-bold px-1>招聘要求</span>等</p>
         </div>
 
+        <button
+          v-show="showJumpButton"
+          type="button"
+          aria-label="回到底部"
+          size-10 rounded-full bg-white shadow-lg border border-gray-200
+          text-gray-600 hover="bg-gray-50 text-blue-500"
+          transition-all duration-200
+          flex items-center justify-center
+          :class="{ 'animate-bounce': isStreaming }"
+          fixed bottom-20 right-6 z-20
+          @click="jumpToBottom"
+        >
+          <div i-carbon-arrow-down />
+        </button>
+
         <template v-for="(msg, idx) in visibleMessages" :key="msg.id">
           <!-- AI 消息 -->
           <MessageBubble
             v-if="msg.role === 'assistant'"
+            :ref="trackAssistantBubble"
             position="left"
             bg-class="bg-white"
           >
@@ -106,7 +122,6 @@
           :disabled="isStreaming"
           @keyup.enter="sendMessage"
           @focus="onInputFocus"
-          @blur="onInputBlur"
         >
         <button
           bg-blue-500 text-white px-4 py-2 rounded-r-lg hover="bg-blue-600"
@@ -121,9 +136,11 @@
 </template>
 
 <script lang="ts" setup>
-import { useScroll } from '@vueuse/core'
+import { useEventListener, useResizeObserver } from '@vueuse/core'
 import MarkdownRender from 'markstream-vue'
 import { motion } from 'motion-v'
+
+const BOTTOM_TOLERANCE = 4
 
 const { messages, isStreaming, send } = useAiSession({
   tools: aiTools.listTools(),
@@ -143,13 +160,49 @@ const visibleMessages = computed(() => {
 })
 
 const messageContainerRef = useTemplateRef('message-container')
-const { arrivedState } = useScroll(messageContainerRef)
 
 const userInput = ref('')
 const defaultInput = '做个自我介绍'
 const showSuggestion = ref(false)
 
-const isAtBottom = computed(() => arrivedState.bottom)
+// 用户滚动意图：在底部 = false，滚上去 = true
+// 直接由 scroll event 维护意图，不依赖 arrivedState（陈旧态）
+let prevScrollTop = 0
+const userScrolledUp = ref(false)
+useEventListener(messageContainerRef, 'scroll', () => {
+  const el = messageContainerRef.value
+  if (!el)
+    return
+  const newScrollTop = el.scrollTop
+  // 用户真往上滚了 → 标记；阈值过滤 scroll anchoring 之类的小幅抖动
+  if (newScrollTop < prevScrollTop - BOTTOM_TOLERANCE)
+    userScrolledUp.value = true
+  // 回到（含容差的）底部 → 解除标记
+  if (el.scrollHeight - el.clientHeight - newScrollTop <= BOTTOM_TOLERANCE)
+    userScrolledUp.value = false
+  prevScrollTop = newScrollTop
+}, { passive: true })
+
+const showJumpButton = computed(() => userScrolledUp.value)
+
+// 跟踪最后一个 assistant 气泡的 DOM。v-for 里 :ref 回调每次 mount 都会调用，
+// 最后一个写进来的就是当前正在流式的气泡。
+const lastBubbleEl = ref<HTMLElement | null>(null)
+function trackAssistantBubble(el: any) {
+  if (el?.$el)
+    lastBubbleEl.value = el.$el
+}
+
+// 只观察最后一个气泡的高度变化：SSE chunk 到达、markstream 后续动画都改它的高度。
+// 用户在底部就跟到底。靠 userScrolledUp 判定意图，不查陈旧态。
+useResizeObserver(lastBubbleEl, () => {
+  if (userScrolledUp.value)
+    return
+  const container = messageContainerRef.value
+  if (!container || container.scrollHeight <= container.clientHeight)
+    return
+  container.scrollTo({ top: container.scrollHeight, behavior: 'auto' })
+})
 
 const shouldShowSuggestion = computed(
   () => showSuggestion.value && !userInput.value.trim() && visibleMessages.value.length === 0
@@ -167,22 +220,17 @@ onMounted(() => {
   }, 2000)
 })
 
-watch(() => [...messages.value], () => {
-  nextTick(() => {
-    smartScrollToBottom()
-  })
-}, { deep: true })
-
 function scrollToBottom() {
   if (messageContainerRef.value) {
     messageContainerRef.value.scrollTop = messageContainerRef.value.scrollHeight
   }
 }
 
-function smartScrollToBottom() {
-  if (isAtBottom.value) {
-    scrollToBottom()
-  }
+function jumpToBottom() {
+  if (!messageContainerRef.value)
+    return
+  // 即时跳，不走 smooth 动画：用户点按钮的瞬间就期望到位
+  messageContainerRef.value.scrollTop = messageContainerRef.value.scrollHeight
 }
 
 function onInputFocus() {
@@ -199,11 +247,8 @@ async function sendMessage() {
   const text = userInput.value
   userInput.value = ''
 
-  await new Promise(resolve => setTimeout(resolve, 50))
-
-  nextTick(() => {
-    scrollToBottom()
-  })
+  await nextTick()
+  scrollToBottom()
 
   await send(text)
 }

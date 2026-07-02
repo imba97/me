@@ -24,7 +24,7 @@ onMounted(async () => {
   const image = await useLoadImage('/masks/avatar.png', 10000)
   maskRef.value?.style.setProperty('--mask-image', `url(${image})`)
 
-  const position = [
+  const position: [number, number][] = [
     [0, 0],
     [0, 100],
     [100, 0],
@@ -34,7 +34,7 @@ onMounted(async () => {
   let index = 0
 
   setInterval(() => {
-    const [top, left] = position[index++ % position.length]
+    const [top, left] = position[index++ % position.length]!
     maskPosition.value = `${top}% ${left}%`
   }, 100)
 })

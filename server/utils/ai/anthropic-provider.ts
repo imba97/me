@@ -1,5 +1,6 @@
 import type { AIProvider, ChatMessage, ChatRequest, ProviderConfig } from './types'
 import { createParser } from 'eventsource-parser'
+import { SSE_HEADERS, toolInputSchema, upstreamErrorResponse } from './response'
 import { stripTrailingSlash } from './url'
 
 /**
@@ -36,14 +37,7 @@ export function createAnthropicProvider(opts: ProviderConfig): AIProvider {
       })
 
       if (!upstream.ok || !upstream.body) {
-        const text = await upstream.text().catch(() => '')
-        return new Response(
-          JSON.stringify({
-            error: `AI upstream error ${upstream.status}`,
-            detail: text.slice(0, 1000)
-          }),
-          { status: upstream.status, headers: { 'Content-Type': 'application/json' } }
-        )
+        return await upstreamErrorResponse(upstream)
       }
 
       return anthropicToOpenAISSE(upstream, model)
@@ -55,10 +49,7 @@ function toAnthropicTools(tools: NonNullable<ChatRequest['tools']>): any[] {
   return tools.map(t => ({
     name: t.name,
     description: t.description,
-    input_schema:
-      t.parameters && Object.keys(t.parameters).length > 0
-        ? t.parameters
-        : { type: 'object', properties: {} }
+    input_schema: toolInputSchema(t)
   }))
 }
 
@@ -248,10 +239,6 @@ function anthropicToOpenAISSE(upstream: Response, model: string): Response {
 
   return new Response(stream, {
     status: 200,
-    headers: {
-      'Content-Type': 'text/event-stream',
-      'Cache-Control': 'no-cache, no-transform',
-      'Connection': 'keep-alive'
-    }
+    headers: SSE_HEADERS
   })
 }

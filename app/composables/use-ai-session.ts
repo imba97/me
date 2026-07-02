@@ -1,17 +1,15 @@
-import type { ChatMessage, ChatTool, ToolCall } from '~~/shared/ai/chat'
-import type { AiToolRegistry } from './ai-tools'
+import type { AssistantMessage, ChatMessage, ChatTool, ToolCall, ToolMessage } from '~~/shared/ai/chat'
 import { destr } from 'destr'
 import { createParser } from 'eventsource-parser'
 
 interface UseAiSessionOptions {
   tools: ChatTool[]
-  executeCall: AiToolRegistry['execute']
+  executeCall: (name: string, args: Record<string, unknown>) => Promise<unknown>
   maxRounds?: number
   endpoint?: string
 }
 
 interface StreamChunk {
-  content: string
   toolCalls: ToolCall[]
 }
 
@@ -36,15 +34,16 @@ export function useAiSession(opts: UseAiSessionOptions) {
   const error = ref<string | null>(null)
   const endpoint = opts.endpoint ?? '/api/ai'
   const maxRounds = opts.maxRounds ?? 5
-  const abortController = new AbortController()
+  let abortController = new AbortController()
 
-  function pushMsg(msg: Omit<ChatMessage, 'id'>): ChatMessage {
-    const created = { id: nextId(), ...msg } as ChatMessage
+  function pushMsg<M extends ChatMessage>(msg: Omit<M, 'id'>): M {
+    const created = { id: nextId(), ...msg } as M
     messages.value.push(created)
-    return created
+    // 返回 reactive Proxy：后续 content/toolCalls 的就地修改才会触发响应式
+    return messages.value[messages.value.length - 1] as M
   }
 
-  async function streamOnce(): Promise<StreamChunk> {
+  async function streamOnce(onContent: (delta: string) => void): Promise<StreamChunk> {
     const outbound = messages.value.map(m => ({
       role: m.role,
       content: m.content,
@@ -69,7 +68,6 @@ export function useAiSession(opts: UseAiSessionOptions) {
       throw new Error(`AI request failed ${res.status}: ${text.slice(0, 200)}`)
     }
 
-    let contentBuf = ''
     const toolAcc = new Map<number, { id?: string, name?: string, args: string }>()
 
     const parser = createParser({
@@ -82,7 +80,7 @@ export function useAiSession(opts: UseAiSessionOptions) {
           return
 
         if (typeof delta.content === 'string' && delta.content.length > 0) {
-          contentBuf += delta.content
+          onContent(delta.content)
         }
         if (Array.isArray(delta.tool_calls)) {
           for (const t of delta.tool_calls) {
@@ -131,29 +129,32 @@ export function useAiSession(opts: UseAiSessionOptions) {
         args
       })
     }
-    return { content: contentBuf, toolCalls }
+    return { toolCalls }
   }
 
   async function runRounds(): Promise<void> {
     for (let i = 0; i < maxRounds; i++) {
-      const aiMsg = pushMsg({ role: 'assistant', content: '' })
-      const { content, toolCalls } = await streamOnce()
-      aiMsg.content = content
+      const aiMsg = pushMsg<AssistantMessage>({ role: 'assistant', content: '' })
+      const { toolCalls } = await streamOnce((delta) => {
+        aiMsg.content += delta
+      })
 
       if (toolCalls.length === 0)
         return
 
       aiMsg.toolCalls = toolCalls
 
-      for (const call of toolCalls) {
-        const result = await opts.executeCall(call.name, call.args)
-        pushMsg({
+      const results = await Promise.all(
+        toolCalls.map(call => opts.executeCall(call.name, call.args))
+      )
+      toolCalls.forEach((call, idx) => {
+        pushMsg<ToolMessage>({
           role: 'tool',
           toolCallId: call.id,
           name: call.name,
-          content: truncateToolResult(JSON.stringify(result))
+          content: truncateToolResult(JSON.stringify(results[idx]))
         })
-      }
+      })
     }
     pushMsg({
       role: 'assistant',
@@ -168,6 +169,8 @@ export function useAiSession(opts: UseAiSessionOptions) {
     pushMsg({ role: 'user', content: trimmed })
     isStreaming.value = true
     error.value = null
+    if (abortController.signal.aborted)
+      abortController = new AbortController()
     try {
       await runRounds()
     }
@@ -178,6 +181,7 @@ export function useAiSession(opts: UseAiSessionOptions) {
       error.value = msg
       const last = messages.value[messages.value.length - 1]
       if (last && last.role === 'assistant' && !last.content) {
+        // `last` is the reactive Proxy; mutating through it triggers updates.
         last.content = `[错误: ${msg}]`
       }
     }

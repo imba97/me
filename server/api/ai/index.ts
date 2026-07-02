@@ -1,38 +1,7 @@
-import type { ChatMessage, ChatTool, ToolCall } from '~~/shared/ai/chat'
-import type { AiProviderName } from '../utils/ai'
+import type { AiProviderName } from '../../utils/ai'
+import type { AiRequest } from '../../utils/ai/wire'
 import { createError } from 'h3'
-
-interface WireMessage {
-  role: 'user' | 'assistant' | 'tool'
-  content: string
-  tool_calls?: ToolCall[]
-  tool_call_id?: string
-  name?: string
-}
-
-interface AiRequest {
-  messages: WireMessage[]
-  tools?: ChatTool[]
-}
-
-function toInternalMessage(m: WireMessage): ChatMessage {
-  if (m.role === 'tool') {
-    return {
-      role: 'tool',
-      toolCallId: m.tool_call_id ?? '',
-      ...(m.name ? { name: m.name } : {}),
-      content: m.content
-    }
-  }
-  if (m.role === 'assistant') {
-    return {
-      role: 'assistant',
-      content: m.content,
-      ...(m.tool_calls && m.tool_calls.length > 0 ? { toolCalls: m.tool_calls } : {})
-    }
-  }
-  return { role: 'user', content: m.content }
-}
+import { toInternalMessage } from '../../utils/ai/wire'
 
 export default defineEventHandler(async (event) => {
   const body = await readBody<AiRequest>(event)
@@ -101,11 +70,7 @@ export default defineEventHandler(async (event) => {
     })
   }
 
-  setResponseHeaders(event, {
-    'Content-Type': 'text/event-stream',
-    'Cache-Control': 'no-cache',
-    'Connection': 'keep-alive'
-  })
-
-  return response.body
+  // Return the upstream Response directly so Nitro streams the body through
+  // instead of buffering it. response.body alone is not recognized as a stream.
+  return response
 })

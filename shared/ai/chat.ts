@@ -4,21 +4,28 @@
  * `id` is set by the client for Vue :key stability; the server ignores it.
  */
 
-export type ChatMessage
-  = | { role: 'user', id?: string, content: string }
-    | {
-      role: 'assistant'
-      id?: string
-      content: string
-      toolCalls?: ToolCall[]
-    }
-    | {
-      role: 'tool'
-      id?: string
-      toolCallId: string
-      name?: string
-      content: string
-    }
+export interface UserMessage {
+  role: 'user'
+  id?: string
+  content: string
+}
+
+export interface AssistantMessage {
+  role: 'assistant'
+  id?: string
+  content: string
+  toolCalls?: ToolCall[]
+}
+
+export interface ToolMessage {
+  role: 'tool'
+  id?: string
+  toolCallId: string
+  name?: string
+  content: string
+}
+
+export type ChatMessage = UserMessage | AssistantMessage | ToolMessage
 
 export interface ToolCall {
   id: string

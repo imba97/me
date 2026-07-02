@@ -115,8 +115,12 @@ async function playAnimate() {
         `inset(${left}% 0 ${right}% 0)`
       )
 
-      const [minX, maxX] = props.translateX
-      const [minY, maxY] = props.translateY
+      const tx = props.translateX
+      const ty = props.translateY
+      const minX = tx[0] ?? -15
+      const maxX = tx[1] ?? 15
+      const minY = ty[0] ?? -5
+      const maxY = ty[1] ?? 5
       container.value.style.setProperty(
         `--translate-${i}`,
         `translate(${_random(minX, maxX)}px, ${_random(minY, maxY)}px)`
@@ -126,7 +130,8 @@ async function playAnimate() {
 
   isPlaying.value = true
 
-  const [minDuration, maxDuration] = props.duration
+  const minDuration = props.duration?.[0] ?? 200
+  const maxDuration = props.duration?.[1] ?? 1200
   const playTime = _random(minDuration, maxDuration)
 
   await new Promise((resolve) => {
@@ -136,7 +141,8 @@ async function playAnimate() {
     }, playTime)
   })
 
-  const [minInterval, maxInterval] = props.interval
+  const minInterval = props.interval?.[0] ?? 2000
+  const maxInterval = props.interval?.[1] ?? 5000
   setTimeout(() => {
     playAnimate()
   }, _random(minInterval, maxInterval))

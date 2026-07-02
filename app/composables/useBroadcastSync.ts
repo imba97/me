@@ -1,3 +1,4 @@
+import type { LeaderElector } from 'broadcast-channel'
 import { BroadcastChannel, createLeaderElection } from 'broadcast-channel'
 
 interface SyncMessage<T = any> {
@@ -26,15 +27,15 @@ export function useBroadcastSync<T>(
 
   let timer: NodeJS.Timeout | null = null
   let isActive = false
-  let channel: any = null
-  let elector: any = null
+  let channel: BroadcastChannel<SyncMessage<T>> | null = null
+  let elector: LeaderElector | null = null
 
   // 只在客户端初始化
   onMounted(async () => {
     if (!import.meta.client)
       return
 
-    channel = new BroadcastChannel(channelName)
+    channel = new BroadcastChannel<SyncMessage<T>>(channelName)
 
     // 创建 Leader Elector
     elector = createLeaderElection(channel)
@@ -53,9 +54,9 @@ export function useBroadcastSync<T>(
       else if (msg.type === 'request') {
         // Leader 收到数据请求，立即广播当前数据
         if (isLeader.value && data.value !== null) {
-          // 使用 JSON 序列化来确保数据可以被克隆
-          const clonedData = JSON.parse(JSON.stringify(data.value))
-          channel.postMessage({
+          // 深拷贝以确保数据可被结构化克隆后广播
+          const clonedData = structuredClone(toRaw(data.value)) as T
+          channel!.postMessage({
             type: 'update',
             channel: channelName,
             data: clonedData,
@@ -73,7 +74,7 @@ export function useBroadcastSync<T>(
       if (isLeader.value)
         return
 
-      channel.postMessage({
+      channel!.postMessage({
         type: 'request',
         channel: channelName,
         timestamp: Date.now()
@@ -99,8 +100,8 @@ export function useBroadcastSync<T>(
 
         // 广播给其他页面
         if (channel) {
-          // 使用 JSON 序列化来确保数据可以被克隆
-          const clonedData = JSON.parse(JSON.stringify(result))
+          // 深拷贝以确保数据可被结构化克隆后广播
+          const clonedData = structuredClone(toRaw(result)) as T
           await channel.postMessage({
             type: 'update',
             channel: channelName,
