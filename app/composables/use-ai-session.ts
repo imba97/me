@@ -190,20 +190,11 @@ export function useAiSession(opts: UseAiSessionOptions) {
     }
   }
 
-  function reset() {
-    messages.value = []
-    error.value = null
-  }
-
-  function cancel() {
-    abortController.abort()
-  }
-
   if (import.meta.client) {
     onScopeDispose(() => {
       abortController.abort()
     })
   }
 
-  return { messages, isStreaming, error, send, reset, cancel }
+  return { messages, isStreaming, send }
 }

@@ -43,7 +43,7 @@
           flex items-center justify-center
           :class="{ 'animate-bounce': isStreaming }"
           fixed bottom-20 right-6 z-20
-          @click="jumpToBottom"
+          @click="scrollToBottom"
         >
           <div i-carbon-arrow-down />
         </button>
@@ -188,9 +188,10 @@ const showJumpButton = computed(() => userScrolledUp.value)
 // 跟踪最后一个 assistant 气泡的 DOM。v-for 里 :ref 回调每次 mount 都会调用，
 // 最后一个写进来的就是当前正在流式的气泡。
 const lastBubbleEl = ref<HTMLElement | null>(null)
-function trackAssistantBubble(el: any) {
-  if (el?.$el)
-    lastBubbleEl.value = el.$el
+function trackAssistantBubble(el: unknown) {
+  const node = (el as { $el?: HTMLElement } | null)?.$el
+  if (node)
+    lastBubbleEl.value = node
 }
 
 // 只观察最后一个气泡的高度变化：SSE chunk 到达、markstream 后续动画都改它的高度。
@@ -221,23 +222,15 @@ onMounted(() => {
 })
 
 function scrollToBottom() {
-  if (messageContainerRef.value) {
-    messageContainerRef.value.scrollTop = messageContainerRef.value.scrollHeight
-  }
-}
-
-function jumpToBottom() {
   if (!messageContainerRef.value)
     return
-  // 即时跳，不走 smooth 动画：用户点按钮的瞬间就期望到位
+  // 即时跳：发送消息、点浮动按钮、聚焦输入框都期望瞬间到位
   messageContainerRef.value.scrollTop = messageContainerRef.value.scrollHeight
 }
 
 function onInputFocus() {
-  setTimeout(() => {
-    window.scrollTo(0, document.body.scrollHeight)
-    scrollToBottom()
-  }, 300)
+  // 现代浏览器聚焦 input 时会自动滚到可见区，无需手动 hack
+  messageContainerRef.value?.scrollTo({ top: messageContainerRef.value.scrollHeight, behavior: 'smooth' })
 }
 
 async function sendMessage() {

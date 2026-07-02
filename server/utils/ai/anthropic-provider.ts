@@ -28,7 +28,7 @@ export function createAnthropicProvider(opts: ProviderConfig): AIProvider {
           max_tokens: maxTokens,
           stream: true,
           system: req.systemPrompt,
-          thinking: { type: 'disabled' },
+          ...(opts.thinking ? { thinking: { type: 'enabled' } } : { thinking: { type: 'disabled' } }),
           ...(req.tools && req.tools.length > 0
             ? { tools: toAnthropicTools(req.tools) }
             : {}),
@@ -40,7 +40,7 @@ export function createAnthropicProvider(opts: ProviderConfig): AIProvider {
         return await upstreamErrorResponse(upstream)
       }
 
-      return anthropicToOpenAISSE(upstream, model)
+      return pipeAnthropicToOpenAI(upstream, model)
     }
   }
 }
@@ -110,125 +110,28 @@ function toAnthropicMessages(messages: ChatMessage[]): any[] {
   return out
 }
 
-function anthropicToOpenAISSE(upstream: Response, model: string): Response {
+function pipeAnthropicToOpenAI(upstream: Response, model: string): Response {
   const encoder = new TextEncoder()
   const id = `chatcmpl-${Date.now()}`
   const created = Math.floor(Date.now() / 1000)
-  const baseChoice = (delta: any, finishReason: string | null) => ({
-    index: 0,
-    delta,
-    finish_reason: finishReason
-  })
-  let sentRole = false
-  let doneEmitted = false
+  const state = { sentRole: false, doneEmitted: false }
 
   const stream = new ReadableStream({
     async start(controller) {
-      const emitDone = () => {
-        if (doneEmitted)
-          return
-        doneEmitted = true
-        controller.enqueue(encoder.encode('data: [DONE]\n\n'))
-      }
+      const send = makeSseChunkSender(encoder, controller, state, id, created, model)
+      const parser = createParser({
+        onEvent: makeAnthropicEventHandler(send)
+      })
 
       try {
         const reader = upstream.body!.pipeThrough(new TextDecoderStream()).getReader()
-
-        const send = (delta: any, finishReason: string | null) => {
-          if (!sentRole && delta.role === undefined) {
-            delta.role = 'assistant'
-            sentRole = true
-          }
-          const chunk = {
-            id,
-            object: 'chat.completion.chunk',
-            created,
-            model,
-            choices: [baseChoice(delta, finishReason)]
-          }
-          controller.enqueue(encoder.encode(`data: ${JSON.stringify(chunk)}\n\n`))
-        }
-
-        const parser = createParser({
-          onEvent(event) {
-            if (event.data === '[DONE]' || !event.data)
-              return
-            let evt: any
-            try {
-              evt = JSON.parse(event.data)
-            }
-            catch {
-              return
-            }
-
-            switch (evt.type) {
-              case 'content_block_start': {
-                const block = evt.content_block
-                if (block?.type === 'tool_use') {
-                  send(
-                    {
-                      tool_calls: [
-                        {
-                          index: evt.index,
-                          id: block.id,
-                          type: 'function',
-                          function: { name: block.name, arguments: '' }
-                        }
-                      ]
-                    },
-                    null
-                  )
-                }
-                break
-              }
-              case 'content_block_delta': {
-                const d = evt.delta
-                if (d?.type === 'text_delta') {
-                  send({ content: d.text ?? '' }, null)
-                }
-                else if (d?.type === 'input_json_delta') {
-                  send(
-                    {
-                      tool_calls: [
-                        {
-                          index: evt.index,
-                          function: { arguments: d.partial_json ?? '' }
-                        }
-                      ]
-                    },
-                    null
-                  )
-                }
-                break
-              }
-              case 'message_delta': {
-                const stop = evt.delta?.stop_reason
-                if (stop) {
-                  const finish
-                    = stop === 'tool_use'
-                      ? 'tool_calls'
-                      : stop === 'max_tokens'
-                        ? 'length'
-                        : 'stop'
-                  send({}, finish)
-                }
-                break
-              }
-              case 'message_stop': {
-                emitDone()
-                break
-              }
-            }
-          }
-        })
-
         while (true) {
           const { value, done } = await reader.read()
           if (done)
             break
           parser.feed(value)
         }
-        emitDone()
+        emitDone(encoder, controller, state)
         controller.close()
       }
       catch (err) {
@@ -241,4 +144,107 @@ function anthropicToOpenAISSE(upstream: Response, model: string): Response {
     status: 200,
     headers: SSE_HEADERS
   })
+}
+
+/** Build the SSE chunk payload and enqueue it. */
+function makeSseChunkSender(
+  encoder: TextEncoder,
+  controller: ReadableStreamDefaultController<Uint8Array>,
+  state: { sentRole: boolean, doneEmitted: boolean },
+  id: string,
+  created: number,
+  model: string
+) {
+  return (delta: any, finishReason: string | null) => {
+    if (!state.sentRole && delta.role === undefined) {
+      delta.role = 'assistant'
+      state.sentRole = true
+    }
+    const chunk = {
+      id,
+      object: 'chat.completion.chunk',
+      created,
+      model,
+      choices: [{ index: 0, delta, finish_reason: finishReason }]
+    }
+    controller.enqueue(encoder.encode(`data: ${JSON.stringify(chunk)}\n\n`))
+  }
+}
+
+function emitDone(
+  encoder: TextEncoder,
+  controller: ReadableStreamDefaultController<Uint8Array>,
+  state: { doneEmitted: boolean }
+) {
+  if (state.doneEmitted)
+    return
+  state.doneEmitted = true
+  controller.enqueue(encoder.encode('data: [DONE]\n\n'))
+}
+
+/** Map Anthropic stop_reason to OpenAI finish_reason. */
+function finishReasonFromStop(stop: string): 'tool_calls' | 'length' | 'stop' {
+  if (stop === 'tool_use')
+    return 'tool_calls'
+  if (stop === 'max_tokens')
+    return 'length'
+  return 'stop'
+}
+
+/** Translate Anthropic stream events into OpenAI-style chunks via `send`. */
+function makeAnthropicEventHandler(
+  send: (delta: any, finishReason: string | null) => void
+) {
+  return (event: { data: string }) => {
+    if (event.data === '[DONE]' || !event.data)
+      return
+    let evt: any
+    try {
+      evt = JSON.parse(event.data)
+    }
+    catch {
+      return
+    }
+
+    switch (evt.type) {
+      case 'content_block_start': {
+        const block = evt.content_block
+        if (block?.type === 'tool_use') {
+          send({
+            tool_calls: [{
+              index: evt.index,
+              id: block.id,
+              type: 'function',
+              function: { name: block.name, arguments: '' }
+            }]
+          }, null)
+        }
+        break
+      }
+      case 'content_block_delta': {
+        const d = evt.delta
+        if (d?.type === 'text_delta') {
+          send({ content: d.text ?? '' }, null)
+        }
+        else if (d?.type === 'input_json_delta') {
+          send({
+            tool_calls: [{
+              index: evt.index,
+              function: { arguments: d.partial_json ?? '' }
+            }]
+          }, null)
+        }
+        break
+      }
+      case 'message_delta': {
+        const stop = evt.delta?.stop_reason
+        if (stop)
+          send({}, finishReasonFromStop(stop))
+        break
+      }
+      case 'message_stop':
+        // no-op; emitDone called by stream consumer
+        break
+    }
+  }
 }

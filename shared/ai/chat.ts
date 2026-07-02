@@ -4,22 +4,24 @@
  * `id` is set by the client for Vue :key stability; the server ignores it.
  */
 
-export interface UserMessage {
-  role: 'user'
+interface BaseMessage {
+  /** Vue :key for the client; the server ignores it. */
   id?: string
+}
+
+export interface UserMessage extends BaseMessage {
+  role: 'user'
   content: string
 }
 
-export interface AssistantMessage {
+export interface AssistantMessage extends BaseMessage {
   role: 'assistant'
-  id?: string
   content: string
   toolCalls?: ToolCall[]
 }
 
-export interface ToolMessage {
+export interface ToolMessage extends BaseMessage {
   role: 'tool'
-  id?: string
   toolCallId: string
   name?: string
   content: string

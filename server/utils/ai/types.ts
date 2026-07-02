@@ -20,6 +20,8 @@ export interface ProviderConfig {
   apiKey: string
   model: string
   maxTokens?: number
+  /** 启用 Anthropic extended thinking（先思考再回答，会更慢更准） */
+  thinking?: boolean
 }
 
 export type { ChatMessage, ChatTool, ToolCall } from '~~/shared/ai/chat'
