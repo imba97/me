@@ -38,7 +38,7 @@
   },
   "devDependencies": {
     "@antfu/eslint-config": "^9.1.0",
-    "@types/node": "^26.0.1",
+    "@types/node": "^26.1.0",
     "@unocss/preset-web-fonts": "^66.7.4",
     "bumpp": "^11.1.0",
     "es-toolkit": "^1.49.0",
