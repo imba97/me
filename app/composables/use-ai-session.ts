@@ -111,7 +111,8 @@ export function useAiSession(opts: UseAiSessionOptions) {
     }
 
     const toolAcc = new Map<number, { id?: string, name?: string, args: string }>()
-    const queue: string[] = []
+    // 单帧内累积的待 yield 文本增量。`createParser.onEvent` 同步回调 → 用 buffer 桥接到 async generator。
+    let pending: string[] = []
 
     const parser = createParser({
       onEvent(event) {
@@ -123,7 +124,7 @@ export function useAiSession(opts: UseAiSessionOptions) {
           return
 
         if (typeof delta.content === 'string' && delta.content.length > 0)
-          queue.push(delta.content)
+          pending.push(delta.content)
 
         if (Array.isArray(delta.tool_calls)) {
           for (const t of delta.tool_calls) {
@@ -147,8 +148,13 @@ export function useAiSession(opts: UseAiSessionOptions) {
         if (done)
           break
         parser.feed(value)
-        while (queue.length > 0)
-          yield queue.shift()!
+        // 一次 drain 当前帧累积的 deltas：swap 引用而非逐个 shift，避免 O(n²)
+        if (pending.length > 0) {
+          const deltas = pending
+          pending = []
+          for (const d of deltas)
+            yield d
+        }
       }
     }
     finally {

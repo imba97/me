@@ -242,6 +242,13 @@ const pendingImageUrl = computed(() =>
   pendingImage.value ? imageSrc(pendingImage.value) : ''
 )
 
+// 预览打开时锁住 body 滚动，避免背景跟着滚
+watch(previewOpen, (open) => {
+  if (typeof document === 'undefined')
+    return
+  document.body.style.overflow = open ? 'hidden' : ''
+})
+
 function imageSrc(img: ChatImage): string {
   return `data:${img.mediaType};base64,${img.data}`
 }
@@ -349,35 +356,40 @@ function readAsDataUrl(file: Blob): Promise<string> {
   })
 }
 
-function loadImage(src: string): Promise<HTMLImageElement> {
-  return new Promise((resolve, reject) => {
-    const img = new Image()
-    img.onload = () => resolve(img)
-    img.onerror = () => reject(new Error('decode failed'))
-    img.src = src
-  })
-}
-
 async function fileToChatImage(file: File): Promise<ChatImage> {
   const mediaType = file.type
-  const dataUrl = await readAsDataUrl(file)
-  // GIF 保留原图避免丢动画；其余超长边则等比缩小，省 token 与请求体
-  if (mediaType !== 'image/gif') {
-    const img = await loadImage(dataUrl)
-    const longest = Math.max(img.width, img.height)
-    if (longest > MAX_IMAGE_EDGE) {
-      const scale = MAX_IMAGE_EDGE / longest
-      const canvas = document.createElement('canvas')
-      canvas.width = Math.round(img.width * scale)
-      canvas.height = Math.round(img.height * scale)
-      const ctx = canvas.getContext('2d')
-      if (ctx) {
-        ctx.drawImage(img, 0, 0, canvas.width, canvas.height)
-        return { mediaType, data: stripBase64Prefix(canvas.toDataURL(mediaType)) }
-      }
-    }
+
+  // GIF 保留原图（保留动画帧）
+  if (mediaType === 'image/gif') {
+    const dataUrl = await readAsDataUrl(file)
+    return { mediaType, data: stripBase64Prefix(dataUrl) }
   }
-  return { mediaType, data: stripBase64Prefix(dataUrl) }
+
+  // createImageBitmap 直接解码 File，跳过完整 base64 字符串这一中间态，
+  // 内存峰值更低；对 4MB 截图可省约 4MB 同时驻留。
+  const bitmap = await createImageBitmap(file)
+  try {
+    const longest = Math.max(bitmap.width, bitmap.height)
+    if (longest <= MAX_IMAGE_EDGE) {
+      // 不缩放：直接读原文件，避免 canvas 二次编码（JPEG 会有损）
+      const dataUrl = await readAsDataUrl(file)
+      return { mediaType, data: stripBase64Prefix(dataUrl) }
+    }
+
+    // 超长边：等比缩小到 MAX_IMAGE_EDGE
+    const scale = MAX_IMAGE_EDGE / longest
+    const canvas = document.createElement('canvas')
+    canvas.width = Math.round(bitmap.width * scale)
+    canvas.height = Math.round(bitmap.height * scale)
+    const ctx = canvas.getContext('2d')
+    if (!ctx)
+      throw new Error('canvas context unavailable')
+    ctx.drawImage(bitmap, 0, 0, canvas.width, canvas.height)
+    return { mediaType, data: stripBase64Prefix(canvas.toDataURL(mediaType)) }
+  }
+  finally {
+    bitmap.close()
+  }
 }
 
 async function onPaste(e: ClipboardEvent) {
