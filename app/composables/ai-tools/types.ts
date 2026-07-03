@@ -8,10 +8,10 @@ import type { ChatTool } from '~~/shared/ai/chat'
 export interface ToolProvider {
   readonly name: string
   readonly tools: ReadonlyArray<{ localName: string, tool: ChatTool }>
-  execute: (localName: string, args: Record<string, unknown>) => Promise<unknown>
+  execute: (localName: string, args: Record<string, unknown>, signal?: AbortSignal) => Promise<unknown>
 }
 
 export interface AiToolRegistry {
   listTools: () => ChatTool[]
-  execute: (namespacedName: string, args: Record<string, unknown>) => Promise<unknown>
+  execute: (namespacedName: string, args: Record<string, unknown>, signal?: AbortSignal) => Promise<unknown>
 }

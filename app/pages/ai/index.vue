@@ -69,6 +69,16 @@
                 :fade="false"
                 html-policy="escape"
               />
+              <div v-if="msg.aborted" mt-1 flex items-center gap-1 text="xs gray-400">
+                <div i-carbon-stop-outline />
+                <span>已停止</span>
+              </div>
+            </template>
+            <template v-else-if="msg.aborted">
+              <div flex items-center gap-1 text="sm gray-400">
+                <div i-carbon-stop-outline />
+                <span>已停止回答</span>
+              </div>
             </template>
             <template v-else>
               <div i-line-md-loading-loop />
@@ -119,13 +129,19 @@
           type="text"
           placeholder="输入消息..."
           flex-1 border rounded-l-lg px-4 py-2 outline-none focus="ring-2 ring-blue-500"
-          :disabled="isStreaming"
           @keyup.enter="sendMessage"
           @focus="onInputFocus"
         >
         <button
+          v-if="isStreaming"
+          bg-gray-500 text-white px-4 py-2 rounded-r-lg hover="bg-gray-600"
+          @click="interrupt"
+        >
+          停止
+        </button>
+        <button
+          v-else
           bg-blue-500 text-white px-4 py-2 rounded-r-lg hover="bg-blue-600"
-          :disabled="isStreaming"
           @click="sendMessage"
         >
           发送
@@ -142,7 +158,7 @@ import { motion } from 'motion-v'
 
 const BOTTOM_TOLERANCE = 4
 
-const { messages, isStreaming, send } = useAiSession({
+const { messages, isStreaming, send, interrupt } = useAiSession({
   tools: aiTools.listTools(),
   executeCall: aiTools.execute
 })
@@ -234,7 +250,7 @@ function onInputFocus() {
 }
 
 async function sendMessage() {
-  if (!userInput.value.trim() || isStreaming.value)
+  if (!userInput.value.trim())
     return
 
   const text = userInput.value

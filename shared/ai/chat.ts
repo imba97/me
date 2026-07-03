@@ -18,6 +18,8 @@ export interface AssistantMessage extends BaseMessage {
   role: 'assistant'
   content: string
   toolCalls?: ToolCall[]
+  /** 客户端标记：这次回答被用户中断；服务端忽略。 */
+  aborted?: boolean
 }
 
 export interface ToolMessage extends BaseMessage {

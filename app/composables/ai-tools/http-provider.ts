@@ -12,10 +12,11 @@ export function createHttpToolProvider(config: {
   return {
     name: config.name,
     tools: config.tools,
-    async execute(localName, args) {
+    async execute(localName, args, signal) {
       return await $fetch(`/api/tools/${config.name}/${localName.replace(/_/g, '-')}`, {
         method: 'POST',
-        body: args
+        body: args,
+        signal
       })
     }
   }

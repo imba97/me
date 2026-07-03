@@ -15,7 +15,7 @@ export function createAnthropicProvider(opts: ProviderConfig): AIProvider {
   return {
     name: 'anthropic',
 
-    async chat(req: ChatRequest): Promise<Response> {
+    async chat(req: ChatRequest, signal?: AbortSignal): Promise<Response> {
       const upstream = await fetch(`${stripTrailingSlash(baseUrl)}/v1/messages`, {
         method: 'POST',
         headers: {
@@ -33,7 +33,8 @@ export function createAnthropicProvider(opts: ProviderConfig): AIProvider {
             ? { tools: toAnthropicTools(req.tools) }
             : {}),
           messages: toAnthropicMessages(req.messages)
-        })
+        }),
+        signal
       })
 
       if (!upstream.ok || !upstream.body) {
@@ -115,6 +116,7 @@ function pipeAnthropicToOpenAI(upstream: Response, model: string): Response {
   const id = `chatcmpl-${Date.now()}`
   const created = Math.floor(Date.now() / 1000)
   const state = { sentRole: false, doneEmitted: false }
+  const reader = upstream.body!.pipeThrough(new TextDecoderStream()).getReader()
 
   const stream = new ReadableStream({
     async start(controller) {
@@ -124,7 +126,6 @@ function pipeAnthropicToOpenAI(upstream: Response, model: string): Response {
       })
 
       try {
-        const reader = upstream.body!.pipeThrough(new TextDecoderStream()).getReader()
         while (true) {
           const { value, done } = await reader.read()
           if (done)
@@ -137,6 +138,10 @@ function pipeAnthropicToOpenAI(upstream: Response, model: string): Response {
       catch (err) {
         controller.error(err)
       }
+    },
+    // 下游取消（客户端断开）时取消上游读取，避免继续消费上游 token。
+    cancel(reason) {
+      reader.cancel(reason).catch(() => {})
     }
   })
 

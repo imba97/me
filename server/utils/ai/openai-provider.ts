@@ -13,7 +13,7 @@ export function createOpenAIProvider(opts: ProviderConfig): AIProvider {
   return {
     name: 'openai',
 
-    async chat(req: ChatRequest): Promise<Response> {
+    async chat(req: ChatRequest, signal?: AbortSignal): Promise<Response> {
       const upstream = await fetch(`${stripTrailingSlash(baseUrl)}/chat/completions`, {
         method: 'POST',
         headers: {
@@ -31,7 +31,8 @@ export function createOpenAIProvider(opts: ProviderConfig): AIProvider {
           ...(req.tools && req.tools.length > 0
             ? { tools: req.tools.map(toOpenAITool) }
             : {})
-        })
+        }),
+        signal
       })
 
       if (!upstream.ok || !upstream.body) {

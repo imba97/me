@@ -12,7 +12,7 @@ export interface ChatRequest {
 
 export interface AIProvider {
   readonly name: string
-  chat: (req: ChatRequest) => Promise<Response>
+  chat: (req: ChatRequest, signal?: AbortSignal) => Promise<Response>
 }
 
 export interface ProviderConfig {

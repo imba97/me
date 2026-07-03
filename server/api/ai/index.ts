@@ -56,11 +56,15 @@ export default defineEventHandler(async (event) => {
     maxTokens: aiMaxTokens
   })
 
+  // 客户端断开（新消息打断/离开页面）时中止上游，避免继续消耗 token。
+  const ac = new AbortController()
+  event.node.req.on('close', () => ac.abort())
+
   const response = await provider.chat({
     systemPrompt,
     messages: messages.map(toInternalMessage),
     tools
-  })
+  }, ac.signal)
 
   if (!response.ok) {
     const error = await response.text()

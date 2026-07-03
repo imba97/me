@@ -30,13 +30,13 @@ export function createToolRegistry(providers: ReadonlyArray<ToolProvider>): AiTo
 
   return {
     listTools: () => tools,
-    async execute(namespacedName, args) {
+    async execute(namespacedName, args, signal) {
       const route = routes.get(namespacedName)
       if (!route) {
         return { ok: false, error: `Unknown tool: ${namespacedName}` }
       }
       try {
-        const data = await route.provider.execute(route.localName, args)
+        const data = await route.provider.execute(route.localName, args, signal)
         return { ok: true, data }
       }
       catch (error) {
