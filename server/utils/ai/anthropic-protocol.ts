@@ -1,4 +1,4 @@
-import type { AIProvider, ChatMessage, ChatRequest, ProviderConfig } from './types'
+import type { AiProtocol, ChatMessage, ChatRequest, ProviderConfig } from './types'
 import { createParser } from 'eventsource-parser'
 import { SSE_HEADERS, toolInputSchema, upstreamErrorResponse } from './response'
 import { stripTrailingSlash } from './url'
@@ -9,7 +9,7 @@ import { stripTrailingSlash } from './url'
  * so the rest of the pipeline is provider-agnostic.
  */
 
-export function createAnthropicProvider(opts: ProviderConfig): AIProvider {
+export function createAnthropicProtocol(opts: ProviderConfig): AiProtocol {
   const { baseUrl, apiKey, model, maxTokens = 4096 } = opts
 
   return {
@@ -61,7 +61,16 @@ function toAnthropicMessages(messages: ChatMessage[]): any[] {
     const m = messages[i]!
 
     if (m.role === 'user') {
-      out.push({ role: 'user', content: [{ type: 'text', text: m.content }] })
+      const blocks: any[] = []
+      // 图片在文本之前（Anthropic 推荐顺序，也对应 UI 中图在上）
+      if (m.image) {
+        blocks.push({
+          type: 'image',
+          source: { type: 'base64', media_type: m.image.mediaType, data: m.image.data }
+        })
+      }
+      blocks.push({ type: 'text', text: m.content })
+      out.push({ role: 'user', content: blocks })
       continue
     }
 

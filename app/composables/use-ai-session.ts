@@ -1,4 +1,4 @@
-import type { AssistantMessage, ChatMessage, ChatTool, ToolCall, ToolMessage } from '~~/shared/ai/chat'
+import type { AssistantMessage, ChatImage, ChatMessage, ChatTool, ToolCall, ToolMessage, UserMessage } from '~~/shared/ai/chat'
 import { destr } from 'destr'
 import { createParser } from 'eventsource-parser'
 
@@ -83,10 +83,13 @@ export function useAiSession(opts: UseAiSessionOptions) {
    * 把 fetch + SSE 解析和上层 agentic 循环解耦。
    */
   async function* streamChat(signal: AbortSignal): AsyncGenerator<string, ToolCall[]> {
-    const outbound = messages.value.map(m => ({
+    const lastUserIdx = messages.value.map(m => m.role).lastIndexOf('user')
+    const outbound = messages.value.map((m, i) => ({
       role: m.role,
       content: m.content,
       ...(m.role === 'assistant' && m.toolCalls ? { tool_calls: m.toolCalls } : {}),
+      // 只有最新一条 user 消息携带图片，历史轮不再带（规则：上下文不持续带图）
+      ...(m.role === 'user' && m.image && i === lastUserIdx ? { image: m.image } : {}),
       ...(m.role === 'tool'
         ? {
             tool_call_id: m.toolCallId,
@@ -243,15 +246,15 @@ export function useAiSession(opts: UseAiSessionOptions) {
    * 发送一条新消息。若正在流式，先打断当前运行并等其结算，再开新运行——
    * 于是「新消息打断」是主路径，而非特例。
    */
-  async function send(text: string): Promise<void> {
+  async function send(text: string, image?: ChatImage): Promise<void> {
     const trimmed = text.trim()
-    if (!trimmed)
+    if (!trimmed && !image)
       return
 
     interrupt()
     await current?.done
 
-    pushMsg({ role: 'user', content: trimmed })
+    pushMsg<UserMessage>({ role: 'user', content: trimmed, ...(image ? { image } : {}) })
     current = startRun()
     await current.done
   }

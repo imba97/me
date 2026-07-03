@@ -1,4 +1,4 @@
-import type { AIProvider, ChatMessage, ChatRequest, ChatTool, ProviderConfig } from './types'
+import type { AiProtocol, ChatMessage, ChatRequest, ChatTool, ProviderConfig } from './types'
 import { SSE_HEADERS, toolInputSchema, upstreamErrorResponse } from './response'
 import { stripTrailingSlash } from './url'
 
@@ -7,7 +7,7 @@ import { stripTrailingSlash } from './url'
  * OpenAI's upstream response is already OpenAI-style SSE, so the body passes through verbatim.
  */
 
-export function createOpenAIProvider(opts: ProviderConfig): AIProvider {
+export function createOpenAIProtocol(opts: ProviderConfig): AiProtocol {
   const { baseUrl, apiKey, model, maxTokens } = opts
 
   return {
@@ -83,6 +83,15 @@ function toOpenAIMessage(m: ChatMessage) {
             }))
           }
         : {})
+    }
+  }
+  if (m.image) {
+    return {
+      role: 'user' as const,
+      content: [
+        { type: 'text' as const, text: m.content },
+        { type: 'image_url' as const, image_url: { url: `data:${m.image.mediaType};base64,${m.image.data}` } }
+      ]
     }
   }
   return { role: 'user' as const, content: m.content }

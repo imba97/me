@@ -95,7 +95,15 @@
             <template #avatar>
               我
             </template>
-            {{ msg.content }}
+            <img
+              v-if="msg.role === 'user' && msg.image"
+              :src="imageSrc(msg.image)"
+              alt="图片"
+              max-h-60 rounded mb-2 object-contain
+            >
+            <div v-if="msg.content">
+              {{ msg.content }}
+            </div>
           </MessageBubble>
         </template>
       </div>
@@ -124,14 +132,42 @@
           </div>
         </motion.div>
 
-        <input
-          v-model="userInput"
-          type="text"
-          placeholder="输入消息..."
-          flex-1 border rounded-l-lg px-4 py-2 outline-none focus="ring-2 ring-blue-500"
-          @keyup.enter="sendMessage"
-          @focus="onInputFocus"
-        >
+        <div v-if="imageError" absolute bottom-full mb-2 left-0 text="xs red-500">
+          {{ imageError }}
+        </div>
+
+        <div flex-1 relative>
+          <input
+            ref="chat-input"
+            v-model="userInput"
+            type="text"
+            placeholder="输入消息..."
+            w-full border rounded-l-lg px-4 py-2 outline-none focus="ring-2 ring-blue-500"
+            :class="pendingImage ? 'pr-12' : ''"
+            @keyup.enter="sendMessage"
+            @focus="onInputFocus"
+          >
+          <div
+            v-if="pendingImage"
+            group absolute right-2 size-8
+            class="top-1/2 -translate-y-1/2"
+          >
+            <img
+              :src="pendingImageUrl"
+              alt="待发送图片"
+              size-full rounded object-cover cursor-pointer
+              @click="previewOpen = true"
+            >
+            <button
+              type="button"
+              absolute size-4 items-center justify-center rounded-full bg-gray-700 text-white
+              class="hidden group-hover:flex -right-1.5 -top-1.5"
+              @click="pendingImage = null"
+            >
+              <div i-carbon-close class="text-[10px]" />
+            </button>
+          </div>
+        </div>
         <button
           v-if="isStreaming"
           bg-gray-500 text-white px-4 py-2 rounded-r-lg hover="bg-gray-600"
@@ -148,15 +184,29 @@
         </button>
       </div>
     </div>
+
+    <Teleport to="body">
+      <div
+        v-if="previewOpen"
+        fixed inset-0 z-50 flex items-center justify-center bg="black/70" p-8
+        @click="previewOpen = false"
+      >
+        <img :src="pendingImageUrl" alt="图片预览" max-w-full max-h-full rounded object-contain>
+      </div>
+    </Teleport>
   </div>
 </template>
 
 <script lang="ts" setup>
+import type { ChatImage } from '~~/shared/ai/chat'
 import { useEventListener, useResizeObserver } from '@vueuse/core'
 import MarkdownRender from 'markstream-vue'
 import { motion } from 'motion-v'
 
 const BOTTOM_TOLERANCE = 4
+const ALLOWED_IMAGE_TYPES = ['image/jpeg', 'image/png', 'image/gif', 'image/webp']
+const MAX_IMAGE_BYTES = 4 * 1024 * 1024
+const MAX_IMAGE_EDGE = 1568
 
 const { messages, isStreaming, send, interrupt } = useAiSession({
   tools: aiTools.listTools(),
@@ -180,6 +230,21 @@ const messageContainerRef = useTemplateRef('message-container')
 const userInput = ref('')
 const defaultInput = '做个自我介绍'
 const showSuggestion = ref(false)
+
+// 图片粘贴：能力由服务端 AI provider 声明（provider.supportsImage）
+const { data: aiCaps } = useFetch('/api/ai/capabilities')
+const supportsImage = computed(() => aiCaps.value?.supportsImage ?? false)
+const inputRef = useTemplateRef<HTMLInputElement>('chat-input')
+const pendingImage = ref<ChatImage | null>(null)
+const imageError = ref('')
+const previewOpen = ref(false)
+const pendingImageUrl = computed(() =>
+  pendingImage.value ? imageSrc(pendingImage.value) : ''
+)
+
+function imageSrc(img: ChatImage): string {
+  return `data:${img.mediaType};base64,${img.data}`
+}
 
 // 用户滚动意图：在底部 = false，滚上去 = true
 // 直接由 scroll event 维护意图，不依赖 arrivedState（陈旧态）
@@ -250,20 +315,103 @@ function onInputFocus() {
 }
 
 async function sendMessage() {
-  if (!userInput.value.trim())
+  const image = pendingImage.value ?? undefined
+  if (!userInput.value.trim() && !image)
     return
 
   const text = userInput.value
   userInput.value = ''
+  pendingImage.value = null
+  imageError.value = ''
 
   await nextTick()
   scrollToBottom()
 
-  await send(text)
+  await send(text, image)
 }
 
 function sendSuggestion() {
   userInput.value = defaultInput
   sendMessage()
 }
+
+function stripBase64Prefix(dataUrl: string): string {
+  const comma = dataUrl.indexOf(',')
+  return comma >= 0 ? dataUrl.slice(comma + 1) : dataUrl
+}
+
+function readAsDataUrl(file: Blob): Promise<string> {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader()
+    reader.onload = () => resolve(reader.result as string)
+    reader.onerror = () => reject(new Error('read failed'))
+    reader.readAsDataURL(file)
+  })
+}
+
+function loadImage(src: string): Promise<HTMLImageElement> {
+  return new Promise((resolve, reject) => {
+    const img = new Image()
+    img.onload = () => resolve(img)
+    img.onerror = () => reject(new Error('decode failed'))
+    img.src = src
+  })
+}
+
+async function fileToChatImage(file: File): Promise<ChatImage> {
+  const mediaType = file.type
+  const dataUrl = await readAsDataUrl(file)
+  // GIF 保留原图避免丢动画；其余超长边则等比缩小，省 token 与请求体
+  if (mediaType !== 'image/gif') {
+    const img = await loadImage(dataUrl)
+    const longest = Math.max(img.width, img.height)
+    if (longest > MAX_IMAGE_EDGE) {
+      const scale = MAX_IMAGE_EDGE / longest
+      const canvas = document.createElement('canvas')
+      canvas.width = Math.round(img.width * scale)
+      canvas.height = Math.round(img.height * scale)
+      const ctx = canvas.getContext('2d')
+      if (ctx) {
+        ctx.drawImage(img, 0, 0, canvas.width, canvas.height)
+        return { mediaType, data: stripBase64Prefix(canvas.toDataURL(mediaType)) }
+      }
+    }
+  }
+  return { mediaType, data: stripBase64Prefix(dataUrl) }
+}
+
+async function onPaste(e: ClipboardEvent) {
+  if (!supportsImage.value)
+    return
+  const items = e.clipboardData?.items
+  if (!items)
+    return
+  const item = Array.from(items).find(it => it.kind === 'file' && it.type.startsWith('image/'))
+  if (!item)
+    return
+  e.preventDefault()
+  const file = item.getAsFile()
+  if (!file)
+    return
+  // 图片是用户表达的一部分：无法采用时提示并中止，不静默降级
+  if (!ALLOWED_IMAGE_TYPES.includes(file.type)) {
+    imageError.value = '仅支持 JPEG / PNG / GIF / WEBP 图片'
+    return
+  }
+  if (file.size > MAX_IMAGE_BYTES) {
+    imageError.value = '图片过大，请使用 4MB 以内的图片'
+    return
+  }
+  try {
+    // 多次粘贴替换上一张
+    pendingImage.value = await fileToChatImage(file)
+    imageError.value = ''
+  }
+  catch {
+    imageError.value = '图片读取失败，请重试'
+  }
+}
+
+// 粘贴监听始终注册，是否处理由 provider 能力决定（onPaste 内部判断）
+useEventListener(inputRef, 'paste', onPaste)
 </script>

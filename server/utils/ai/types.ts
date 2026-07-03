@@ -10,9 +10,15 @@ export interface ChatRequest {
   tools?: ChatTool[]
 }
 
-export interface AIProvider {
+export interface AiProtocol {
   readonly name: string
   chat: (req: ChatRequest, signal?: AbortSignal) => Promise<Response>
+}
+
+/** 协议名：标识走哪种 wire 格式（OpenAI 兼容 / Anthropic 兼容）。 */
+export enum AiProtocolName {
+  OpenAI = 'openai',
+  Anthropic = 'anthropic'
 }
 
 export interface ProviderConfig {

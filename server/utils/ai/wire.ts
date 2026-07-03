@@ -1,4 +1,4 @@
-import type { ChatMessage, ChatTool, ToolCall } from '~~/shared/ai/chat'
+import type { ChatImage, ChatMessage, ChatTool, ToolCall } from '~~/shared/ai/chat'
 
 /**
  * HTTP wire format for the AI endpoint. Differs from internal `ChatMessage`
@@ -12,6 +12,7 @@ export interface WireMessage {
   tool_calls?: ToolCall[]
   tool_call_id?: string
   name?: string
+  image?: ChatImage
 }
 
 export interface AiRequest {
@@ -35,5 +36,5 @@ export function toInternalMessage(m: WireMessage): ChatMessage {
       ...(m.tool_calls && m.tool_calls.length > 0 ? { toolCalls: m.tool_calls } : {})
     }
   }
-  return { role: 'user', content: m.content }
+  return { role: 'user', content: m.content, ...(m.image ? { image: m.image } : {}) }
 }

@@ -12,6 +12,8 @@ interface BaseMessage {
 export interface UserMessage extends BaseMessage {
   role: 'user'
   content: string
+  /** 用户粘贴的图片（单张）；仅在最新一条 user 消息随请求发送，历史轮不再携带。 */
+  image?: ChatImage
 }
 
 export interface AssistantMessage extends BaseMessage {
@@ -42,4 +44,11 @@ export interface ChatTool {
   description: string
   /** JSON Schema */
   parameters: Record<string, unknown>
+}
+
+/** 图片输入（base64）。`data` 为纯 base64，不含 `data:` 前缀。 */
+export interface ChatImage {
+  /** image/jpeg | image/png | image/gif | image/webp */
+  mediaType: string
+  data: string
 }

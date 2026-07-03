@@ -1,12 +1,12 @@
-import type { AiProviderName } from '../../utils/ai'
 import type { AiRequest } from '../../utils/ai/wire'
 import { createError } from 'h3'
+import { createMiniMaxProvider } from '../../utils/ai/platform/minimax-cn'
 import { toInternalMessage } from '../../utils/ai/wire'
 
 export default defineEventHandler(async (event) => {
   const body = await readBody<AiRequest>(event)
   const { messages, tools } = body ?? {}
-  const { aiApiUrl, aiApiKey, aiProvider, aiModel, aiMaxTokens, githubAccessToken }
+  const { aiApiUrl, aiApiKey, aiModel, aiMaxTokens, githubAccessToken }
     = useRuntimeConfig()
 
   if (!aiApiUrl || !aiApiKey) {
@@ -40,27 +40,19 @@ export default defineEventHandler(async (event) => {
     ? `${baseSystemPrompt}\n\n${formatToolDescriptions(tools)}`
     : baseSystemPrompt
 
-  const providerName = (aiProvider ?? 'anthropic') as AiProviderName
-  if (providerName !== 'openai' && providerName !== 'anthropic') {
-    throw createError({
-      statusCode: 500,
-      statusMessage: `Invalid AI_PROVIDER: ${aiProvider}`
-    })
-  }
-
-  const provider = createAiProvider({
-    name: providerName,
+  const provider = createMiniMaxProvider({
     baseUrl: aiApiUrl,
     apiKey: aiApiKey,
     model: aiModel,
-    maxTokens: aiMaxTokens
+    maxTokens: aiMaxTokens,
+    contentTypes: new Set(['text', 'tool_use', 'tool_result', 'thinking', 'image', 'video'])
   })
 
   // 客户端断开（新消息打断/离开页面）时中止上游，避免继续消耗 token。
   const ac = new AbortController()
   event.node.req.on('close', () => ac.abort())
 
-  const response = await provider.chat({
+  const response = await provider.protocol.chat({
     systemPrompt,
     messages: messages.map(toInternalMessage),
     tools
