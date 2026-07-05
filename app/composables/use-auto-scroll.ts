@@ -29,8 +29,12 @@ export function useAutoScroll(containerRef: Ref<HTMLElement | null>) {
   }, { passive: true })
 
   function trackAssistantBubble(el: unknown) {
-    const node = (el as { $el?: HTMLElement } | null)?.$el
-    if (node)
+    if (!el)
+      return
+    // 仅当 $el 是真正的 HTMLElement 时才记录；否则留空，避免把组件代理 / 文本节点等
+    // 喂给 ResizeObserver 导致 "parameter 1 is not of type 'Element'"。
+    const node = (el as { $el?: unknown }).$el
+    if (node instanceof HTMLElement)
       lastBubbleEl.value = node
   }
 
