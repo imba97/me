@@ -39,6 +39,11 @@
   opacity: 0;
 }
 
+.function-menu-row {
+  /* 给 max-height 过渡一个明确目标：避免默认值 none，无法从 0 过渡；80px > 自然高度 80px */
+  max-height: 80px;
+}
+
 .function-menu-enter-active,
 .function-menu-leave-active {
   transition: max-height 0.25s ease, opacity 0.2s ease, transform 0.25s ease;
@@ -54,6 +59,7 @@
 .function-menu-leave-to {
   max-height: 0;
   opacity: 0;
+  transform: translateY(100%);
 }
 </style>
 
@@ -81,7 +87,8 @@
           transition-all duration-200
           flex items-center justify-center
           :class="{ 'animate-bounce': isStreaming }"
-          fixed bottom-20 right-6 z-20
+          fixed right-6 z-20
+          :style="{ bottom: jumpButtonBottom }"
           @click="scrollToBottom"
         >
           <div i-carbon-arrow-down />
@@ -233,13 +240,13 @@
       <Transition name="function-menu">
         <div
           v-if="functionMenuOpen"
-          class="function-menu-row border-t border-gray-100"
+          class="function-menu-row"
         >
           <div max-w-3xl mx-auto px-4 py-2 flex items-center justify-start gap-1>
             <button
               type="button"
               aria-label="添加图片"
-              class="size-12 flex items-center justify-center rounded-lg text-gray-600 hover:bg-gray-50 transition-colors"
+              class="size-12 flex items-center justify-center rounded-lg text-gray-600 select-none hover:bg-gray-50 active:bg-gray-100 transition-colors"
               @click="triggerImagePicker"
             >
               <div class="i-carbon-image text-2xl" />
@@ -346,6 +353,16 @@ const { menuOpen: functionMenuOpen, close: closeFunctionMenu } = useSwipeUpMenu(
   isMobile: isMobileSize,
   containerRef: inputContainerRef
 })
+
+// 跟踪输入区高度（含菜单）。菜单展开时 input-container 自然撑高，跳转按钮跟着上移
+// 用 useElementBounding 而非 useElementSize —— 后者 v14 签名是 (target, initialSize, options)，
+// 想要 border-box 必须放第三个参数；bounding rect 天然包含 border，更直接
+const { height: inputAreaHeight } = useElementBounding(inputContainerRef)
+const jumpButtonBottom = computed(() =>
+  inputAreaHeight.value > 0
+    ? `calc(${inputAreaHeight.value}px + 0.5rem)`
+    : '5rem'
+)
 
 // 系统选图：菜单里的"图片"按钮 → closeFunctionMenu → 走 picker。
 // 用专用 hook 把 fresh input + 取消兜底 + 卸载清理集中在一处
