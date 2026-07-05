@@ -2,6 +2,9 @@
 .ai-chat-container {
   position: relative;
   padding-bottom: env(safe-area-inset-bottom, 0);
+  /* 禁止双指缩放 / 双击缩放，但允许滚动 */
+  touch-action: pan-x pan-y;
+  overscroll-behavior: contain;
 }
 
 .input-container {
@@ -35,6 +38,23 @@
 .image-prime-leave-to {
   opacity: 0;
 }
+
+.function-menu-enter-active,
+.function-menu-leave-active {
+  transition: max-height 0.25s ease, opacity 0.2s ease, transform 0.25s ease;
+  overflow: hidden;
+}
+
+.function-menu-enter-from {
+  max-height: 0;
+  opacity: 0;
+  transform: translateY(100%);
+}
+
+.function-menu-leave-to {
+  max-height: 0;
+  opacity: 0;
+}
 </style>
 
 <template>
@@ -43,7 +63,13 @@
       <div max-w-3xl mx-auto space-y-4>
         <div v-show="visibleMessages.length === 0" text="4 center gray" space-y-4 pt-4>
           <p>求职偷懒 AI，精确获取我的简历信息</p>
-          <p>您可以输入<span font-bold px-1>想要了解的问题</span>或<span font-bold px-1>招聘要求</span>等</p>
+          <!-- 平台相关文案避免 SSR/CSR 内容不一致导致的 hydration mismatch -->
+          <ClientOnly>
+            <p>{{ isMobileSize ? '按住输入框上滑添加图片' : '在输入框中粘贴图片' }}</p>
+            <template #fallback>
+              <p>在输入框中粘贴图片</p>
+            </template>
+          </ClientOnly>
         </div>
 
         <button
@@ -124,7 +150,7 @@
       </div>
     </div>
 
-    <div border-t bg-white p-4 class="input-container">
+    <div ref="input-container" border-t bg-white p-4 class="input-container">
       <div max-w-3xl mx-auto flex relative>
         <motion.div
           :initial="{ opacity: 0, y: 30 }"
@@ -147,6 +173,8 @@
           </div>
         </motion.div>
 
+        <!-- 功能菜单：按住输入框上滑触发；菜单里点图标才真正打开 picker。
+             picker 通过按钮 @click 触发，每次都在新 user-activation 上下文里。 -->
         <div v-if="imageError" absolute bottom-full mb-2 left-0 text="xs red-500">
           {{ imageError }}
         </div>
@@ -199,6 +227,26 @@
           发送
         </button>
       </div>
+
+      <!-- 功能菜单：流式贴在 input 行下方，按住上滑唤起，整体上移出现。
+           v-if 切换 + max-height 过渡，整个 input-container 自然撑高把内容往上推。 -->
+      <Transition name="function-menu">
+        <div
+          v-if="functionMenuOpen"
+          class="function-menu-row border-t border-gray-100"
+        >
+          <div max-w-3xl mx-auto px-4 py-2 flex items-center justify-start gap-1>
+            <button
+              type="button"
+              aria-label="添加图片"
+              class="size-12 flex items-center justify-center rounded-lg text-gray-600 hover:bg-gray-50 transition-colors"
+              @click="triggerImagePicker"
+            >
+              <div class="i-carbon-image text-2xl" />
+            </button>
+          </div>
+        </div>
+      </Transition>
     </div>
 
     <Teleport to="body">
@@ -240,6 +288,16 @@ import MarkdownRender from 'markstream-vue'
 import { motion } from 'motion-v'
 import { chatImageToDataUrl } from '~/utils/chat-image'
 
+// 禁止移动端双指缩放 / 双击缩放
+useHead({
+  meta: [
+    {
+      name: 'viewport',
+      content: 'width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, viewport-fit=cover'
+    }
+  ]
+})
+
 const { messages, isStreaming, send, interrupt } = useAiSession({
   tools: aiTools.listTools(),
   executeCall: aiTools.execute
@@ -262,6 +320,9 @@ const userInput = ref('')
 const inputRef = useTemplateRef<HTMLInputElement>('chat-input')
 const messageContainerRef = useTemplateRef('message-container')
 
+// vueuse 没有直接的 isMobile；项目里以 670px 为断点（与 Status 组件复用同一规则）
+const { isMobileSize } = useMobileSize()
+
 // 图片粘贴 / 双击退格删除
 const {
   pendingImage,
@@ -270,8 +331,33 @@ const {
   previewOpen,
   imageDeletePrimed,
   handleKeydown: handleInputKeydown,
-  deleteImage: deletePendingImage
+  deleteImage: deletePendingImage,
+  pickFromFile
 } = usePendingImage(inputRef, userInput)
+
+// 菜单所在的容器：click-outside 判定的"外"= 这个容器之外
+const inputContainerRef = useTemplateRef<HTMLElement>('input-container')
+
+// 移动端：按住输入框上滑唤出功能菜单。菜单本身是普通 UI（不碰 picker 激活），
+// 具体功能由菜单里的图标按钮点开 — 按钮 @click 是新 user-activation 上下文，
+// 所以 picker 不会受 picker dialog 关掉后 transient activation TTL 损坏影响。
+const { menuOpen: functionMenuOpen, close: closeFunctionMenu } = useSwipeUpMenu({
+  origin: inputRef,
+  isMobile: isMobileSize,
+  containerRef: inputContainerRef
+})
+
+// 系统选图：菜单里的"图片"按钮 → closeFunctionMenu → 走 picker。
+// 用专用 hook 把 fresh input + 取消兜底 + 卸载清理集中在一处
+const { trigger: triggerPicker } = useFilePicker({
+  accept: 'image/*',
+  onFile: pickFromFile
+})
+
+function triggerImagePicker() {
+  closeFunctionMenu()
+  triggerPicker()
+}
 
 // 消息列表的自动滚动
 const {

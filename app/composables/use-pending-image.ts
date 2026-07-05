@@ -136,6 +136,33 @@ export function usePendingImage(
     return comma >= 0 ? dataUrl.slice(comma + 1) : dataUrl
   }
 
+  // ---------- File -> ChatImage 公开入口 ----------
+
+  /**
+   * 处理单个图片文件：校验类型/大小后写入 `pendingImage`。
+   * 被 paste（剪切板图片）和移动端的隐藏文件选择器共用，保证两条路径行为一致。
+   * 校验失败 / 读取失败时设置 `imageError`，不静默降级。
+   */
+  async function pickFromFile(file: File): Promise<void> {
+    if (!supportsImage.value)
+      return
+    const fail = (msg: string) => {
+      imageError.value = msg
+    }
+    if (!ALLOWED_IMAGE_TYPES.includes(file.type))
+      return fail('仅支持 JPEG / PNG / GIF / WEBP 图片')
+    if (file.size > MAX_IMAGE_BYTES)
+      return fail('图片过大，请使用 4MB 以内的图片')
+    try {
+      // 多次粘贴/选择替换上一张
+      pendingImage.value = await fileToChatImage(file)
+      imageError.value = ''
+    }
+    catch {
+      fail('图片读取失败，请重试')
+    }
+  }
+
   // ---------- Paste ----------
 
   async function onPaste(e: ClipboardEvent) {
@@ -151,23 +178,7 @@ export function usePendingImage(
     const file = item.getAsFile()
     if (!file)
       return
-    // 图片是用户表达的一部分：无法采用时提示并中止，不静默降级
-    if (!ALLOWED_IMAGE_TYPES.includes(file.type)) {
-      imageError.value = '仅支持 JPEG / PNG / GIF / WEBP 图片'
-      return
-    }
-    if (file.size > MAX_IMAGE_BYTES) {
-      imageError.value = '图片过大，请使用 4MB 以内的图片'
-      return
-    }
-    try {
-      // 多次粘贴替换上一张
-      pendingImage.value = await fileToChatImage(file)
-      imageError.value = ''
-    }
-    catch {
-      imageError.value = '图片读取失败，请重试'
-    }
+    await pickFromFile(file)
   }
 
   // 粘贴监听始终注册，是否处理由 provider 能力决定
@@ -182,6 +193,7 @@ export function usePendingImage(
     imageDeletePrimed,
     // 行为
     handleKeydown,
-    deleteImage
+    deleteImage,
+    pickFromFile
   }
 }
