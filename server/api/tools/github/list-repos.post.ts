@@ -1,3 +1,5 @@
+import { createTtlCache } from '~~/server/utils/cache/ttl'
+
 interface Repo {
   name: string
   fullName: string
@@ -8,44 +10,36 @@ interface Repo {
 const EXTRA_ORGS = ['triggerix-collective']
 const CACHE_TTL_MS = 5 * 60 * 1000
 
-let cache: { fetchedAt: number, repos: Repo[] } | null = null
-
-export default defineEventHandler(async (): Promise<{ repos: Repo[] }> => {
-  if (cache && Date.now() - cache.fetchedAt < CACHE_TTL_MS)
-    return { repos: cache.repos }
-
+async function loadRepos(signal?: AbortSignal): Promise<Repo[]> {
   const { githubAccessToken } = useRuntimeConfig()
 
   if (!githubAccessToken) {
-    throw createError({ statusCode: 500, statusMessage: 'Missing GITHUB_ACCESS_TOKEN' })
+    throw new Error('Missing GITHUB_ACCESS_TOKEN')
   }
 
   const headers = githubHeaders(githubAccessToken)
 
-  const fetchOpts = { signal: AbortSignal.timeout(GITHUB_FETCH_TIMEOUT_MS) }
-
-  const personal = await $fetch<any[]>(`${GITHUB_API_BASE}/user/repos`, {
-    ...fetchOpts,
-    headers,
-    query: {
-      per_page: 100,
-      sort: 'pushed',
-      affiliation: 'owner,collaborator,organization_member'
-    }
-  })
-
-  const orgLists = await Promise.all(
-    EXTRA_ORGS.map(org =>
+  const [personal, ...orgLists] = await Promise.all([
+    $fetch<any[]>(`${GITHUB_API_BASE}/user/repos`, {
+      signal,
+      headers,
+      query: {
+        per_page: 100,
+        sort: 'pushed',
+        affiliation: 'owner,collaborator,organization_member'
+      }
+    }),
+    ...EXTRA_ORGS.map(org =>
       $fetch<any[]>(`${GITHUB_API_BASE}/orgs/${org}/repos`, {
-        ...fetchOpts,
+        signal,
         headers,
         query: { per_page: 100, sort: 'pushed', type: 'all' }
       })
     )
-  )
+  ])
 
   const seen = new Set<number>()
-  const repos = [...personal, ...orgLists.flat()]
+  return [...personal, ...orgLists.flat()]
     .filter(r => !r.fork && (r.owner?.type === 'User' || r.permissions?.admin || r.permissions?.push))
     .filter((r) => {
       if (seen.has(r.id))
@@ -61,7 +55,22 @@ export default defineEventHandler(async (): Promise<{ repos: Repo[] }> => {
       description: r.description,
       language: r.language
     }))
+}
 
-  cache = { fetchedAt: Date.now(), repos }
-  return { repos }
+const reposCache = createTtlCache(loadRepos, {
+  ttlMs: CACHE_TTL_MS,
+  fetchTimeoutMs: GITHUB_FETCH_TIMEOUT_MS
+})
+
+export default defineEventHandler(async (): Promise<{ repos: Repo[] }> => {
+  try {
+    const repos = await reposCache.get()
+    return { repos }
+  }
+  catch (error) {
+    throw createError({
+      statusCode: 500,
+      statusMessage: error instanceof Error ? error.message : 'Failed to load repos'
+    })
+  }
 })

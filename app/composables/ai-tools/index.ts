@@ -1,4 +1,5 @@
 import { createBilibiliToolProvider } from './bilibili'
+import { createBlogToolProvider } from './blog'
 import { createGitHubToolProvider } from './github'
 import { createToolRegistry } from './registry'
 
@@ -7,5 +8,6 @@ import { createToolRegistry } from './registry'
  */
 export const aiTools = createToolRegistry([
   createGitHubToolProvider(),
-  createBilibiliToolProvider()
+  createBilibiliToolProvider(),
+  createBlogToolProvider()
 ])

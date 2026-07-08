@@ -1,4 +1,5 @@
 import { buildAiSystemPrompt } from './ai-system-prompt-local'
+import { createKeyedTtlCache } from './cache/keyed-ttl'
 
 const GIST_ID = 'bdc1cb7ad6eb40a7b7a4a1c25accda60'
 const RESUME_FILE = 'resume.md'
@@ -12,19 +13,14 @@ interface GistResponse {
   files?: Record<string, GistFile>
 }
 
-let cache: { content: string, fetchedAt: number } | null = null
-
-async function fetchResumeFromGist(token: string): Promise<string> {
+async function loadResume(token: string, signal?: AbortSignal): Promise<string> {
   if (!token) {
     throw new Error('Missing GITHUB_ACCESS_TOKEN')
   }
 
-  if (cache && Date.now() - cache.fetchedAt < CACHE_TTL_MS) {
-    return cache.content
-  }
-
   const response = await fetch(`${GITHUB_API_BASE}/gists/${GIST_ID}`, {
-    headers: githubHeaders(token)
+    headers: githubHeaders(token),
+    signal
   })
 
   if (!response.ok) {
@@ -38,11 +34,17 @@ async function fetchResumeFromGist(token: string): Promise<string> {
     throw new Error(`Missing ${RESUME_FILE} in gist`)
   }
 
-  cache = { content, fetchedAt: Date.now() }
   return content
 }
 
+// Per-token cache: in practice the token is a constant from env, but keying
+// by token keeps the factory token-agnostic and safe if that ever changes.
+const getResume = createKeyedTtlCache(loadResume, {
+  ttlMs: CACHE_TTL_MS,
+  fetchTimeoutMs: GITHUB_FETCH_TIMEOUT_MS
+})
+
 export async function getAiSystemPrompt(token: string): Promise<string> {
-  const resume = await fetchResumeFromGist(token)
+  const resume = await getResume(token)
   return buildAiSystemPrompt(resume)
 }

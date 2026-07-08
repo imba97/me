@@ -1,3 +1,5 @@
+import { createKeyedTtlCache } from '~~/server/utils/cache/keyed-ttl'
+
 interface RepoMeta {
   name: string
   fullName: string
@@ -5,23 +7,24 @@ interface RepoMeta {
   language: string | null
 }
 
-const CACHE_TTL_MS = 60 * 60 * 1000
-let userCache: { login: string, fetchedAt: number } | null = null
+const USER_CACHE_TTL_MS = 60 * 60 * 1000
+const README_MAX_CHARS = 8000
 
 const REPO_NAME_RE = /^[\w.-]+$/
 const FULL_NAME_RE = /^[\w.-]+\/[\w.-]+$/
 
-async function getAuthenticatedUser(token: string): Promise<string> {
-  if (userCache && Date.now() - userCache.fetchedAt < CACHE_TTL_MS) {
-    return userCache.login
-  }
+async function loadAuthenticatedUser(token: string, signal?: AbortSignal): Promise<string> {
   const user = await $fetch<{ login: string }>(`${GITHUB_API_BASE}/user`, {
     headers: githubHeaders(token),
-    signal: AbortSignal.timeout(GITHUB_FETCH_TIMEOUT_MS)
+    signal
   })
-  userCache = { login: user.login, fetchedAt: Date.now() }
   return user.login
 }
+
+const getAuthenticatedUser = createKeyedTtlCache(loadAuthenticatedUser, {
+  ttlMs: USER_CACHE_TTL_MS,
+  fetchTimeoutMs: GITHUB_FETCH_TIMEOUT_MS
+})
 
 function resolveRepo(name: string, owner: string): { owner: string, name: string } {
   if (name.includes('/')) {
@@ -30,8 +33,6 @@ function resolveRepo(name: string, owner: string): { owner: string, name: string
   }
   return { owner, name }
 }
-
-const README_MAX_CHARS = 8000
 
 export default defineEventHandler(async (event): Promise<{ repo: RepoMeta, readme: string }> => {
   const { githubAccessToken } = useRuntimeConfig()
