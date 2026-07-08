@@ -49,6 +49,7 @@
           :msg="msg"
           :is-last="idx === visibleMessages.length - 1"
           :is-streaming="isStreaming"
+          @retry="retry"
         />
       </div>
     </div>
@@ -78,7 +79,7 @@ useHead({
   ]
 })
 
-const { messages, isStreaming, send, interrupt } = useAiSession({
+const { messages, isStreaming, send, interrupt, retry } = useAiSession({
   tools: aiTools.listTools(),
   executeCall: aiTools.execute
 })

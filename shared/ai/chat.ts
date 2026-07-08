@@ -22,6 +22,8 @@ export interface AssistantMessage extends BaseMessage {
   toolCalls?: ToolCall[]
   /** 客户端标记：这次回答被用户中断；服务端忽略。 */
   aborted?: boolean
+  /** 客户端标记：本次回答因上游错误失败；UI 用它渲染错误 + 重试按钮；服务端忽略。 */
+  error?: string
 }
 
 export interface ToolMessage extends BaseMessage {
