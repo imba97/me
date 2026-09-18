@@ -57,7 +57,9 @@ export default defineNuxtConfig({
     steamApiKey: process.env.STEAM_API_KEY,
     aiApiUrl: process.env.AI_API_URL,
     aiApiKey: process.env.AI_API_KEY,
-    aiModel: process.env.AI_MODEL ?? 'MiniMax-M3',
+    /** AI 平台：minimax | kimi，默认 minimax。模型与地址留空时由各 provider 决定默认值。 */
+    aiProvider: process.env.AI_PROVIDER ?? 'minimax',
+    aiModel: process.env.AI_MODEL,
     aiMaxTokens: process.env.AI_MAX_TOKENS
       ? Number(process.env.AI_MAX_TOKENS)
       : 4096,

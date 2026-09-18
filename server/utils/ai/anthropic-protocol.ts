@@ -20,8 +20,10 @@ export function createAnthropicProtocol(opts: ProviderConfig): AiProtocol {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'x-api-key': apiKey,
-          'anthropic-version': '2023-06-01'
+          'anthropic-version': '2023-06-01',
+          ...(opts.authStyle === 'bearer'
+            ? { Authorization: `Bearer ${apiKey}` }
+            : { 'x-api-key': apiKey })
         },
         body: JSON.stringify({
           model,

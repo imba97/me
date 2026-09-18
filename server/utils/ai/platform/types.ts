@@ -21,9 +21,11 @@ export interface PlatformCapabilities {
 }
 
 export interface PlatformConfig {
-  baseUrl: string
+  /** 留空时使用各平台默认地址 */
+  baseUrl?: string
   apiKey: string
-  model: string
+  /** 留空时使用各平台默认模型 */
+  model?: string
   maxTokens?: number
   /** 该平台对当前 model 暴露的可用内容类型，由调用方按业务声明。 */
   contentTypes: ReadonlySet<MessageContentType>

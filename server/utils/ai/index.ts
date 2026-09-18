@@ -9,6 +9,7 @@ export interface AiProtocolOptions {
   apiKey: string
   model: string
   maxTokens?: number
+  authStyle?: ProviderConfig['authStyle']
 }
 
 /** 协议工厂：按协议名选定 wire 格式实现。 */
@@ -17,7 +18,8 @@ export function createAiProtocol(opts: AiProtocolOptions): AiProtocol {
     baseUrl: opts.baseUrl,
     apiKey: opts.apiKey,
     model: opts.model,
-    ...(opts.maxTokens !== undefined ? { maxTokens: opts.maxTokens } : {})
+    ...(opts.maxTokens !== undefined ? { maxTokens: opts.maxTokens } : {}),
+    ...(opts.authStyle !== undefined ? { authStyle: opts.authStyle } : {})
   }
 
   switch (opts.name ?? AiProtocolName.Anthropic) {

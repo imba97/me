@@ -1,4 +1,4 @@
-import { createMiniMaxProvider } from '../../utils/ai/platform/minimax-cn'
+import { createAiProvider } from '../../utils/ai/platform'
 
 /**
  * Exposes the active AI provider's declared capabilities to the client.
@@ -7,10 +7,10 @@ import { createMiniMaxProvider } from '../../utils/ai/platform/minimax-cn'
  * decide whether to enable image paste.
  */
 export default defineEventHandler(() => {
-  const { aiApiUrl, aiApiKey, aiModel, aiMaxTokens } = useRuntimeConfig()
+  const { aiApiUrl, aiApiKey, aiModel, aiMaxTokens, aiProvider } = useRuntimeConfig()
 
   try {
-    const provider = createMiniMaxProvider({
+    const provider = createAiProvider(aiProvider, {
       baseUrl: aiApiUrl ?? '',
       apiKey: aiApiKey ?? '',
       model: aiModel,

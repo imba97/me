@@ -1,15 +1,15 @@
 import type { AiRequest } from '../../utils/ai/wire'
 import { createError } from 'h3'
-import { createMiniMaxProvider } from '../../utils/ai/platform/minimax-cn'
+import { createAiProvider } from '../../utils/ai/platform'
 import { toInternalMessage } from '../../utils/ai/wire'
 
 export default defineEventHandler(async (event) => {
   const body = await readBody<AiRequest>(event)
   const { messages, tools } = body ?? {}
-  const { aiApiUrl, aiApiKey, aiModel, aiMaxTokens, githubAccessToken }
+  const { aiApiUrl, aiApiKey, aiModel, aiMaxTokens, aiProvider, githubAccessToken }
     = useRuntimeConfig()
 
-  if (!aiApiUrl || !aiApiKey) {
+  if (!aiApiKey) {
     throw createError({
       statusCode: 500,
       statusMessage: 'Missing AI API configuration'
@@ -40,7 +40,7 @@ export default defineEventHandler(async (event) => {
     ? `${baseSystemPrompt}\n\n${formatToolDescriptions(tools)}`
     : baseSystemPrompt
 
-  const provider = createMiniMaxProvider({
+  const provider = createAiProvider(aiProvider, {
     baseUrl: aiApiUrl,
     apiKey: aiApiKey,
     model: aiModel,

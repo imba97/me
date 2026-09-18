@@ -8,7 +8,13 @@ import { AiProtocolName } from '../types'
  * 参考：https://platform.minimaxi.com/docs/api-reference/text-anthropic-api
  */
 export function createMiniMaxProvider(config: PlatformConfig): AiProvider {
-  const protocol = createAiProtocol({ name: AiProtocolName.Anthropic, ...config })
+  const protocol = createAiProtocol({
+    name: AiProtocolName.Anthropic,
+    baseUrl: config.baseUrl || 'https://api.minimaxi.com/anthropic',
+    apiKey: config.apiKey,
+    model: config.model || 'MiniMax-M3',
+    ...(config.maxTokens !== undefined ? { maxTokens: config.maxTokens } : {})
+  })
 
   return {
     name: 'MiniMax',

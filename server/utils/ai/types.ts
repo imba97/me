@@ -28,6 +28,8 @@ export interface ProviderConfig {
   maxTokens?: number
   /** 启用 Anthropic extended thinking（先思考再回答，会更慢更准） */
   thinking?: boolean
+  /** Anthropic 兼容端的鉴权方式：x-api-key 头（默认）或 Authorization Bearer */
+  authStyle?: 'x-api-key' | 'bearer'
 }
 
 export type { ChatMessage, ChatTool, ToolCall } from '~~/shared/ai/chat'
