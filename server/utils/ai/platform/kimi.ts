@@ -1,6 +1,5 @@
 import type { AiProvider, PlatformConfig } from './types'
-import { createAiProtocol } from '../index'
-import { AiProtocolName } from '../types'
+import { createAnthropicPlatform } from './anthropic-platform'
 
 /**
  * Kimi provider：走 Anthropic 兼容协议（POST {baseUrl}/v1/messages）。
@@ -8,21 +7,10 @@ import { AiProtocolName } from '../types'
  * 参考：https://platform.moonshot.cn/docs/guide/agent-support#kimi-for-coding
  */
 export function createKimiProvider(config: PlatformConfig): AiProvider {
-  const protocol = createAiProtocol({
-    name: AiProtocolName.Anthropic,
-    baseUrl: config.baseUrl || 'https://api.kimi.com/coding',
-    apiKey: config.apiKey,
-    model: config.model || 'k3',
-    ...(config.maxTokens !== undefined ? { maxTokens: config.maxTokens } : {}),
-    authStyle: 'bearer'
-  })
-
-  return {
+  return createAnthropicPlatform({
     name: 'Kimi',
-    protocol,
-    capabilities: {
-      contentTypes: config.contentTypes,
-      supportsImage: config.contentTypes.has('image')
-    }
-  }
+    defaultBaseUrl: 'https://api.kimi.com/coding',
+    defaultModel: 'k3',
+    authStyle: 'bearer'
+  }, config)
 }

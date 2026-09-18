@@ -3,31 +3,18 @@ import { createAnthropicProtocol } from './anthropic-protocol'
 import { createOpenAIProtocol } from './openai-protocol'
 import { AiProtocolName } from './types'
 
-export interface AiProtocolOptions {
-  name?: AiProtocolName
-  baseUrl: string
-  apiKey: string
-  model: string
-  maxTokens?: number
-  authStyle?: ProviderConfig['authStyle']
-}
+export type AiProtocolOptions = ProviderConfig & { name?: AiProtocolName }
 
 /** 协议工厂：按协议名选定 wire 格式实现。 */
 export function createAiProtocol(opts: AiProtocolOptions): AiProtocol {
-  const config: ProviderConfig = {
-    baseUrl: opts.baseUrl,
-    apiKey: opts.apiKey,
-    model: opts.model,
-    ...(opts.maxTokens !== undefined ? { maxTokens: opts.maxTokens } : {}),
-    ...(opts.authStyle !== undefined ? { authStyle: opts.authStyle } : {})
-  }
+  const { name = AiProtocolName.Anthropic, ...config } = opts
 
-  switch (opts.name ?? AiProtocolName.Anthropic) {
+  switch (name) {
     case AiProtocolName.Anthropic:
       return createAnthropicProtocol(config)
     case AiProtocolName.OpenAI:
       return createOpenAIProtocol(config)
     default:
-      throw new Error(`Unknown AI protocol: ${opts.name}`)
+      throw new Error(`Unknown AI protocol: ${name}`)
   }
 }

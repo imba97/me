@@ -30,7 +30,9 @@ export function createAnthropicProtocol(opts: ProviderConfig): AiProtocol {
           max_tokens: maxTokens,
           stream: true,
           system: req.systemPrompt,
-          ...(opts.thinking ? { thinking: { type: 'enabled' } } : { thinking: { type: 'disabled' } }),
+          // thinking 仅在显式启用时下发；未配置时省略字段，由上游决定默认行为（Anthropic 默认为关闭），
+          // 避免不识别 thinking 字段的 Anthropic 兼容端报错。
+          ...(opts.thinking ? { thinking: { type: 'enabled' } } : {}),
           ...(req.tools && req.tools.length > 0
             ? { tools: toAnthropicTools(req.tools) }
             : {}),
@@ -71,8 +73,12 @@ function toAnthropicMessages(messages: ChatMessage[]): any[] {
           source: { type: 'base64', media_type: m.image.mediaType, data: m.image.data }
         })
       }
-      blocks.push({ type: 'text', text: m.content })
-      out.push({ role: 'user', content: blocks })
+      // 跳过空 text block：只发图不带文字时 content 为空字符串，
+      // Kimi 等严格校验的兼容端会报 "text content is empty"。
+      if (m.content)
+        blocks.push({ type: 'text', text: m.content })
+      if (blocks.length > 0)
+        out.push({ role: 'user', content: blocks })
       continue
     }
 

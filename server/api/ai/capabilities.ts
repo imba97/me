@@ -9,10 +9,14 @@ import { createAiProvider } from '../../utils/ai/platform'
 export default defineEventHandler(() => {
   const { aiApiUrl, aiApiKey, aiModel, aiMaxTokens, aiProvider } = useRuntimeConfig()
 
+  if (!aiApiKey) {
+    return { supportsImage: false }
+  }
+
   try {
     const provider = createAiProvider(aiProvider, {
-      baseUrl: aiApiUrl ?? '',
-      apiKey: aiApiKey ?? '',
+      baseUrl: aiApiUrl,
+      apiKey: aiApiKey,
       model: aiModel,
       maxTokens: aiMaxTokens,
       contentTypes: new Set(['text', 'tool_use', 'tool_result', 'thinking', 'image', 'video'])

@@ -1,6 +1,5 @@
 import type { AiProvider, PlatformConfig } from './types'
-import { createAiProtocol } from '../index'
-import { AiProtocolName } from '../types'
+import { createAnthropicPlatform } from './anthropic-platform'
 
 /**
  * MiniMax provider：走 Anthropic 兼容协议（POST {baseUrl}/v1/messages）。
@@ -8,20 +7,9 @@ import { AiProtocolName } from '../types'
  * 参考：https://platform.minimaxi.com/docs/api-reference/text-anthropic-api
  */
 export function createMiniMaxProvider(config: PlatformConfig): AiProvider {
-  const protocol = createAiProtocol({
-    name: AiProtocolName.Anthropic,
-    baseUrl: config.baseUrl || 'https://api.minimaxi.com/anthropic',
-    apiKey: config.apiKey,
-    model: config.model || 'MiniMax-M3',
-    ...(config.maxTokens !== undefined ? { maxTokens: config.maxTokens } : {})
-  })
-
-  return {
+  return createAnthropicPlatform({
     name: 'MiniMax',
-    protocol,
-    capabilities: {
-      contentTypes: config.contentTypes,
-      supportsImage: config.contentTypes.has('image')
-    }
-  }
+    defaultBaseUrl: 'https://api.minimaxi.com/anthropic',
+    defaultModel: 'MiniMax-M3'
+  }, config)
 }
