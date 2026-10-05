@@ -7,6 +7,9 @@ settings:
 overrides:
   semver: ^7.8.5
 
+patchedDependencies:
+  unload@2.4.1: 4499a377f358747b692f714777f41ce18cd505edb8038ba090bc345f000c20d4
+
 importers:
 
   .:
@@ -7570,7 +7573,7 @@ snapshots:
       '@babel/runtime': 7.29.7
       oblivious-set: 2.0.0
       p-queue: 6.6.2
-      unload: 2.4.1
+      unload: 2.4.1(patch_hash=4499a377f358747b692f714777f41ce18cd505edb8038ba090bc345f000c20d4)
 
   browserslist@4.29.0:
     dependencies:
@@ -10684,7 +10687,7 @@ snapshots:
       unist-util-is: 6.0.1
       unist-util-visit-parents: 6.0.2
 
-  unload@2.4.1: {}
+  unload@2.4.1(patch_hash=4499a377f358747b692f714777f41ce18cd505edb8038ba090bc345f000c20d4): {}
 
   uno-colors@0.1.0: {}
 

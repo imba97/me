@@ -55,7 +55,6 @@ function loadImage(src: string): Promise<HTMLImageElement> {
 let stopAnimation: (() => void) | null = null
 
 onMounted(() => {
-  console.warn('[cyberpunk] onMounted, bgCanvas=', bgCanvas.value)
   start()
 })
 
@@ -65,16 +64,13 @@ onBeforeUnmount(() => {
 
 async function start() {
   const canvas = bgCanvas.value
-  console.warn('[cyberpunk] start, canvas=', canvas, 'tagName=', canvas?.tagName)
   if (!canvas) {
     return
   }
 
   // 选定的格子 + 来源
   const cell = pickCell()
-  console.warn('[cyberpunk] cell=', cell)
   const tileImg = await loadImage(cell.src)
-  console.warn('[cyberpunk] loaded img, size=', tileImg.naturalWidth, 'x', tileImg.naturalHeight)
 
   // 该格子在源图中的像素范围
   const sourceW = tileImg.naturalWidth
@@ -212,10 +208,6 @@ async function start() {
 
   function render() {
     drawStable()
-    if (!('debugged' in render)) {
-      console.warn('[cyberpunk] first render call')
-      ;(render as any).debugged = true
-    }
     ctx.drawImage(stable, 0, 0)
     drawJitterBand(ctx)
     drawScanlines(ctx)

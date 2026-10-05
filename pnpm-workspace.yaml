@@ -1,9 +1,12 @@
-shellEmulator: true
-
+minimumReleaseAgeExcludePrune: true
 trustPolicy: no-downgrade
+shellEmulator: true
 
 overrides:
   semver: ^7.8.5
+
+patchedDependencies:
+  unload@2.4.1: patches/unload@2.4.1.patch
 
 allowBuilds:
   '@parcel/watcher': true

@@ -1,0 +1,44 @@
+diff --git a/dist/es/browser.js b/dist/es/browser.js
+index cac49fd8b3a4a5459b316fe2ac7da9ca08ff4c98..68fe89025e3b36ca09826c4de1290c468e62a65f 100644
+--- a/dist/es/browser.js
++++ b/dist/es/browser.js
+@@ -30,12 +30,13 @@ export function addBrowser(fn) {
+     }, true);
+ 
+     /**
+-     * for iframes, we have to use the unload-event
++     * PATCHED (pnpm patch): the `unload` event listener was removed here.
++     * Chrome now treats `unload` as a restricted permission and reports
++     * "Permissions policy violation: unload is not allowed in this document"
++     * for every registration. `beforeunload` above already handles cleanup for
++     * normal browser windows; only the legacy iframe case relied on `unload`.
+      * @link https://stackoverflow.com/q/47533670/3443137
+      */
+-    window.addEventListener('unload', function () {
+-      fn();
+-    }, true);
+   }
+ 
+   /**
+diff --git a/dist/lib/browser.js b/dist/lib/browser.js
+index 24216c521f0ed40ca597737fa242a15b9ca20eea..e06b50e98f55df64e36d6b30d5bfbb0aef28c1fc 100644
+--- a/dist/lib/browser.js
++++ b/dist/lib/browser.js
+@@ -36,12 +36,13 @@ function addBrowser(fn) {
+     }, true);
+ 
+     /**
+-     * for iframes, we have to use the unload-event
++     * PATCHED (pnpm patch): the `unload` event listener was removed here.
++     * Chrome now treats `unload` as a restricted permission and reports
++     * "Permissions policy violation: unload is not allowed in this document"
++     * for every registration. `beforeunload` above already handles cleanup for
++     * normal browser windows; only the legacy iframe case relied on `unload`.
+      * @link https://stackoverflow.com/q/47533670/3443137
+      */
+-    window.addEventListener('unload', function () {
+-      fn();
+-    }, true);
+   }
+ 
+   /**

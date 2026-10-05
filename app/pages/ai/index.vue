@@ -69,12 +69,12 @@
 import type { ChatImage } from '~~/shared/ai/chat'
 import ChatInput from '~/components/ChatInput.vue'
 
-// 禁止移动端双指缩放 / 双击缩放
+// 移动端全屏聊天：保留刘海屏安全区，但不锁定缩放（禁止缩放会触发 unhead 无障碍告警）
 useHead({
   meta: [
     {
       name: 'viewport',
-      content: 'width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, viewport-fit=cover'
+      content: 'width=device-width, initial-scale=1, viewport-fit=cover'
     }
   ]
 })
