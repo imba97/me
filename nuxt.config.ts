@@ -12,7 +12,6 @@ export default defineNuxtConfig({
     '@vueuse/nuxt',
     '@unocss/nuxt',
     '@pinia/nuxt',
-    'floating-vue/nuxt',
     'motion-v/nuxt'
   ],
 
@@ -76,17 +75,6 @@ export default defineNuxtConfig({
         './lib-components.d.ts'
       ]
     }
-  },
-
-  vue: {
-    /**
-     * compatibilityVersion 5 起 Nuxt 默认关闭 Options API（__VUE_OPTIONS_API__ = false），
-     * 而 floating-vue 完全基于 Options API（extends / mixins / computed）实现，
-     * 关闭后 VMenu 的 slotData 等计算属性不会挂到实例上，
-     * 渲染时抛 "Cannot read properties of undefined (reading 'isShown')"。
-     * 项目自身组件都用 <script setup>，仅需为依赖开启。
-     */
-    optionsApi: true
   },
 
   future: {

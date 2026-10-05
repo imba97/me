@@ -15,6 +15,7 @@
     "lint": "eslint --cache"
   },
   "dependencies": {
+    "@floating-ui/vue": "^2.0.1",
     "@introxd/components": "^0.0.10",
     "@nuxt/image": "^2.1.0",
     "@pinia/nuxt": "^1.0.2",
@@ -26,7 +27,6 @@
     "defu": "^6.1.7",
     "destr": "^2.0.5",
     "eventsource-parser": "^4.1.1",
-    "floating-vue": "^5.4.0",
     "h2l-ranking": "^0.2.0",
     "markstream-vue": "1.0.1-beta.5",
     "motion-v": "^2.4.4",

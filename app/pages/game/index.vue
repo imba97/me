@@ -26,7 +26,7 @@
         <div
           lt-md="h-48 w-48" md="h-86 w-86" my-4 rounded-full of-hidden
         >
-          <NuxtImg v-show="steam.hasImage" :src="steam.image" size-full object-cover animate-fade-in />
+          <NuxtImg v-if="steam.hasImage" :src="steam.image" size-full object-cover animate-fade-in />
           <div v-show="!steam.hasImage" i-mdi-steam size-full bg-dark-1 />
         </div>
         <Text
@@ -40,7 +40,7 @@
       </div>
     </div>
 
-    <div fixed top="-10%" left="-10%" h="120%" w="120%" z--1 blur-32>
+    <div v-if="steam.hasImage" fixed top="-10%" left="-10%" h="120%" w="120%" z--1 blur-32>
       <NuxtImg
         :src="steam.image"
         size-full object-cover select-none animate-fade-in

@@ -1,8 +1,8 @@
 <template>
   <div v-show="steam.playing">
-    <VMenu
-      :distance="16" :skidding="isMobileSize ? 0 : 100" :triggers="['hover', 'click']"
-      :placement="isMobileSize ? undefined : 'right'"
+    <MePopper
+      :distance="16" :skidding="isMobileSize ? 0 : 100"
+      :placement="isMobileSize ? 'bottom' : 'right'"
     >
       <div size-6 animate-fade-in>
         <div i-ph-game-controller size-full animate-pulse bg-gradient-to-tr from="#bd34fe" to="#47caff" />
@@ -43,7 +43,7 @@
           </div>
         </div>
       </template>
-    </VMenu>
+    </MePopper>
   </div>
 </template>
 
