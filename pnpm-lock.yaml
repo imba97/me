@@ -54,10 +54,10 @@ importers:
         specifier: ^0.2.0
         version: 0.2.0(vue@3.5.43(typescript@6.0.3))
       markstream-vue:
-        specifier: 1.0.1-beta.5
-        version: 1.0.1-beta.5(katex@0.16.47)(vue@3.5.43(typescript@6.0.3))
+        specifier: ^2.0.16
+        version: 2.0.16(katex@0.16.47)(vue@3.5.43(typescript@6.0.3))
       motion-v:
-        specifier: ^2.4.4
+        specifier: ^2.5.2
         version: 2.5.2(@vueuse/core@15.0.0(vue@3.5.43(typescript@6.0.3)))(vue@3.5.43(typescript@6.0.3))
       nuxt:
         specifier: ^4.5.2
@@ -79,7 +79,7 @@ importers:
         specifier: ^9.5.1
         version: 9.5.1(@typescript-eslint/typescript-estree@8.71.0(typescript@6.0.3))(@typescript-eslint/utils@8.71.0(eslint@10.12.0(jiti@2.7.0))(typescript@6.0.3))(@vue/compiler-sfc@3.5.43)(eslint@10.12.0(jiti@2.7.0))(typescript@6.0.3)
       '@types/node':
-        specifier: ^26.6.1
+        specifier: ^26.6.4
         version: 26.6.4
       '@unocss/preset-web-fonts':
         specifier: ^66.10.5
@@ -91,7 +91,7 @@ importers:
         specifier: ^1.52.0
         version: 1.52.0
       eslint:
-        specifier: ^10.10.0
+        specifier: ^10.12.0
         version: 10.12.0(jiti@2.7.0)
       eslint-plugin-unused-imports:
         specifier: ^4.4.1
@@ -100,7 +100,7 @@ importers:
         specifier: ^1.0.2
         version: 1.0.2
       sass:
-        specifier: ^1.104.1
+        specifier: ^1.105.1
         version: 1.105.1
       simple-git-hooks:
         specifier: ^2.14.0
@@ -121,7 +121,7 @@ importers:
         specifier: ^32.1.0
         version: 32.1.0(@nuxt/kit@4.5.2(magic-string@1.4.2)(magicast@0.5.5)(oxc-parser@0.150.0)(rolldown@1.2.12)(unplugin@3.4.0(esbuild@0.28.2)(rolldown@1.2.12)(rollup@4.64.0)(vite@8.3.2(@types/node@26.6.4)(esbuild@0.28.2)(jiti@2.7.0)(sass@1.105.1)(terser@5.51.2)(yaml@2.9.1))(webpack@5.111.1(esbuild@0.28.2)(lightningcss@1.33.0)(postcss@8.5.28))))(esbuild@0.28.2)(rolldown@1.2.12)(rollup@4.64.0)(vite@8.3.2(@types/node@26.6.4)(esbuild@0.28.2)(jiti@2.7.0)(sass@1.105.1)(terser@5.51.2)(yaml@2.9.1))(vue@3.5.43(typescript@6.0.3))(webpack@5.111.1(esbuild@0.28.2)(lightningcss@1.33.0)(postcss@8.5.28))
       vue-tsc:
-        specifier: ^3.3.11
+        specifier: ^3.3.12
         version: 3.3.12(typescript@6.0.3)
 
 packages:
@@ -341,8 +341,8 @@ packages:
   '@cacheable/utils@2.5.0':
     resolution: {integrity: sha512-buipgOVDkkPXNR5+xBpDw7Zk2n1EvU7qBJCNUcL7rhQ//kfpOXPAvQ511Os0vpLYJ1pZnvudNytkQt2hst3wqA==}
 
-  '@chenglou/pretext@0.0.5':
-    resolution: {integrity: sha512-A8GZN10REdFGsyuiUgLV8jjPDDFMg5GmgxGWV0I3igxBOnzj+jgz2VMmVD7g+SFyoctfeqHFxbNatKSzVRWtRg==}
+  '@chenglou/pretext@0.0.9':
+    resolution: {integrity: sha512-vInlpC//3vjRfWTs78k2BBIq/0bUdpjIp8TIn9fXe0NvnChhTQZfjioVzERQQbkQvCVpPpw7PDOrTWMHpq27VA==}
 
   '@clack/core@1.5.1':
     resolution: {integrity: sha512-iHTrHA8MtVuLl2TfZySmcKv1qO2PoyC9Z7pfSDozEuV5vtY3/wcOPKJXlqJ5Oq2Cx5DDGQGAMVx6HZfRRoVEbQ==}
@@ -3485,9 +3485,6 @@ packages:
   markdown-it-mark@4.0.0:
     resolution: {integrity: sha512-YLhzaOsU9THO/cal0lUjfMjrqSMPjjyjChYM7oyj4DnyaXEzA8gnW6cVJeyCrCVeyesrY2PlEdUYJSPFYL4Nkg==}
 
-  markdown-it-sub@2.0.0:
-    resolution: {integrity: sha512-iCBKgwCkfQBRg2vApy9vx1C1Tu6D8XYo8NvevI3OlwzBRmiMtsJ2sXupBgEA7PPxiDwNni3qIUkhZ6j5wofDUA==}
-
   markdown-it-sup@2.0.0:
     resolution: {integrity: sha512-5VgmdKlkBd8sgXuoDoxMpiU+BiEt3I49GItBzzw7Mxq9CxvnhE/k09HFli09zgfFDRixDQDfDxi0mgBCXtaTvA==}
 
@@ -3501,18 +3498,17 @@ packages:
   markdown-table@3.0.4:
     resolution: {integrity: sha512-wiYz4+JrLyb/DqW2hkFJxP7Vd7JuTDm77fvbM8VfEQdmSMqcImWeeRbHwZjBjIFki/VaMK2BhFi7oUUZeM5bqw==}
 
-  markstream-core@1.0.0:
-    resolution: {integrity: sha512-V39W0rPgJ5Yj/XEl11LaKQxX9dYOI34RL729Zoi9oyy/Y6z6H+PJOsBFktu7gU9ZZxCsevWMb/Re2LgSKbWfRg==}
+  markstream-core@2.0.16:
+    resolution: {integrity: sha512-vw/x1trglIch/FyY2mZBF0fVTeOkvIBx0TS9zEgruzE7jIDj6gY8VPTKVAtr0p75dUSaZp3TzNqu0Q/rbHFI1A==}
 
-  markstream-vue@1.0.1-beta.5:
-    resolution: {integrity: sha512-a1zI20OSgH4xw7j3l87BINbIze8ScWlhQTCPERpbDfrGMkeXSAcckJb/YUHOCZkhbFzvYBP56W2wZKWZ9p5dIA==}
+  markstream-vue@2.0.16:
+    resolution: {integrity: sha512-oPzDZa5F0BlTyuQdt/fcoCEd1C/ha+6BHB+B1t8rOJuXpoMj90Cask7lWgfjY+NaZlSHaN0gADwyQIDQBums/A==}
     peerDependencies:
       '@antv/infographic': ^0.2.3
       '@terrastruct/d2': '>=0.1.33'
       katex: '>=0.16.22'
       mermaid: '>=11'
-      stream-markdown: '>=0.0.15'
-      stream-monaco: '>=0.0.41'
+      stream-diffs: '>=0.0.2'
       vue: '>=3.0.0'
       vue-i18n: '>=9'
     peerDependenciesMeta:
@@ -3524,9 +3520,7 @@ packages:
         optional: true
       mermaid:
         optional: true
-      stream-markdown:
-        optional: true
-      stream-monaco:
+      stream-diffs:
         optional: true
       vue-i18n:
         optional: true
@@ -4589,8 +4583,8 @@ packages:
   steam-playing-game@0.0.4:
     resolution: {integrity: sha512-h/cy9I3RXPrOIEzDMaicleCZ4ewrpFeoudYfMOxq7oeltLsUbXDPWsvXpH/uYg+V6j0ZKDIVkIfOlZesxh9w0Q==}
 
-  stream-markdown-parser@1.0.3:
-    resolution: {integrity: sha512-hSU22+3LIPKZTwa80vgSkQV5wuwrZfeeKIEqXnAOqwVnrtWUTJodIYh2IU/6mYwHQeBrs4eWcEe9/JHWx2pvHA==}
+  stream-markdown-parser@1.2.18:
+    resolution: {integrity: sha512-k7kwPmm+30yoiceEq7skIIZvAItfJ+MkPNVVL3hQ1GBdr18yyNJsuerhxpLw4QcIKdbqVCbvhx4w2HLpwKiEkg==}
 
   streamx@2.28.1:
     resolution: {integrity: sha512-zEzXb0s5Cds7tqMH6rhZ05lcJydCWiQPEwiNngVqzsxCc962vLY4Uw+mW7od8kDH258k2Uz/JrOkdIAAhSh9VA==}
@@ -5564,7 +5558,7 @@ snapshots:
       hashery: 1.5.1
       keyv: 5.6.0
 
-  '@chenglou/pretext@0.0.5': {}
+  '@chenglou/pretext@0.0.9': {}
 
   '@clack/core@1.5.1':
     dependencies:
@@ -8904,8 +8898,6 @@ snapshots:
 
   markdown-it-mark@4.0.0: {}
 
-  markdown-it-sub@2.0.0: {}
-
   markdown-it-sup@2.0.0: {}
 
   markdown-it-task-checkbox@1.0.6: {}
@@ -8919,14 +8911,14 @@ snapshots:
 
   markdown-table@3.0.4: {}
 
-  markstream-core@1.0.0: {}
+  markstream-core@2.0.16: {}
 
-  markstream-vue@1.0.1-beta.5(katex@0.16.47)(vue@3.5.43(typescript@6.0.3)):
+  markstream-vue@2.0.16(katex@0.16.47)(vue@3.5.43(typescript@6.0.3)):
     dependencies:
-      '@chenglou/pretext': 0.0.5
+      '@chenglou/pretext': 0.0.9
       '@floating-ui/dom': 1.8.0
-      markstream-core: 1.0.0
-      stream-markdown-parser: 1.0.3
+      markstream-core: 2.0.16
+      stream-markdown-parser: 1.2.18
       vue: 3.5.43(typescript@6.0.3)
     optionalDependencies:
       katex: 0.16.47
@@ -10369,13 +10361,12 @@ snapshots:
 
   steam-playing-game@0.0.4: {}
 
-  stream-markdown-parser@1.0.3:
+  stream-markdown-parser@1.2.18:
     dependencies:
       markdown-it-container: 4.0.0
       markdown-it-footnote: 4.0.0
       markdown-it-ins: 4.0.0
       markdown-it-mark: 4.0.0
-      markdown-it-sub: 2.0.0
       markdown-it-sup: 2.0.0
       markdown-it-task-checkbox: 1.0.6
       markdown-it-ts: 1.1.2

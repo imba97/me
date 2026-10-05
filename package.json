@@ -28,8 +28,8 @@
     "destr": "^2.0.5",
     "eventsource-parser": "^4.1.1",
     "h2l-ranking": "^0.2.0",
-    "markstream-vue": "1.0.1-beta.5",
-    "motion-v": "^2.4.4",
+    "markstream-vue": "^2.0.16",
+    "motion-v": "^2.5.2",
     "nuxt": "^4.5.2",
     "pinia": "^4.0.3",
     "steam-playing-game": "^0.0.4",
@@ -38,21 +38,21 @@
   },
   "devDependencies": {
     "@antfu/eslint-config": "^9.5.1",
-    "@types/node": "^26.6.1",
+    "@types/node": "^26.6.4",
     "@unocss/preset-web-fonts": "^66.10.5",
     "bumpp": "^12.3.0",
     "es-toolkit": "^1.52.0",
-    "eslint": "^10.10.0",
+    "eslint": "^10.12.0",
     "eslint-plugin-unused-imports": "^4.4.1",
     "nano-staged": "^1.0.2",
-    "sass": "^1.104.1",
+    "sass": "^1.105.1",
     "simple-git-hooks": "^2.14.0",
     "typescript": "^6.0.3",
     "unimport": "^7.0.2",
     "uno-colors": "^0.1.0",
     "unocss": "^66.10.5",
     "unplugin-vue-components": "^32.1.0",
-    "vue-tsc": "^3.3.11"
+    "vue-tsc": "^3.3.12"
   },
   "simple-git-hooks": {
     "pre-commit": "pnpm nano-staged"
